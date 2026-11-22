@@ -1,0 +1,918 @@
+{
+  "nodes": [
+    {
+      "id": "agent_skills_cecics_auth_cookies_skill_doc",
+      "label": "CECICS Authentication & Cookie Debugging Skill",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\cecics-auth-cookies\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_cecics_auth_cookies_skill_1_cấu_trúc_xác_thực_2_chế_độ",
+      "label": "1. Cấu Trúc Xác Thực 2 Chế Độ",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\cecics-auth-cookies\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_cecics_auth_cookies_skill_2_các_lỗi_phổ_biến_cách_khắc_phục",
+      "label": "2. Các Lỗi Phổ Biến & Cách Khắc Phục",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\cecics-auth-cookies\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_graphify_rag_skill_doc",
+      "label": "Graphify RAG & Token Optimization Skill",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_graphify_rag_skill_1_nguyên_tắc_4_tầng_tối_ưu",
+      "label": "1. Nguyên Tắc 4 Tầng Tối Ưu",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_graphify_rag_skill_2_lệnh_cli_thường_dùng",
+      "label": "2. Lệnh CLI Thường Dùng",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_microsoft_token_economizer_skill_doc",
+      "label": "Microsoft TokenEconomizer Integration Guide",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_microsoft_token_economizer_skill_1_ba_trụ_cột_tối_ưu_cốt_lõi",
+      "label": "1. Ba Trụ Cột Tối Ưu Cốt Lõi",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_microsoft_token_economizer_skill_2_các_lệnh_cli_quản_trị_thường_dùng",
+      "label": "2. Các Lệnh CLI Quản Trị Thường Dùng",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_nextjs_react_guidance_skill_doc",
+      "label": "Next.js 15 & React 19 Best Practices for CECICS",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_nextjs_react_guidance_skill_1_phòng_tránh_hydration_mismatch_server_vs_client",
+      "label": "1. Phòng Tránh Hydration Mismatch (Server vs Client)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_nextjs_react_guidance_skill_2_loại_bỏ_request_waterfalls_tối_ưu_data_fetching",
+      "label": "2. Loại Bỏ Request Waterfalls & Tối Ưu Data Fetching",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_nextjs_react_guidance_skill_3_tối_ưu_re_renders_trên_giao_diện_lịch_ma_trận_phòng",
+      "label": "3. Tối Ưu Re-renders Trên Giao Diện Lịch & Ma Trận Phòng",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_skills_nextjs_react_guidance_skill_4_tailwind_css_v4_best_practices",
+      "label": "4. Tailwind CSS v4 Best Practices",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "gemini_doc",
+      "label": "CECICS WebApp - Hướng Dẫn & Quy Chuẩn Dự Án",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "gemini_1_công_nghệ_kiến_trúc",
+      "label": "1. Công Nghệ & Kiến Trúc",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "gemini_2_quy_tắc_phân_quyền_nghiệp_vụ_y_khoa",
+      "label": "2. Quy Tắc Phân Quyền & Nghiệp Vụ Y Khoa",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "gemini_3_quy_tắc_tối_ưu_hóa_prompt_kết_nối_ai_qwen_gemma",
+      "label": "3. Quy Tắc Tối Ưu Hóa Prompt & Kết Nối AI (Qwen & Gemma)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "gemini_4_skills_dự_án_tích_hợp",
+      "label": "4. Skills Dự Án Tích Hợp",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_doc",
+      "label": "Hướng dẫn Cài đặt & Đấu nối Google Sheets + Apps Script (100% Miễn phí)",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_bước_1_chuẩn_bị_tài_khoản_google_của_trung_tâm",
+      "label": "Bước 1 — Chuẩn bị tài khoản Google của Trung tâm",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_bước_2_triển_khai_google_apps_script_cửa_ghi_có_khóa_lockservice",
+      "label": "Bước 2 — Triển khai Google Apps Script (Cửa ghi có khóa `LockService`)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_bước_3_cấu_hình_google_cloud_đăng_nhập_oauth_đọc_sheets",
+      "label": "Bước 3 — Cấu hình Google Cloud (Đăng nhập OAuth & Đọc Sheets)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_bước_4_nạp_danh_mục_ban_đầu_vào_sheets",
+      "label": "Bước 4 — Nạp danh mục ban đầu vào Sheets",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_huong_dan_cai_dat_bước_5_triển_khai_lên_vercel_hoặc_cloudflare_pages",
+      "label": "Bước 5 — Triển khai lên Vercel (hoặc Cloudflare Pages)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_doc",
+      "label": "BỘ QUY TẮC TỐI ƯU TOKEN & QUOTA KHI DÙNG QWEN, GEMMA VÀ GRAPHIFY",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_1_mô_hình_phân_tầng_vai_trò_4_lớp_tiered_architecture",
+      "label": "1. MÔ HÌNH PHÂN TẦNG VAI TRÒ 4 LỚP (TIERED ARCHITECTURE)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_2_quy_tắc_dùng_api_kết_nối_gemma_qwen_tối_ưu_quota",
+      "label": "2. QUY TẮC DÙNG API KẾT NỐI GEMMA & QWEN (TỐI ƯU QUOTA)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_2_1_gemma_qua_google_ai_studio_api",
+      "label": "2.1. Gemma qua Google AI Studio API",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_2_2_qwen_2_5_coder_qua_openrouter_groq_api",
+      "label": "2.2. Qwen 2.5 Coder qua OpenRouter / Groq API",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_3_cấu_trúc_node_code_trong_graphify_signature_level_pruning",
+      "label": "3. CẤU TRÚC NODE CODE TRONG GRAPHIFY (SIGNATURE-LEVEL PRUNING)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_3_1_cấu_trúc_schema_của_một_code_node",
+      "label": "3.1. Cấu trúc Schema của một Code Node",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_3_2_cấu_trúc_schema_của_một_edge_cạnh_quan_hệ",
+      "label": "3.2. Cấu trúc Schema của một Edge (Cạnh quan hệ)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_3_3_cơ_chế_god_node_pruning_cắt_tỉa_hub_trung_tâm",
+      "label": "3.3. Cơ chế \"God-Node Pruning\" (Cắt tỉa Hub trung tâm)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_4_kỹ_thuật_nén_prompt_prompt_token_optimization",
+      "label": "4. KỸ THUẬT NÉN PROMPT (PROMPT TOKEN OPTIMIZATION)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_4_1_dạng_biểu_diễn_đồ_thị_siêu_nén_compact_adjacency_list",
+      "label": "4.1. Dạng biểu diễn Đồ thị siêu nén: Compact Adjacency List",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_code_graph_context_budget_600_tokens",
+      "label": "Code Graph Context (Budget: 600 tokens)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_4_2_mẫu_system_prompt_chuẩn_hóa_cho_qwen_2_5_coder",
+      "label": "4.2. Mẫu System Prompt chuẩn hóa cho Qwen 2.5 Coder",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_prompt_optimization_rules_5_bảng_tính_toán_tiết_kiệm_token_thực_tế",
+      "label": "5. BẢNG TÍNH TOÁN TIẾT KIỆM TOKEN THỰC TẾ",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_doc",
+      "label": "Quy trình Vận hành Chuẩn (SOP) — CECICS Web App MVP",
+      "file_type": "document",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_1_đơn_vị_đào_tạo_lịch_giảng",
+      "label": "1. Đơn vị Đào tạo (Lịch giảng)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_2_đơn_vị_hành_chính_gán_phòng_coi_thi",
+      "label": "2. Đơn vị Hành chính (Gán phòng & Coi thi)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_3_giảng_viên_kể_cả_giảng_viên_thỉnh_giảng_có_email_trong_whitelist",
+      "label": "3. Giảng viên (Kể cả giảng viên thỉnh giảng có email trong Whitelist)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_4_đầu_mối_bộ_môn_đơn_vị_kỹ_thuật_lớp_mô_phỏng_thiết_bị",
+      "label": "4. Đầu mối Bộ môn & Đơn vị Kỹ thuật (Lớp Mô phỏng & Thiết bị)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_sop_nhap_lieu_5_ban_lãnh_đạo_trưởng_phó_trung_tâm",
+      "label": "5. Ban Lãnh đạo (Trưởng & Phó Trung tâm)",
+      "file_type": "concept",
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "agent_skills_cecics_auth_cookies_skill_doc",
+      "target": "agent_skills_cecics_auth_cookies_skill_1_cấu_trúc_xác_thực_2_chế_độ",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\cecics-auth-cookies\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_cecics_auth_cookies_skill_doc",
+      "target": "agent_skills_cecics_auth_cookies_skill_2_các_lỗi_phổ_biến_cách_khắc_phục",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\cecics-auth-cookies\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_graphify_rag_skill_doc",
+      "target": "agent_skills_graphify_rag_skill_1_nguyên_tắc_4_tầng_tối_ưu",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_graphify_rag_skill_doc",
+      "target": "agent_skills_graphify_rag_skill_2_lệnh_cli_thường_dùng",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_microsoft_token_economizer_skill_doc",
+      "target": "agent_skills_microsoft_token_economizer_skill_1_ba_trụ_cột_tối_ưu_cốt_lõi",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_microsoft_token_economizer_skill_doc",
+      "target": "agent_skills_microsoft_token_economizer_skill_2_các_lệnh_cli_quản_trị_thường_dùng",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_nextjs_react_guidance_skill_doc",
+      "target": "agent_skills_nextjs_react_guidance_skill_1_phòng_tránh_hydration_mismatch_server_vs_client",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_nextjs_react_guidance_skill_doc",
+      "target": "agent_skills_nextjs_react_guidance_skill_2_loại_bỏ_request_waterfalls_tối_ưu_data_fetching",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_nextjs_react_guidance_skill_doc",
+      "target": "agent_skills_nextjs_react_guidance_skill_3_tối_ưu_re_renders_trên_giao_diện_lịch_ma_trận_phòng",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_skills_nextjs_react_guidance_skill_doc",
+      "target": "agent_skills_nextjs_react_guidance_skill_4_tailwind_css_v4_best_practices",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\nextjs-react-guidance\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_doc",
+      "target": "gemini_1_công_nghệ_kiến_trúc",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_doc",
+      "target": "gemini_2_quy_tắc_phân_quyền_nghiệp_vụ_y_khoa",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_doc",
+      "target": "gemini_3_quy_tắc_tối_ưu_hóa_prompt_kết_nối_ai_qwen_gemma",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_doc",
+      "target": "gemini_4_skills_dự_án_tích_hợp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_huong_dan_cai_dat_doc",
+      "target": "docs_huong_dan_cai_dat_bước_1_chuẩn_bị_tài_khoản_google_của_trung_tâm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_huong_dan_cai_dat_doc",
+      "target": "docs_huong_dan_cai_dat_bước_2_triển_khai_google_apps_script_cửa_ghi_có_khóa_lockservice",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_huong_dan_cai_dat_doc",
+      "target": "docs_huong_dan_cai_dat_bước_3_cấu_hình_google_cloud_đăng_nhập_oauth_đọc_sheets",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_huong_dan_cai_dat_doc",
+      "target": "docs_huong_dan_cai_dat_bước_4_nạp_danh_mục_ban_đầu_vào_sheets",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_huong_dan_cai_dat_doc",
+      "target": "docs_huong_dan_cai_dat_bước_5_triển_khai_lên_vercel_hoặc_cloudflare_pages",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\HUONG_DAN_CAI_DAT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_1_mô_hình_phân_tầng_vai_trò_4_lớp_tiered_architecture",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_2_quy_tắc_dùng_api_kết_nối_gemma_qwen_tối_ưu_quota",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_2_1_gemma_qua_google_ai_studio_api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_2_2_qwen_2_5_coder_qua_openrouter_groq_api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_3_cấu_trúc_node_code_trong_graphify_signature_level_pruning",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_3_1_cấu_trúc_schema_của_một_code_node",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_3_2_cấu_trúc_schema_của_một_edge_cạnh_quan_hệ",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_3_3_cơ_chế_god_node_pruning_cắt_tỉa_hub_trung_tâm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_4_kỹ_thuật_nén_prompt_prompt_token_optimization",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_4_1_dạng_biểu_diễn_đồ_thị_siêu_nén_compact_adjacency_list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_code_graph_context_budget_600_tokens",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_4_2_mẫu_system_prompt_chuẩn_hóa_cho_qwen_2_5_coder",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_prompt_optimization_rules_doc",
+      "target": "docs_prompt_optimization_rules_5_bảng_tính_toán_tiết_kiệm_token_thực_tế",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_sop_nhap_lieu_doc",
+      "target": "docs_sop_nhap_lieu_1_đơn_vị_đào_tạo_lịch_giảng",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_sop_nhap_lieu_doc",
+      "target": "docs_sop_nhap_lieu_2_đơn_vị_hành_chính_gán_phòng_coi_thi",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_sop_nhap_lieu_doc",
+      "target": "docs_sop_nhap_lieu_3_giảng_viên_kể_cả_giảng_viên_thỉnh_giảng_có_email_trong_whitelist",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_sop_nhap_lieu_doc",
+      "target": "docs_sop_nhap_lieu_4_đầu_mối_bộ_môn_đơn_vị_kỹ_thuật_lớp_mô_phỏng_thiết_bị",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_sop_nhap_lieu_doc",
+      "target": "docs_sop_nhap_lieu_5_ban_lãnh_đạo_trưởng_phó_trung_tâm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\SOP_NHAP_LIEU.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "_agent_skills_graphify_rag_skill_doc",
+      "target": "docs_prompt_optimization_rules_doc",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\graphify-rag\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "_agent_skills_microsoft_token_economizer_skill_doc",
+      "target": "docs_prompt_optimization_rules_doc",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "E:\\CECICS_webApp\\.agent\\skills\\microsoft-token-economizer\\SKILL.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_doc",
+      "target": "docs_sop_nhap_lieu_doc",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\GEMINI.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "cecics_rag_token_optimization",
+      "label": "CECICS Token & Prompt Optimization Standards",
+      "nodes": [
+        "_agent_skills_graphify_rag_skill_doc",
+        "_agent_skills_microsoft_token_economizer_skill_doc",
+        "docs_prompt_optimization_rules_doc"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "E:\\CECICS_webApp\\docs\\PROMPT_OPTIMIZATION_RULES.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

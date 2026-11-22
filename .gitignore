@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.env
+.env*.local
+.data/
+apps-script/dist/
+apps-script/.clasp.json
+*.log
+.DS_Store

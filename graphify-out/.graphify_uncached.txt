@@ -1,0 +1,8 @@
+E:\CECICS_webApp\.agent\skills\cecics-auth-cookies\SKILL.md
+E:\CECICS_webApp\.agent\skills\graphify-rag\SKILL.md
+E:\CECICS_webApp\.agent\skills\microsoft-token-economizer\SKILL.md
+E:\CECICS_webApp\.agent\skills\nextjs-react-guidance\SKILL.md
+E:\CECICS_webApp\GEMINI.md
+E:\CECICS_webApp\docs\HUONG_DAN_CAI_DAT.md
+E:\CECICS_webApp\docs\PROMPT_OPTIMIZATION_RULES.md
+E:\CECICS_webApp\docs\SOP_NHAP_LIEU.md
