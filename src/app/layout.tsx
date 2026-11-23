@@ -4,6 +4,12 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'CECICS — Hệ thống Vận hành Số hóa',
   description: 'Trung tâm Kỹ năng và Sáng tạo Mô phỏng Lâm sàng (CECICS) — Lịch giảng, Phân phòng, Lớp mô phỏng & Thiết bị',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

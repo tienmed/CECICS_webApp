@@ -1,27 +1,61 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { idFieldOf, type Rec, type TableName } from '@/core/schema';
 import type { DataStore } from '@/core/mutations';
 import type { DatabaseSnapshot } from '@/core/types';
 import { buildMockSeed } from './mock-seed';
 
-const DB_PATH = path.join(process.cwd(), '.data', 'db.json');
+function getDbPath(): string {
+  if (process.env.DATA_PATH) return process.env.DATA_PATH;
+  // Trên Vercel hoặc AWS Lambda, process.cwd() là hệ thống tệp chỉ đọc. Chuyển sang os.tmpdir().
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    return path.join(os.tmpdir(), 'cecics_data', 'db.json');
+  }
+  return path.join(process.cwd(), '.data', 'db.json');
+}
+
+// Bộ nhớ đệm in-memory để đảm bảo ứng dụng không bao giờ bị crash kể cả khi môi trường cấm ghi đĩa
+let inMemoryDb: DatabaseSnapshot | null = null;
 
 function ensureFile(): DatabaseSnapshot {
-  if (!fs.existsSync(DB_PATH)) {
-    fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-    const seed = buildMockSeed();
-    fs.writeFileSync(DB_PATH, JSON.stringify(seed, null, 2), 'utf8');
-    return seed;
+  if (inMemoryDb) {
+    return inMemoryDb;
   }
-  const raw = fs.readFileSync(DB_PATH, 'utf8');
-  return JSON.parse(raw) as DatabaseSnapshot;
+
+  const dbPath = getDbPath();
+  try {
+    if (fs.existsSync(dbPath)) {
+      const raw = fs.readFileSync(dbPath, 'utf8');
+      inMemoryDb = JSON.parse(raw) as DatabaseSnapshot;
+      return inMemoryDb;
+    }
+  } catch (readErr) {
+    console.warn('[local-store] Cảnh báo đọc tệp db.json, chuyển sang nạp mock seed:', readErr);
+  }
+
+  const seed = buildMockSeed();
+  inMemoryDb = seed;
+  try {
+    fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+    fs.writeFileSync(dbPath, JSON.stringify(seed, null, 2), 'utf8');
+  } catch (writeErr) {
+    console.warn('[local-store] Cảnh báo: Không thể ghi đĩa (read-only filesystem). Tiếp tục với in-memory store:', writeErr);
+  }
+
+  return inMemoryDb;
 }
 
 export function resetLocalDb(): DatabaseSnapshot {
-  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
   const seed = buildMockSeed();
-  fs.writeFileSync(DB_PATH, JSON.stringify(seed, null, 2), 'utf8');
+  inMemoryDb = seed;
+  try {
+    const dbPath = getDbPath();
+    fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+    fs.writeFileSync(dbPath, JSON.stringify(seed, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('[local-store] Reset db in-memory fallback:', err);
+  }
   return seed;
 }
 
@@ -50,7 +84,13 @@ export function withLocalLock<T>(fn: (store: DataStore) => T): Promise<T> {
       },
     };
     const result = fn(store);
-    fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf8');
+    try {
+      const dbPath = getDbPath();
+      fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+      fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8');
+    } catch (writeErr) {
+      console.warn('[local-store] Cảnh báo: Không thể đồng bộ thay đổi ra đĩa. Dữ liệu đã lưu in-memory:', writeErr);
+    }
     return result;
   });
   writeQueue = task.catch(() => undefined);

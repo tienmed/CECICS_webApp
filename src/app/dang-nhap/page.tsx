@@ -18,11 +18,18 @@ export default async function LoginPage({
   const sp = await searchParams;
   const demoMode = isDemoModeEnabled();
   const hasGoogleOAuth = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
-  const db = demoMode ? await getSnapshot() : null;
+  let db = null;
+  if (demoMode) {
+    try {
+      db = await getSnapshot();
+    } catch (err) {
+      console.warn('[LoginPage] Lỗi nạp snapshot:', err);
+    }
+  }
 
   return (
     <LoginClient
-      error={sp.error}
+      error={sp?.error}
       demoMode={demoMode}
       hasGoogleOAuth={hasGoogleOAuth}
       dataMode={getDataMode()}

@@ -7,6 +7,11 @@ import { getSnapshot } from './repository';
 
 export const DEMO_COOKIE_NAME = 'cecics_demo_email';
 
+// Đảm bảo AUTH_SECRET luôn có giá trị để Auth.js không crash trên môi trường production/Vercel
+if (!process.env.AUTH_SECRET && !process.env.NEXTAUTH_SECRET) {
+  process.env.AUTH_SECRET = 'cecics-production-fallback-auth-secret-key-32chars';
+}
+
 export function isDemoModeEnabled(): boolean {
   // Mặc định bật demo ở local khi chưa cấu hình Google OAuth thật
   if (process.env.DEMO_MODE === 'false') return false;
@@ -64,35 +69,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
  * Lấy bản ghi UserRecord hiện tại (từ Google Auth session hoặc Demo cookie khi DEMO_MODE=true).
  */
 export async function getCurrentUser(): Promise<UserRecord | null> {
-  const db = await getSnapshot();
-  const allowedDomain = process.env.ALLOWED_EMAIL_DOMAIN || 'pnt.edu.vn';
-
-  // 1. Ưu tiên session Google Auth thật
   try {
-    const session = await auth();
-    const email = session?.user?.email;
-    if (email) {
-      const verdict = evaluateLoginAccess(email, db.Users, allowedDomain);
-      if (verdict.allowed) return verdict.user;
-    }
-  } catch {
-    // Bỏ qua nếu chưa cấu hình Google OAuth ở local
-  }
+    const db = await getSnapshot();
+    const allowedDomain = process.env.ALLOWED_EMAIL_DOMAIN || 'pnt.edu.vn';
 
-  // 2. Dự phòng Demo Mode cho thử nghiệm nội bộ
-  if (isDemoModeEnabled()) {
-    const cookieStore = await cookies();
-    const rawDemoEmail = cookieStore.get(DEMO_COOKIE_NAME)?.value;
-    if (rawDemoEmail) {
-      let demoEmail = rawDemoEmail;
-      try {
-        demoEmail = decodeURIComponent(rawDemoEmail);
-      } catch {
-        // Giữ nguyên nếu không decode được
+    // 1. Ưu tiên session Google Auth thật
+    try {
+      const session = await auth();
+      const email = session?.user?.email;
+      if (email) {
+        const verdict = evaluateLoginAccess(email, db.Users, allowedDomain);
+        if (verdict.allowed) return verdict.user;
       }
-      const verdict = evaluateLoginAccess(demoEmail, db.Users, allowedDomain);
-      if (verdict.allowed) return verdict.user;
+    } catch {
+      // Bỏ qua nếu chưa cấu hình Google OAuth ở local hoặc session không hợp lệ
     }
+
+    // 2. Dự phòng Demo Mode cho thử nghiệm nội bộ
+    if (isDemoModeEnabled()) {
+      try {
+        const cookieStore = await cookies();
+        const rawDemoEmail = cookieStore.get(DEMO_COOKIE_NAME)?.value;
+        if (rawDemoEmail) {
+          let demoEmail = rawDemoEmail;
+          try {
+            demoEmail = decodeURIComponent(rawDemoEmail);
+          } catch {
+            // Giữ nguyên nếu không decode được
+          }
+          const verdict = evaluateLoginAccess(demoEmail, db.Users, allowedDomain);
+          if (verdict.allowed) return verdict.user;
+        }
+      } catch (cookieErr) {
+        console.warn('[getCurrentUser] Cảnh báo truy cập cookie:', cookieErr);
+      }
+    }
+  } catch (err) {
+    console.warn('[getCurrentUser] Lỗi xác định người dùng hiện tại:', err);
   }
 
   return null;
