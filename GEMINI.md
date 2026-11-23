@@ -35,6 +35,9 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
+- **Chỉ Push Git khi lên Version mới hoặc có yêu cầu thủ công**:
+  - **CHỈ ĐƯỢC PUSH (`git push`)**: (1) Khi lên phiên bản mới (`package.json` nâng version do có tính năng mới), hoặc (2) Khi người dùng yêu cầu rõ ràng bằng lệnh thủ công (ví dụ: *"push git"*, *"đẩy mã nguồn lên github"*).
+  - **Khi chỉ Sửa Lỗi (Bug Fix), Refactor, Tinh chỉnh nhỏ**: **CHỈ commit cục bộ (`git commit`)**, tuyệt đối **KHÔNG** tự ý `git push` lên remote.
 - **Chỉ lên Version khi có Tính Năng Mới**: Chỉ được phép nâng version (`version` trong `package.json` theo Semantic Versioning) khi bổ sung tính năng mới (Minor/Feature release). Khi sửa lỗi nhỏ (bug fix), refactor, dọn dẹp mã nguồn hoặc cập nhật cấu hình, giữ nguyên version hiện tại.
 - **Luôn dựa vào Graphify khi Code, Fix Bug hay Lên Plan**: Bắt buộc sử dụng cấu trúc đồ thị tri thức mã nguồn `graphify` (`graphify-out/GRAPH_REPORT.md`, `graph.json` hoặc lệnh `python scripts/graphify_rag.py subgraph`) để:
   1. *Lên Plan*: Nhận diện trước các God Nodes bị ảnh hưởng (`executeAction`, `todayVnYmd`, `useApp`, `canPerform`...) và ranh giới các Community liên quan.
