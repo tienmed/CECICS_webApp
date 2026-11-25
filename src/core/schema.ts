@@ -450,7 +450,7 @@ export function fromRow<T extends TableName>(t: T, row: unknown[]): Rec<T> {
   const fields = TABLES[t].fields as Record<string, FieldType>;
   const out: Record<string, unknown> = {};
   Object.keys(fields).forEach((name, i) => {
-    out[name] = parseCell(fields[name], row[i]);
+    out[name] = parseCell(fields[name], row[i], name);
   });
   return out as Rec<T>;
 }
@@ -461,7 +461,25 @@ export function toRow<T extends TableName>(t: T, rec: Partial<Rec<T>>): (string 
   return Object.keys(fields).map((name) => serializeCell(fields[name], (rec as Record<string, unknown>)[name]));
 }
 
-export function parseCell(type: FieldType, v: unknown): unknown {
+function excelSerialToYmd(serial: number): string {
+  // Mốc epoch của Excel / Google Sheets: 30/12/1899
+  const epoch = Date.UTC(1899, 11, 30);
+  const ms = Math.round(serial * 86400 * 1000);
+  const d = new Date(epoch + ms);
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function excelFractionToTime(frac: number): string {
+  const totalSeconds = Math.round(frac * 86400);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+export function parseCell(type: FieldType, v: unknown, fieldName?: string): unknown {
   if (v === null || v === undefined) v = '';
   switch (type) {
     case 'number': {
@@ -483,10 +501,61 @@ export function parseCell(type: FieldType, v: unknown): unknown {
       } catch {
         return String(v);
       }
-    default:
-      // Sheets có thể trả về Date (Apps Script) hoặc số — chuẩn hóa về chuỗi
-      if (v instanceof Date) return v.toISOString();
-      return String(v);
+    default: {
+      const fn = fieldName ? fieldName.toLowerCase() : '';
+      const isDateField = fn.startsWith('ngay') || fn.includes('date');
+      const isTimeField = fn.startsWith('gio_') || fn.includes('time');
+
+      // 1. Google Sheets UNFORMATTED_VALUE trả về số Serial cho ngày (ví dụ 46352)
+      if (typeof v === 'number' && isDateField && v >= 35000 && v <= 65000) {
+        return excelSerialToYmd(v);
+      }
+
+      // 2. Google Sheets UNFORMATTED_VALUE trả về phần thập phân 0 <= v < 1 cho giờ (ví dụ 0.5625 -> 13:30)
+      if (typeof v === 'number' && isTimeField && v >= 0 && v < 1) {
+        return excelFractionToTime(v);
+      }
+
+      // 3. Đối tượng Date từ Apps Script hoặc API
+      if (v instanceof Date) {
+        if (isDateField) {
+          const vn = new Date(v.getTime() + 7 * 3600 * 1000);
+          return vn.toISOString().slice(0, 10);
+        }
+        if (isTimeField) {
+          const vn = new Date(v.getTime() + 7 * 3600 * 1000);
+          const h = String(vn.getUTCHours()).padStart(2, '0');
+          const m = String(vn.getUTCMinutes()).padStart(2, '0');
+          return `${h}:${m}`;
+        }
+        return v.toISOString();
+      }
+
+      // 4. Chuỗi ISO UTC (ví dụ "2026-11-25T17:00:00.000Z" hoặc "1899-12-30T06:23:30.000Z")
+      const s = String(v);
+      if (s.includes('T') && s.endsWith('Z')) {
+        const d = new Date(s);
+        if (!isNaN(d.getTime())) {
+          // Lưu ý: Đối với mốc thời gian năm 1899 (Google Sheets time epoch), Apps Script tại múi giờ Việt Nam
+          // sử dụng Saigon Local Mean Time (LMT = UTC+07:06:30), làm 13:30 thành 06:23:30Z.
+          // Cần cộng thêm đúng 7h06m30s cho các mốc năm 1899 để khôi phục chính xác 13:30 / 17:00.
+          const isHistoric1899 = d.getUTCFullYear() <= 1900;
+          const offsetMs = isHistoric1899 ? (7 * 3600 + 6 * 60 + 30) * 1000 : 7 * 3600 * 1000;
+          const vn = new Date(d.getTime() + offsetMs);
+
+          if (isDateField) {
+            return vn.toISOString().slice(0, 10);
+          }
+          if (isTimeField) {
+            const h = String(vn.getUTCHours()).padStart(2, '0');
+            const m = String(vn.getUTCMinutes()).padStart(2, '0');
+            return `${h}:${m}`;
+          }
+        }
+      }
+
+      return s;
+    }
   }
 }
 
