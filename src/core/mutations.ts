@@ -1943,6 +1943,203 @@ export function executeAction(
       return { data: created };
     }
 
+    case 'upsertCmeCourse': {
+      const course_id = String(payload.course_id || '').trim();
+      const ten_khoa = String(payload.ten_khoa || '').trim();
+      if (!course_id || !ten_khoa) {
+        throw new DomainError('VALIDATION', 'Vui lòng cung cấp mã khóa học và tên khóa học CME.');
+      }
+      const existing = db.CmeCourses?.find((c) => c.course_id === course_id);
+      const patch = {
+        ma_khoa: String(payload.ma_khoa || course_id),
+        ten_khoa,
+        doi_tuong: String(payload.doi_tuong || ''),
+        so_tiet_cme: Number(payload.so_tiet_cme || 16),
+        hoc_phi: Number(payload.hoc_phi || 0),
+        chi_tieu: Number(payload.chi_tieu || 30),
+        ngay_khai_giang: String(payload.ngay_khai_giang || ''),
+        ngay_be_giang: String(payload.ngay_be_giang || ''),
+        han_dang_ky: String(payload.han_dang_ky || ''),
+        campus_id: String(payload.campus_id || 'HH'),
+        phong_hoc_mac_dinh: String(payload.phong_hoc_mac_dinh || ''),
+        giang_vien_chu_nhiem: String(payload.giang_vien_chu_nhiem || ''),
+        noi_dung_tom_tat: String(payload.noi_dung_tom_tat || ''),
+        thoi_khoa_bieu_json: typeof payload.thoi_khoa_bieu_json === 'string' ? payload.thoi_khoa_bieu_json : JSON.stringify(payload.thoi_khoa_bieu_json || []),
+        ngan_hang_cau_hoi_pretest_json: typeof payload.ngan_hang_cau_hoi_pretest_json === 'string' ? payload.ngan_hang_cau_hoi_pretest_json : JSON.stringify(payload.ngan_hang_cau_hoi_pretest_json || []),
+        ngan_hang_cau_hoi_posttest_json: typeof payload.ngan_hang_cau_hoi_posttest_json === 'string' ? payload.ngan_hang_cau_hoi_posttest_json : JSON.stringify(payload.ngan_hang_cau_hoi_posttest_json || []),
+        trang_thai: String(payload.trang_thai || 'OPEN'),
+      };
+      if (existing) {
+        const updated = store.update('CmeCourses', course_id, patch);
+        recordAudit(store, actor, 'UPDATE_CME_COURSE', 'CmeCourses', course_id, existing, updated, now);
+        return { data: updated };
+      }
+      const created = {
+        course_id,
+        ...patch,
+        ngay_tao: nowIso.slice(0, 10),
+        tao_boi: actor.email,
+      };
+      store.append('CmeCourses', created);
+      recordAudit(store, actor, 'CREATE_CME_COURSE', 'CmeCourses', course_id, null, created, now);
+      return { data: created };
+    }
+
+    case 'reviewCmeRegistration': {
+      const reg_id = String(payload.reg_id || '');
+      const trang_thai = String(payload.trang_thai || 'DA_DUYET'); // DA_DUYET, TU_CHOI, HOAN_THANH
+      const reg = db.CmeRegistrations?.find((r) => r.reg_id === reg_id);
+      if (!reg) throw new DomainError('NOT_FOUND', 'Không tìm thấy hồ sơ đăng ký CME.');
+
+      const patch: Record<string, unknown> = {
+        trang_thai,
+        xac_nhan_boi: actor.email,
+        xac_nhan_luc: nowIso,
+        ly_do_tu_choi: payload.ly_do_tu_choi ? String(payload.ly_do_tu_choi) : reg.ly_do_tu_choi,
+        so_chung_chi_cme: payload.so_chung_chi_cme ? String(payload.so_chung_chi_cme) : reg.so_chung_chi_cme,
+        ngay_cap_chung_chi: payload.ngay_cap_chung_chi ? String(payload.ngay_cap_chung_chi) : reg.ngay_cap_chung_chi,
+      };
+      const updated = store.update('CmeRegistrations', reg_id, patch);
+      recordAudit(store, actor, 'REVIEW_CME_REGISTRATION', 'CmeRegistrations', reg_id, reg, updated, now);
+      return { data: updated };
+    }
+
+    case 'recordCmeAttendance': {
+      const course_id = String(payload.course_id || '');
+      const student_id = String(payload.student_id || '');
+      const buoi_so = Number(payload.buoi_so || 1);
+      const co_mat = Boolean(payload.co_mat);
+      const att_id = String(payload.att_id || `ATT-${course_id.replace(/^CME-/, '')}-${student_id.slice(-4)}-B${buoi_so}`);
+
+      const existing = db.CmeAttendance?.find((a) => a.att_id === att_id || (a.course_id === course_id && a.student_id === student_id && a.buoi_so === buoi_so));
+      const patch = {
+        course_id,
+        student_id,
+        buoi_so,
+        ngay: String(payload.ngay || todayVnYmd(now)),
+        ca_hoc: String(payload.ca_hoc || 'Sáng'),
+        co_mat,
+        ghi_chu: String(payload.ghi_chu || ''),
+        nguoi_diem_danh: actor.email,
+        luc: nowIso,
+      };
+      if (existing) {
+        const updated = store.update('CmeAttendance', existing.att_id, patch);
+        return { data: updated };
+      }
+      const created = { att_id, ...patch };
+      store.append('CmeAttendance', created);
+      return { data: created };
+    }
+
+    case 'submitCmeAssessment': {
+      const course_id = String(payload.course_id || '');
+      const student_id = String(payload.student_id || '');
+      const asm_id = String(payload.asm_id || `ASM-${course_id.replace(/^CME-/, '')}-${student_id.slice(-4)}`);
+      const existing = db.CmeAssessments?.find((a) => a.asm_id === asm_id || (a.course_id === course_id && a.student_id === student_id));
+
+      const diem_pretest = payload.diem_pretest !== undefined ? Number(payload.diem_pretest) : existing?.diem_pretest ?? 0;
+      const diem_posttest = payload.diem_posttest !== undefined ? Number(payload.diem_posttest) : existing?.diem_posttest ?? 0;
+      const diem_thuc_hanh = payload.diem_thuc_hanh !== undefined ? Number(payload.diem_thuc_hanh) : existing?.diem_thuc_hanh ?? 0;
+      const ket_qua = String(payload.ket_qua || (diem_posttest >= 5 && diem_thuc_hanh >= 5 ? 'DAT' : 'KHONG_DAT'));
+      const xep_loai = String(payload.xep_loai || (diem_thuc_hanh >= 9 ? 'XUAT_SAC' : diem_thuc_hanh >= 8 ? 'GIOI' : diem_thuc_hanh >= 6.5 ? 'KHA' : ket_qua === 'DAT' ? 'TRUNG_BINH' : 'KHONG_DAT'));
+
+      const patch = {
+        course_id,
+        student_id,
+        diem_pretest,
+        diem_posttest,
+        diem_thuc_hanh,
+        ket_qua,
+        xep_loai,
+        nhan_xet: String(payload.nhan_xet || ''),
+        ngay_danh_gia: String(payload.ngay_danh_gia || todayVnYmd(now)),
+        nguoi_danh_gia: actor.email,
+      };
+      if (existing) {
+        const updated = store.update('CmeAssessments', existing.asm_id, patch);
+        recordAudit(store, actor, 'UPDATE_CME_ASSESSMENT', 'CmeAssessments', existing.asm_id, existing, updated, now);
+        return { data: updated };
+      }
+      const created = { asm_id, ...patch };
+      store.append('CmeAssessments', created);
+      recordAudit(store, actor, 'CREATE_CME_ASSESSMENT', 'CmeAssessments', asm_id, null, created, now);
+      return { data: created };
+    }
+
+    case 'submitCmeSurvey': {
+      const course_id = String(payload.course_id || '');
+      const student_id = String(payload.student_id || '');
+      const survey_id = String(payload.survey_id || `SRV-${course_id.replace(/^CME-/, '')}-${student_id.slice(-4)}`);
+      const existing = db.CmeSurveys?.find((s) => s.survey_id === survey_id || (s.course_id === course_id && s.student_id === student_id));
+
+      const patch = {
+        course_id,
+        student_id,
+        hai_long_chuong_trinh: Number(payload.hai_long_chuong_trinh || 5),
+        hai_long_giang_vien: Number(payload.hai_long_giang_vien || 5),
+        hai_long_mo_hinh_csvc: Number(payload.hai_long_mo_hinh_csvc || 5),
+        hai_long_to_chuc: Number(payload.hai_long_to_chuc || 5),
+        y_kien_dong_gop: String(payload.y_kien_dong_gop || ''),
+        ngay_khao_sat: String(payload.ngay_khao_sat || todayVnYmd(now)),
+      };
+      if (existing) {
+        const updated = store.update('CmeSurveys', existing.survey_id, patch);
+        return { data: updated };
+      }
+      const created = { survey_id, ...patch };
+      store.append('CmeSurveys', created);
+      return { data: created };
+    }
+
+    case 'upsertCmeSettlement': {
+      const course_id = String(payload.course_id || '');
+      const settlement_id = String(payload.settlement_id || `STL-${course_id.replace(/^CME-/, '')}`);
+      const existing = db.CmeSettlements?.find((s) => s.settlement_id === settlement_id || s.course_id === course_id);
+
+      const tong_thu_hoc_phi = Number(payload.tong_thu_hoc_phi || 0);
+      const thu_lao_giang_vien = Number(payload.thu_lao_giang_vien || 0);
+      const thu_lao_tro_giang_ktv = Number(payload.thu_lao_tro_giang_ktv || 0);
+      const chi_phi_vat_tu = Number(payload.chi_phi_vat_tu || 0);
+      const chi_phi_to_chuc = Number(payload.chi_phi_to_chuc || 0);
+      const trich_nop_nha_truong = Number(payload.trich_nop_nha_truong || Math.round(tong_thu_hoc_phi * 0.15));
+      const thuc_nhan_cecics = Number(payload.thuc_nhan_cecics || (tong_thu_hoc_phi - thu_lao_giang_vien - thu_lao_tro_giang_ktv - chi_phi_vat_tu - chi_phi_to_chuc - trich_nop_nha_truong));
+
+      const patch = {
+        course_id,
+        tong_thu_hoc_phi,
+        thu_lao_giang_vien,
+        thu_lao_tro_giang_ktv,
+        chi_phi_vat_tu,
+        chi_phi_to_chuc,
+        trich_nop_nha_truong,
+        thuc_nhan_cecics,
+        trang_thai: String(payload.trang_thai || 'CHO_DUYET'),
+        nguoi_lap: String(payload.nguoi_lap || actor.email),
+        ngay_lap: String(payload.ngay_lap || todayVnYmd(now)),
+        nguoi_duyet: String(payload.nguoi_duyet || ''),
+        ngay_duyet: String(payload.ngay_duyet || ''),
+        ghi_chu: String(payload.ghi_chu || ''),
+      };
+      if (existing) {
+        const updated = store.update('CmeSettlements', existing.settlement_id, patch);
+        recordAudit(store, actor, 'UPDATE_CME_SETTLEMENT', 'CmeSettlements', existing.settlement_id, existing, updated, now);
+        return { data: updated };
+      }
+      const created = { settlement_id, ...patch };
+      store.append('CmeSettlements', created);
+      recordAudit(store, actor, 'CREATE_CME_SETTLEMENT', 'CmeSettlements', settlement_id, null, created, now);
+      return { data: created };
+    }
+
+    case 'importLegacyCme': {
+      // Nhập hàng loạt khóa học & hồ sơ học viên cũ
+      const { importLegacyCmeData } = require('./cme');
+      const res = importLegacyCmeData(store, payload, actor.email);
+      recordAudit(store, actor, 'IMPORT_LEGACY_CME', 'CmeCourses', 'BATCH', null, res, now);
+      return { data: res };
+    }
+
     default:
       throw new DomainError('UNKNOWN_ACTION', `Hành động không hỗ trợ: ${String(action)}`);
   }

@@ -98,11 +98,17 @@ flowchart TD
 - Kênh giải quyết các tình huống phát sinh vượt thẩm quyền của chuyên viên hành chính hoặc kỹ thuật viên (mô hình đặc chủng hỏng nặng trước ca thi tốt nghiệp, xung đột phòng học giữa hai Bộ môn lớn, lớp học xin mở gấp ngoài kế hoạch).
 - Nơi Ban Giám đốc Trung tâm xem xét bối cảnh lâm sàng, đưa ra chỉ đạo điều chuyển hoặc phê duyệt phương án dự phòng.
 
-### 9. ⏱️ Phân Hệ Thống Kê & Đối Soát Giờ Giảng (Faculty Hours & Audit)
+### 9. 🎓 Phân Hệ Đào Tạo Y Khoa Liên Tục (CME Lifelong Learning Hub)
+- **Cổng tuyển sinh trực tuyến**: Hỗ trợ đăng ký khóa học, thông báo chỉ tiêu, học phí và hướng dẫn chuyển khoản.
+- **Tái sử dụng hồ sơ học viên cũ thông minh**: Tự động tra cứu qua Số CCCD và Ngày sinh để tự động điền lại toàn bộ thông tin cá nhân, đơn vị công tác, email, chức danh và hồ sơ văn bằng cũ, giúp học viên không phải khai báo lại.
+- **Quy trình đào tạo khép kín**: Xác nhận học phí $\rightarrow$ Thông báo nhập học & đồng bộ Google Calendar $\rightarrow$ Làm bài Pre-test $\rightarrow$ Điểm danh từng buổi $\rightarrow$ Làm bài Post-test & Lượng giá kỹ năng lâm sàng $\rightarrow$ Khảo sát chất lượng khóa học $\rightarrow$ Cấp chứng chỉ CME & Lập bảng nghiệm thu - giải chi tài chính.
+- **Nạp dữ liệu khóa cũ (Legacy Import)**: Tiếp nhận lịch sử các khóa đào tạo, danh sách học viên cũ và mã chứng chỉ đã cấp trước đây vào hệ thống dữ liệu tập trung.
+
+### 10. ⏱️ Phân Hệ Thống Kê & Đối Soát Giờ Giảng (Faculty Hours & Audit)
 - Thống kê chi tiết khối lượng giờ giảng thực tế của từng cán bộ, giảng viên cơ hữu và giảng viên thỉnh giảng theo từng Bộ môn, hệ đào tạo và học phần.
 - Công cụ đối soát giờ giảng tự động giữa kế hoạch đào tạo ban đầu và dữ liệu giảng dạy thực tế phục vụ công tác thanh toán phụ cấp thù lao giảng dạy và báo cáo quyết toán năm học.
 
-### 10. ⚙️ Phân Hệ Quản Trị Danh Mục Dùng Chung (System Administration)
+### 11. ⚙️ Phân Hệ Quản Trị Danh Mục Dùng Chung (System Administration)
 - Phân quyền theo vai trò chặt chẽ: Ban Giám đốc, Đơn vị Hành chính, Đơn vị Kỹ thuật, Đầu mối Bộ môn, Giảng viên.
 - Quản lý danh mục cơ sở đào tạo, danh mục phòng học, danh mục Bộ môn và tài khoản người dùng công vụ trong toàn Trường.
 

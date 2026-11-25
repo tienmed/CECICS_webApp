@@ -86,6 +86,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       visible: true,
     },
     {
+      href: '/cme',
+      label: 'Đào tạo CME',
+      icon: '🎓',
+      badge: (db.CmeRegistrations || []).filter((r) => r.trang_thai === 'DA_CHUYEN_KHOAN').length,
+      visible: true,
+    },
+    {
       href: '/thong-ke-gio',
       label: 'Thống kê giờ giảng',
       icon: '⏱️',
