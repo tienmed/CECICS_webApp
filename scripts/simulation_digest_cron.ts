@@ -11,7 +11,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { getWeeklySimulationDigestArticles } from '../src/lib/simulation-crawler';
+import { getWeeklySimulationDigestData } from '../src/lib/simulation-crawler';
 import { summarizeWeeklySimulationDigest } from '../src/lib/simulation-summarizer';
 import { buildSimulationDigestEmailHtml } from '../src/lib/simulation-digest-email';
 import { sendNotificationEmail } from '../src/lib/mailer';
@@ -23,10 +23,10 @@ async function run() {
   const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
   const weekLabel = `Chuyên đề Tuần ${Math.ceil(now.getDate() / 7)}`;
 
-  // 1. Thu thập bài báo
-  console.log('1. Đang quét các bài báo mô phỏng quốc tế (PubMed, SSH, SESAM, INACSL)...');
-  const rawArticles = await getWeeklySimulationDigestArticles();
-  console.log(`-> Tìm thấy ${rawArticles.length} bài viết & tiêu chuẩn liên quan.`);
+  // 1. Thu thập bài báo & thông tin hội nghị
+  console.log('1. Đang quét bài báo (PubMed, SSH, SESAM) & Hội nghị mô phỏng quốc tế...');
+  const { articles: rawArticles, conferences } = await getWeeklySimulationDigestData();
+  console.log(`-> Tìm thấy ${rawArticles.length} bài viết học thuật & ${conferences.length} sự kiện/báo cáo hội nghị.`);
 
   // 2. Tóm tắt AI Tầng 1
   console.log('2. Đang tóm tắt học thuật & xây dựng khuyến nghị cho CECICS (AI Tầng 1)...');
@@ -38,6 +38,7 @@ async function run() {
     issueDate: dateStr,
     weekLabel: weekLabel,
     articles: summarizedArticles,
+    conferences: conferences,
   });
 
   // 4. Lưu bản sao lưu trữ

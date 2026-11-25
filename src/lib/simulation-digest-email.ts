@@ -1,15 +1,20 @@
 /**
  * CECICS Clinical Simulation Digest - HTML Email Template
  * Thiết kế giao diện bản tin chuyên ngành Mô phỏng Lâm sàng chuẩn y khoa
- * Tương thích Mobile, Máy tính bảng và Ứng dụng Desktop Mail
+ * Bao gồm:
+ * 1. Tiêu điểm học thuật tuần (Top Spotlight)
+ * 2. Nghiên cứu & Tiêu chuẩn thực hành mới (In situ, Lượng giá, Debriefing, AI/VR)
+ * 3. Chuyên mục Hội Nghị Quốc Tế & Định Hướng Nghiên Cứu (Hội nghị vừa diễn ra & Hội nghị sắp tới)
  */
 
 import { type SummarizedArticle } from './simulation-summarizer';
+import { type SimulationConference } from './simulation-crawler';
 
 export interface SimulationDigestEmailParams {
   issueDate: string; // dd/mm/yyyy
   weekLabel: string; // Tuần XX - Tháng MM/YYYY
   articles: SummarizedArticle[];
+  conferences?: SimulationConference[];
   webAppUrl?: string;
 }
 
@@ -18,6 +23,7 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
     issueDate,
     weekLabel,
     articles,
+    conferences = [],
     webAppUrl = process.env.NEXTAUTH_URL || 'https://cecics.pnt.edu.vn',
   } = params;
 
@@ -25,7 +31,7 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
   const spotlight = articles[0];
   const regularArticles = articles.slice(1);
 
-  const regularCardsHtml = regularArticles.map((art, idx) => {
+  const regularCardsHtml = regularArticles.map((art) => {
     const badgeColor = art.categories.some((c) => c.includes('In situ'))
       ? '#0284c7'
       : art.categories.some((c) => c.includes('Lượng giá'))
@@ -83,6 +89,103 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
     `;
   }).join('');
 
+  // Render phần Hội nghị (Đã diễn ra & Sắp diễn ra)
+  const pastConferences = conferences.filter((c) => c.timelineType === 'RECENT_PAST');
+  const upcomingConferences = conferences.filter((c) => c.timelineType === 'UPCOMING');
+
+  const pastConferencesHtml = pastConferences.map((conf) => {
+    const proceedingsHtml = (conf.keyProceedings || []).map((p) => `
+      <div style="background-color: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px; margin-top: 8px;">
+        <div style="font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 2px;">
+          📌 ${p.title}
+        </div>
+        <div style="font-size: 11px; color: #64748b; font-style: italic; margin-bottom: 4px;">
+          Tác giả/Báo cáo viên: ${p.speakerOrAuthor}
+        </div>
+        <div style="font-size: 12px; color: #334155; line-height: 1.4;">
+          ${p.summary}
+        </div>
+      </div>
+    `).join('');
+
+    return `
+      <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span style="background-color: #16a34a; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;">
+            ĐÃ BÁO CÁO / VỪA BẾ MẠC
+          </span>
+          <span style="font-size: 11px; color: #15803d; font-weight: 600;">
+            ${conf.dates} &bull; ${conf.location}
+          </span>
+        </div>
+        <h4 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 700; color: #14532d;">
+          ${conf.name}
+        </h4>
+        <p style="margin: 0 0 8px 0; font-size: 12px; color: #334155;">
+          ${conf.themeOrHighlights}
+        </p>
+
+        ${proceedingsHtml}
+
+        <div style="background-color: #ffffff; border-left: 3px solid #16a34a; padding: 8px 10px; border-radius: 4px; margin-top: 10px;">
+          <strong style="font-size: 11px; color: #14532d; display: block; margin-bottom: 2px;">
+            🎯 Chuyển giao thông tin cho Đơn vị Nghiên cứu CECICS:
+          </strong>
+          <span style="font-size: 12px; color: #1e293b; line-height: 1.4;">
+            ${conf.researchFocusForCECICS}
+          </span>
+        </div>
+
+        <div style="text-align: right; margin-top: 8px;">
+          <a href="${conf.website}" target="_blank" style="font-size: 11px; color: #15803d; font-weight: 600; text-decoration: none;">
+            Kỷ yếu & Tài liệu Hội nghị &rarr;
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const upcomingConferencesHtml = upcomingConferences.map((conf) => `
+    <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+        <span style="background-color: #ca8a04; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;">
+          SẮP DIỄN RA (CALL FOR ABSTRACTS)
+        </span>
+        <span style="font-size: 11px; color: #854d0e; font-weight: 600;">
+          ${conf.dates} &bull; ${conf.location}
+        </span>
+      </div>
+      <h4 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 700; color: #713f12;">
+        ${conf.name}
+      </h4>
+      <p style="margin: 0 0 6px 0; font-size: 12px; color: #451a03;">
+        ${conf.themeOrHighlights}
+      </p>
+      ${
+        conf.callForPapersDeadline
+          ? `
+      <div style="font-size: 12px; color: #b45309; font-weight: 600; margin-bottom: 8px;">
+        ⏰ ${conf.callForPapersDeadline}
+      </div>
+      `
+          : ''
+      }
+      <div style="background-color: #ffffff; border-left: 3px solid #eab308; padding: 8px 10px; border-radius: 4px;">
+        <strong style="font-size: 11px; color: #854d0e; display: block; margin-bottom: 2px;">
+          💡 Đề xuất định hướng nộp đề tài/học tập cho CECICS:
+        </strong>
+        <span style="font-size: 12px; color: #1e293b; line-height: 1.4;">
+          ${conf.researchFocusForCECICS}
+        </span>
+      </div>
+      <div style="text-align: right; margin-top: 8px;">
+        <a href="${conf.website}" target="_blank" style="font-size: 11px; color: #a16207; font-weight: 600; text-decoration: none;">
+          Cổng thông tin & Nộp bài &rarr;
+        </a>
+      </div>
+    </div>
+  `).join('');
+
   return `
 <!DOCTYPE html>
 <html lang="vi">
@@ -117,7 +220,7 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
             <td style="padding: 20px 24px; background-color: #eff6ff; border-bottom: 1px solid #dbeafe;">
               <p style="margin: 0; font-size: 13px; color: #1e3a8a; line-height: 1.6;">
                 <strong>Kính gửi: Toàn thể Cán bộ - Giảng viên & Nhân viên Trung tâm CECICS,</strong><br/>
-                Nhằm liên tục cập nhật những bước tiến học thuật mới nhất trên thế giới trong lĩnh vực Đào tạo Mô phỏng Lâm sàng, lượng giá kỹ năng y khoa, kỹ thuật Debriefing và mô phỏng <em>In situ</em>, Trung tâm trân trọng gửi tới Thầy/Cô và Anh/Chị bản tin chuyên ngành tuần này.
+                Nhằm liên tục cập nhật những bước tiến học thuật mới nhất trên thế giới trong lĩnh vực Đào tạo Mô phỏng Lâm sàng, lượng giá kỹ năng y khoa, mô phỏng <em>In situ</em>, cũng như <strong>các diễn đàn khoa học, hội nghị quốc tế và cơ hội công bố nghiên cứu</strong>, Trung tâm trân trọng gửi tới Thầy/Cô và Anh/Chị bản tin chuyên ngành tuần này.
               </p>
             </td>
           </tr>
@@ -177,8 +280,19 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
                   : ''
               }
 
+              <!-- CHUYÊN MỤC HỘI NGHỊ MÔ PHỎNG QUỐC TẾ & KỶ YẾU NGHIÊN CỨU -->
+              <h3 style="margin: 24px 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                🏛️ DIỄN ĐÀN HỘI NGHỊ & ĐỊNH HƯỚNG NGHIÊN CỨU QUỐC TẾ
+              </h3>
+              <p style="margin: 0 0 16px 0; font-size: 12px; color: #64748b; line-height: 1.5;">
+                Theo dõi các báo cáo nổi bật vừa diễn ra và cơ hội kết nối/nộp bài báo khoa học cho <strong>Đơn vị Nghiên cứu & Giảng viên CECICS</strong>:
+              </p>
+
+              ${pastConferencesHtml}
+              ${upcomingConferencesHtml}
+
               <!-- DANH MỤC NGHIÊN CỨU & XU HƯỚNG MỚI -->
-              <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+              <h3 style="margin: 28px 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
                 📚 NGHIÊN CỨU & TIÊU CHUẨN THỰC HÀNH MỚI NHẤT
               </h3>
 
