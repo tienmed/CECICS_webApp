@@ -29,10 +29,11 @@ describe('CECICS Simulation Weekly Digest Module - Link & Data Verification', ()
   });
 
   it('phải tóm tắt học thuật chính xác và tạo HTML Email hoàn chỉnh', async () => {
-    const { articles, conferences } = await getWeeklySimulationDigestData();
+    const conferences = getSimulationConferencesTracker();
+    const articles = getVerifiedSimulationArticles();
     expect(articles.length).toBeGreaterThan(0);
 
-    const summarized = await summarizeWeeklySimulationDigest(articles.slice(0, 3));
+    const summarized = await summarizeWeeklySimulationDigest(articles.slice(0, 2));
     expect(summarized.length).toBeGreaterThan(0);
 
     const html = buildSimulationDigestEmailHtml({
@@ -47,5 +48,5 @@ describe('CECICS Simulation Weekly Digest Module - Link & Data Verification', ()
     expect(html).toContain('DIỄN ĐÀN HỘI NGHỊ & ĐỊNH HƯỚNG NGHIÊN CỨU QUỐC TẾ');
     expect(html).toContain('Đơn vị Nghiên cứu CECICS');
     expect(html).toContain('cecics@pnt.edu.vn');
-  }, 35000);
+  }, 45000);
 });

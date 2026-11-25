@@ -19,16 +19,42 @@ describe('CECICS Simulation Digest History & Deduplication System', () => {
   });
 
   it('phải lọc bỏ các bài báo đã có trong sổ cái lịch sử', () => {
-    const articles = getVerifiedSimulationArticles();
+    const mockArticles = [
+      {
+        id: 'test-art-001',
+        title: 'Bài báo kiểm thử lọc trùng 1',
+        originalTitle: 'Test Article Deduplication 1',
+        source: 'PubMed / Europe PMC' as const,
+        authors: ['Tác giả Test'],
+        pubDate: '2026',
+        doi: '10.1000/test001',
+        url: 'https://doi.org/10.1000/test001',
+        abstract: 'Tóm tắt bài báo kiểm thử 1',
+        categories: ['Mô phỏng lâm sàng'],
+      },
+      {
+        id: 'test-art-002',
+        title: 'Bài báo kiểm thử mới 2',
+        originalTitle: 'Test Article New 2',
+        source: 'Simulation in Healthcare' as const,
+        authors: ['Tác giả Test 2'],
+        pubDate: '2026',
+        doi: '10.1000/test002',
+        url: 'https://doi.org/10.1000/test002',
+        abstract: 'Tóm tắt bài báo kiểm thử 2',
+        categories: ['Debriefing'],
+      },
+    ];
     const confs = getSimulationConferencesTracker();
 
     // Giả lập ghi nhận bài đầu tiên vào sổ cái
-    recordPublishedDigest([articles[0]], confs);
+    recordPublishedDigest([mockArticles[0]], confs);
 
-    // Khi lọc danh sách ban đầu, bài đầu tiên phải bị loại bỏ
-    const filtered = filterUnpublishedArticles(articles);
-    expect(filtered.some((a) => a.id === articles[0].id)).toBe(false);
-    expect(filtered.length).toBe(articles.length - 1);
+    // Khi lọc danh sách ban đầu, bài đầu tiên phải bị loại bỏ, chỉ còn bài thứ 2
+    const filtered = filterUnpublishedArticles(mockArticles);
+    expect(filtered.some((a) => a.id === mockArticles[0].id)).toBe(false);
+    expect(filtered.some((a) => a.id === mockArticles[1].id)).toBe(true);
+    expect(filtered.length).toBe(1);
   });
 
   it('sổ cái phải theo dõi tổng số đợt gửi và thời gian gửi gần nhất', () => {
