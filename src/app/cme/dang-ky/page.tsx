@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Search, CheckCircle, FileText, Upload, AlertCircle, ArrowRight, UserCheck, ShieldCheck } from 'lucide-react';
 
 interface Course {
   course_id: string;
@@ -192,7 +191,7 @@ export default function CmeRegistrationPage() {
         {successResult && (
           <div className="bg-emerald-50 border border-emerald-300 rounded-2xl p-6 shadow-sm">
             <div className="flex items-start space-x-4">
-              <CheckCircle className="w-8 h-8 text-emerald-600 shrink-0 mt-1" />
+              <span className="text-2xl text-emerald-600 shrink-0 mt-1">✅</span>
               <div className="space-y-2">
                 <h3 className="text-xl font-bold text-emerald-900">Đăng Ký Khóa Học Thành Công!</h3>
                 <p className="text-emerald-800 text-sm">
@@ -298,7 +297,7 @@ export default function CmeRegistrationPage() {
                     disabled={searching}
                     className="w-full bg-slate-800 hover:bg-slate-900 text-white rounded-lg p-2 text-sm font-semibold flex items-center justify-center space-x-1.5 transition disabled:opacity-50"
                   >
-                    <Search className="w-4 h-4" />
+                    <span>🔍</span>
                     <span>{searching ? 'Đang tra...' : 'Tra cứu'}</span>
                   </button>
                 </div>
@@ -306,7 +305,7 @@ export default function CmeRegistrationPage() {
 
               {searchFound === true && (
                 <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start space-x-3 text-xs text-emerald-900">
-                  <UserCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span className="text-base text-emerald-600 shrink-0 mt-0.5">👤</span>
                   <div>
                     <p className="font-bold">Đã tìm thấy hồ sơ cũ của học viên: {formData.ho_ten}!</p>
                     <p className="text-emerald-700">Toàn bộ thông tin đơn vị công tác, email, bằng cấp và CCHN đã được tự động điền vào biểu mẫu bên dưới.</p>
@@ -324,7 +323,7 @@ export default function CmeRegistrationPage() {
 
               {searchFound === false && (
                 <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center space-x-2 text-xs text-amber-800">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span className="text-amber-600 shrink-0">⚠️</span>
                   <span>Không tìm thấy hồ sơ cũ trên hệ thống. Quý học viên vui lòng nhập thông tin mới ở Bước 3 dưới đây.</span>
                 </div>
               )}
@@ -453,7 +452,7 @@ export default function CmeRegistrationPage() {
               {/* Thông tin chuyển khoản học phí */}
               <div className="border-t border-slate-200 pt-6">
                 <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center text-teal-800">
-                  <ShieldCheck className="w-4 h-4 mr-1.5" />
+                  <span className="mr-1.5">🛡️</span>
                   Hướng Dẫn Chuyển Khoản & Xác Nhận Học Phí
                 </h3>
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 mb-4 space-y-1">
@@ -500,7 +499,7 @@ export default function CmeRegistrationPage() {
                   className="px-6 py-3 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center space-x-2 disabled:opacity-50"
                 >
                   <span>{submitting ? 'Đang gửi đăng ký...' : 'Xác Nhận Đăng Ký Khóa Học'}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>➔</span>
                 </button>
               </div>
             </form>

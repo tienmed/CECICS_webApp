@@ -107,8 +107,9 @@ export default function RoomAssignmentPage() {
       `Đã nạp bổ sung phòng "${newRoomForm.ten}" thành công và lưu vào danh mục tái sử dụng.`
     );
 
-    if (res && res.data) {
-      const createdRoomId = res.data.room_id || newRoomForm.room_id;
+    if (res && res.ok && res.data) {
+      const roomData = res.data as { room_id?: string };
+      const createdRoomId = roomData.room_id || newRoomForm.room_id;
       if (quickRoomTargetSession && createdRoomId) {
         // Tự động chọn phòng vừa nạp cho buổi học/thi đang chọn
         setSelectedRooms((prev) => ({ ...prev, [quickRoomTargetSession]: createdRoomId }));

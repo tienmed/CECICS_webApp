@@ -1,25 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useApp } from '@/components/AppContext';
-import { 
-  GraduationCap, 
-  Users, 
-  Calendar, 
-  CheckCircle, 
-  Clock, 
-  DollarSign, 
-  FileCheck, 
-  Upload, 
-  BookOpen, 
-  AlertCircle,
-  Award,
-  BarChart3,
-  ExternalLink
-} from 'lucide-react';
+import { useApp } from '@/components/AppProvider';
 
 export default function CmeAdminPage() {
-  const { db, refresh, can, user } = useApp();
+  const { db, refresh, user, execute } = useApp();
   const [activeTab, setActiveTab] = useState<'courses' | 'registrations' | 'legacy_import' | 'assessments' | 'settlement'>('courses');
 
   // Filter
@@ -148,7 +133,7 @@ export default function CmeAdminPage() {
         <div>
           <div className="flex items-center space-x-2">
             <span className="p-2 bg-teal-100 text-teal-800 rounded-xl">
-              <GraduationCap className="w-6 h-6" />
+              🎓
             </span>
             <div>
               <h1 className="text-xl font-bold text-slate-800">Quản Trị Đào Tạo Liên Tục (CME)</h1>
@@ -166,7 +151,7 @@ export default function CmeAdminPage() {
             className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1.5 shadow-sm transition"
           >
             <span>Mở Cổng Đăng Ký Học Viên</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <span>↗</span>
           </a>
         </div>
       </div>
@@ -434,9 +419,9 @@ export default function CmeAdminPage() {
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-800 flex items-center">
-                <Upload className="w-4 h-4 mr-1.5 text-amber-600" />
-                Công Cụ Đẩy Dữ Liệu Các Khóa CME Cũ Vào Hệ Thống
+              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <span className="text-amber-600">📥</span>
+                <span>Công Cụ Đẩy Dữ Liệu Các Khóa CME Cũ Vào Hệ Thống</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 Cho phép nhập lịch sử các khóa đã đào tạo, danh sách học viên cũ và mã chứng chỉ đã cấp để học viên tra cứu tái sử dụng hồ sơ sau này.
