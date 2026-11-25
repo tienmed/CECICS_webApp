@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface Course {
@@ -17,7 +17,7 @@ interface Course {
   giang_vien_chu_nhiem: string;
 }
 
-export default function CmeRegistrationPage() {
+function CmeRegistrationContent() {
   const searchParams = useSearchParams();
   const defaultCourseId = searchParams.get('courseId') || 'CME-2026-02';
 
@@ -507,5 +507,19 @@ export default function CmeRegistrationPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function CmeRegistrationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-sm text-slate-500 font-medium">
+          Đang tải cổng đăng ký CME...
+        </div>
+      }
+    >
+      <CmeRegistrationContent />
+    </Suspense>
   );
 }
