@@ -1,50 +1,24 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { ROLE_LABELS, type Role, type UserRecord } from '@/core/types';
 
 export function LoginClient({
   error,
-  demoMode,
   hasGoogleOAuth,
   dataMode,
-  demoUsers,
 }: {
   error?: string;
-  demoMode: boolean;
+  demoMode?: boolean;
   hasGoogleOAuth: boolean;
   dataMode: 'sheets' | 'local';
-  demoUsers: UserRecord[];
+  demoUsers?: unknown[];
 }) {
-  const router = useRouter();
-  const [busyEmail, setBusyEmail] = useState<string | null>(null);
-  const [localError, setLocalError] = useState<string | null>(error || null);
-
-  async function loginAsDemo(email: string) {
-    setBusyEmail(email);
-    setLocalError(null);
-    try {
-      const res = await fetch('/api/demo-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.ok) {
-        setLocalError(json.error || 'Không thể đăng nhập.');
-        return;
-      }
-      window.location.href = '/tong-quan';
-    } finally {
-      setBusyEmail(null);
-    }
-  }
+  const [localError] = useState<string | null>(error || null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
         <div className="bg-teal-700 px-6 py-6 text-white">
           <div className="flex items-center gap-3">
             <div className="h-11 w-11 rounded-xl bg-white/15 flex items-center justify-center font-bold text-lg">
@@ -67,68 +41,59 @@ export function LoginClient({
           )}
 
           {/* Google Sign-In */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <button
               type="button"
               disabled={!hasGoogleOAuth}
               onClick={() => signIn('google', { callbackUrl: '/tong-quan' })}
-              className="w-full py-3 px-4 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-slate-800 flex items-center justify-center gap-3 shadow-xs transition-colors"
+              className="w-full py-3.5 px-4 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-slate-800 flex items-center justify-center gap-3 shadow-xs transition-colors"
             >
-              <span className="text-lg">🔐</span>
-              <span>
+              <span className="text-xl">🔐</span>
+              <span className="text-sm sm:text-base">
                 {hasGoogleOAuth
                   ? 'Đăng nhập bằng Google (@pnt.edu.vn / Danh sách trắng)'
-                  : 'Đăng nhập Google (chưa cấu hình AUTH_GOOGLE_ID trong .env.local)'}
+                  : 'Đăng nhập Google (chưa cấu hình AUTH_GOOGLE_ID trên Vercel)'}
               </span>
             </button>
-            <p className="text-xs text-slate-500 text-center">
+            <p className="text-xs text-slate-500 text-center leading-relaxed">
               Yêu cầu tài khoản email công vụ <code>@pnt.edu.vn</code> hoặc email ngoài đã được duyệt trong danh sách trắng.
-              Chế độ dữ liệu hiện tại: <strong>{dataMode === 'sheets' ? 'Google Sheets' : 'Local Demo'}</strong>.
+              Chế độ dữ liệu: <strong>{dataMode === 'sheets' ? 'Google Sheets (Thời gian thực)' : 'Local Demo'}</strong>.
             </p>
           </div>
 
-          {/* Demo Role Picker */}
-          {demoMode && demoUsers.length > 0 && (
-            <div className="border-t border-slate-200 pt-5">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-slate-900">
-                  Chế độ dùng thử — Chọn nhanh vai trò để kiểm thử
-                </h2>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-800">
-                  DEMO_MODE=true
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-80 overflow-y-auto pr-1">
-                {demoUsers.map((u) => (
-                  <button
-                    key={u.user_id}
-                    type="button"
-                    disabled={busyEmail !== null}
-                    onClick={() => loginAsDemo(u.email)}
-                    className="text-left p-3 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/40 transition-all disabled:opacity-50"
-                  >
-                    <div className="font-semibold text-sm text-slate-900 truncate">{u.ho_ten}</div>
-                    <div className="text-xs text-slate-500 truncate">{u.email}</div>
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {u.vai_tro.map((r) => (
-                        <span
-                          key={r}
-                          className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-medium"
-                        >
-                          {ROLE_LABELS[r as Role] || r}
-                        </span>
-                      ))}
-                      {u.la_nguoi_ngoai && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-medium">
-                          Ngoài trường (Whitelist)
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
+          {/* Quy chuẩn bảo mật & phân quyền thực tế */}
+          <div className="border-t border-slate-200 pt-5 space-y-3">
+            <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
+              <span>🛡️</span>
+              <span>Xác thực &amp; Phân quyền nghiệp vụ thực tế</span>
             </div>
-          )}
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2 leading-relaxed">
+              <p>
+                • <strong>Định danh tài khoản</strong>: Đăng nhập trực tiếp bằng tài khoản Google cá nhân. Hệ thống tự động đối chiếu thông tin với cơ sở dữ liệu nhân sự CECICS.
+              </p>
+              <p>
+                • <strong>Khu vực hoạt động</strong>: Mỗi tài khoản chỉ được truy cập và thao tác đúng các phân hệ chức năng tương ứng với vai trò được giao:
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-1 pt-1 font-medium text-slate-700">
+                <li className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-teal-600">⚙️</span>
+                  <span><strong>Admin</strong>: Quản trị danh mục &amp; tài khoản</span>
+                </li>
+                <li className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-teal-600">🚪</span>
+                  <span><strong>Điều phối</strong>: Xếp phòng &amp; duyệt đổi lịch</span>
+                </li>
+                <li className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-teal-600">🚨</span>
+                  <span><strong>Ban Lãnh đạo</strong>: Phê duyệt chỉ đạo &amp; báo cáo</span>
+                </li>
+                <li className="flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-teal-600">🩺</span>
+                  <span><strong>Giảng viên</strong>: Lịch dạy &amp; đổi ca cá nhân</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

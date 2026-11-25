@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { canPerform, isAdmin } from '@/core/permissions';
 import { ROLE_LABELS, type Role } from '@/core/types';
 import { useApp } from './AppProvider';
@@ -18,10 +19,9 @@ interface NavItem {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, db, dataMode, demoMode, loading, refresh, execute } = useApp();
+  const { user, db, dataMode, loading, refresh, execute } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
-  const [switching, setSwitching] = useState(false);
 
   const myNotifs = useMemo(
     () =>
@@ -99,24 +99,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     },
   ].filter((item) => item.visible);
 
-  async function handleDemoSwitch(email: string) {
-    setSwitching(true);
-    try {
-      await fetch('/api/demo-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      await refresh(true);
-      router.refresh();
-    } finally {
-      setSwitching(false);
-    }
-  }
-
   async function handleLogout() {
-    await fetch('/api/demo-login', { method: 'DELETE' });
-    window.location.href = '/dang-nhap';
+    try {
+      await fetch('/api/demo-login', { method: 'DELETE' });
+    } catch {
+      // Bỏ qua lỗi dọn cookie demo
+    }
+    try {
+      await signOut({ callbackUrl: '/dang-nhap', redirect: true });
+    } catch {
+      window.location.href = '/dang-nhap';
+    }
   }
 
   async function markAllRead() {
@@ -298,27 +291,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
-            {demoMode && (
-              <div className="flex items-center gap-1">
-                <span className="hidden md:inline text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded">
-                  Đổi vai trò:
-                </span>
-                <select
-                  aria-label="Chuyển vai trò thử nghiệm"
-                  disabled={switching}
-                  value={user.email}
-                  onChange={(e) => handleDemoSwitch(e.target.value)}
-                  className="text-xs border border-amber-300 bg-amber-50/70 text-slate-800 rounded-md px-1.5 py-1 sm:px-2 sm:py-1.5 max-w-[140px] sm:max-w-[240px]"
-                >
-                  {db.Users.filter((u) => u.kich_hoat).map((u) => (
-                    <option key={u.user_id} value={u.email}>
-                      {u.ho_ten}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
             <button
               onClick={() => refresh(true)}
               disabled={loading}
