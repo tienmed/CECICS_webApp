@@ -39,6 +39,7 @@ import { summarizeWeeklySimulationDigest } from '../src/lib/simulation-summarize
 import { buildSimulationDigestEmailHtml } from '../src/lib/simulation-digest-email';
 import { filterUnpublishedArticles, recordPublishedDigest } from '../src/lib/simulation-digest-history';
 import { fetchCurrentRealWeekActivity } from '../src/lib/real-simulation-activity';
+import { verifySingleLink } from '../src/lib/link-verifier';
 import { sendNotificationEmail } from '../src/lib/mailer';
 
 async function run() {
@@ -71,11 +72,35 @@ async function run() {
   console.log('3. Đang tóm tắt học thuật & xây dựng khuyến nghị cho CECICS (AI Tầng 1)...');
   const summarizedArticles = await summarizeWeeklySimulationDigest(finalArticles);
 
+  // 3b. CỔNG KIỂM CHỨNG LIÊN KẾT 100% THỰC TẾ (Live Link Verification Gate)
+  console.log('3b. Đang chạy kiểm chứng trực tiếp (Live Ping) 100% link bài báo gốc và link hội nghị...');
+  const verifiedArticles = [];
+  for (const art of summarizedArticles) {
+    const check = await verifySingleLink(art.url, 7000);
+    if (check.isAlive) {
+      console.log(`  [Link hợp lệ 200/Redirect] ${art.id}: ${art.url}`);
+      verifiedArticles.push(art);
+    } else {
+      console.warn(`  [LOẠI BỎ LINK LỖI/CHẾT] ${art.id}: ${art.url} (${check.error})`);
+    }
+  }
+
+  const verifiedConferences = [];
+  for (const conf of conferences) {
+    const check = await verifySingleLink(conf.website, 7000);
+    if (check.isAlive) {
+      verifiedConferences.push(conf);
+    } else {
+      console.warn(`  [LOẠI BỎ HỘI NGHỊ LINK LỖI] ${conf.id}: ${conf.website} (${check.error})`);
+    }
+  }
+  console.log(`-> Sau kiểm chứng: ${verifiedArticles.length}/${summarizedArticles.length} bài báo và ${verifiedConferences.length}/${conferences.length} hội nghị đạt chuẩn 100% link thật.`);
+
   // Nếu trong tuần có lớp mô phỏng thực tế đang diễn ra, cập nhật bài Spotlight gắn liền với lớp thật
-  if (realActivity && realActivity.activeSimClasses.length > 0 && summarizedArticles.length > 0) {
+  if (realActivity && realActivity.activeSimClasses.length > 0 && verifiedArticles.length > 0) {
     const realClass = realActivity.activeSimClasses[0];
     console.log(`-> Ánh xạ bài học Spotlight bám sát lớp thực tế: "${realClass.noi_dung}" (${realClass.giang_vien_phu_trach})`);
-    summarizedArticles[0].takeawayForCECICS = `Ứng dụng trực tiếp cho buổi thực hành "${realClass.noi_dung}" của ${realClass.doi_tuong_hoc_vien} (Giảng viên phụ trách: ${realClass.giang_vien_phu_trach}) đang triển khai tại CECICS. Thiết bị thực tế sử dụng: ${realClass.thiet_bi_yeu_cau}.`;
+    verifiedArticles[0].takeawayForCECICS = `Ứng dụng trực tiếp cho buổi thực hành "${realClass.noi_dung}" của ${realClass.doi_tuong_hoc_vien} (Giảng viên phụ trách: ${realClass.giang_vien_phu_trach}) đang triển khai tại CECICS. Thiết bị thực tế sử dụng: ${realClass.thiet_bi_yeu_cau}.`;
   }
 
   // 4. Render HTML Email
@@ -83,8 +108,8 @@ async function run() {
   const emailHtml = buildSimulationDigestEmailHtml({
     issueDate: dateStr,
     weekLabel: weekLabel,
-    articles: summarizedArticles,
-    conferences: conferences,
+    articles: verifiedArticles,
+    conferences: verifiedConferences,
   });
 
   // 5. Lưu bản sao lưu trữ
