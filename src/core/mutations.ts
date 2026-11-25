@@ -1,3 +1,4 @@
+import { dispatchLeastUsedEquipment } from './equipment-dispatch';
 import type { Rec, TableName } from './schema';
 import {
   type DatabaseSnapshot,
@@ -259,6 +260,9 @@ export type ActionName =
   | 'approveLateSimClass'
   | 'updateEquipment'
   | 'createEquipment'
+  | 'upsertEquipmentCatalog'
+  | 'upsertConsumable'
+  | 'autoDispatchEquipment'
   | 'reportIncident'
   | 'assessIncident'
   | 'confirmIncidentImpact'
@@ -1455,10 +1459,16 @@ export function executeAction(
       }
       const rec = {
         equipment_id,
+        catalog_id: String(payload.catalog_id || '').trim(),
         ten: String(payload.ten || '').trim(),
         nhom: String(payload.nhom || 'Khác').trim(),
         campus_id: String(payload.campus_id || 'HH'),
         trang_thai: String(payload.trang_thai || 'Hoạt động'),
+        so_seri: String(payload.so_seri || '').trim(),
+        nam_sx: String(payload.nam_sx || '').trim(),
+        vi_tri: String(payload.vi_tri || '').trim(),
+        so_luot_dung: Number(payload.so_luot_dung) || 0,
+        so_gio_dung: Number(payload.so_gio_dung) || 0,
         tu_ngay: todayVnYmd(now),
         ghi_chu: String(payload.ghi_chu || '').trim(),
       };
@@ -1478,10 +1488,16 @@ export function executeAction(
       const nextStatus = String(payload.trang_thai ?? existing.trang_thai);
       const statusChanged = nextStatus !== existing.trang_thai;
       const updated = store.update('Equipment', equipment_id, {
+        catalog_id: String(payload.catalog_id ?? existing.catalog_id ?? ''),
         ten: String(payload.ten ?? existing.ten),
         nhom: String(payload.nhom ?? existing.nhom),
         campus_id: String(payload.campus_id ?? existing.campus_id),
         trang_thai: nextStatus,
+        so_seri: String(payload.so_seri ?? existing.so_seri ?? ''),
+        nam_sx: String(payload.nam_sx ?? existing.nam_sx ?? ''),
+        vi_tri: String(payload.vi_tri ?? existing.vi_tri ?? ''),
+        so_luot_dung: payload.so_luot_dung !== undefined ? Number(payload.so_luot_dung) : existing.so_luot_dung,
+        so_gio_dung: payload.so_gio_dung !== undefined ? Number(payload.so_gio_dung) : existing.so_gio_dung,
         tu_ngay: statusChanged ? todayVnYmd(now) : existing.tu_ngay,
         ghi_chu: String(payload.ghi_chu ?? existing.ghi_chu),
       });
@@ -1495,6 +1511,113 @@ export function executeAction(
         }
       }
       return { data: updated };
+    }
+
+    case 'upsertEquipmentCatalog': {
+      if (!canPerform(actor, 'manage_equipment')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Kỹ thuật có quyền quản lý danh mục loại mô hình/thiết bị.');
+      }
+      const catalog_id = String(payload.catalog_id || '').trim();
+      if (!catalog_id) throw new DomainError('VALIDATION', 'Vui lòng cung cấp mã loại mô hình (catalog_id).');
+      const ten = String(payload.ten || '').trim();
+      if (!ten) throw new DomainError('VALIDATION', 'Vui lòng nhập tên loại mô hình/thiết bị.');
+
+      const existing = db.EquipmentCatalogs.find((c) => c.catalog_id === catalog_id);
+      if (existing) {
+        const updated = store.update('EquipmentCatalogs', catalog_id, {
+          ten,
+          nhom: String(payload.nhom ?? existing.nhom),
+          hang_sx: String(payload.hang_sx ?? existing.hang_sx),
+          dvt: String(payload.dvt ?? existing.dvt),
+          mo_ta: String(payload.mo_ta ?? existing.mo_ta),
+          so_luong_tong: payload.so_luong_tong !== undefined ? Number(payload.so_luong_tong) : existing.so_luong_tong,
+        });
+        recordAudit(store, actor, 'UPDATE_EQUIPMENT_CATALOG', 'EquipmentCatalogs', catalog_id, existing, updated, now);
+        return { data: updated };
+      } else {
+        const rec = {
+          catalog_id,
+          ten,
+          nhom: String(payload.nhom || 'Khác').trim(),
+          hang_sx: String(payload.hang_sx || '').trim(),
+          dvt: String(payload.dvt || 'Mô hình').trim(),
+          mo_ta: String(payload.mo_ta || '').trim(),
+          so_luong_tong: Number(payload.so_luong_tong) || 0,
+        };
+        store.append('EquipmentCatalogs', rec);
+        recordAudit(store, actor, 'CREATE_EQUIPMENT_CATALOG', 'EquipmentCatalogs', catalog_id, null, rec, now);
+        return { data: rec };
+      }
+    }
+
+    case 'upsertConsumable': {
+      if (!canPerform(actor, 'manage_equipment')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Kỹ thuật có quyền quản lý danh mục vật tư tiêu hao.');
+      }
+      const consumable_id = String(payload.consumable_id || '').trim();
+      if (!consumable_id) throw new DomainError('VALIDATION', 'Vui lòng cung cấp mã vật tư (consumable_id).');
+      const ten = String(payload.ten || '').trim();
+      if (!ten) throw new DomainError('VALIDATION', 'Vui lòng nhập tên vật tư tiêu hao.');
+
+      const existing = db.Consumables.find((c) => c.consumable_id === consumable_id);
+      if (existing) {
+        const updated = store.update('Consumables', consumable_id, {
+          ten,
+          nhom: String(payload.nhom ?? existing.nhom),
+          dvt: String(payload.dvt ?? existing.dvt),
+          dinh_muc_mac_dinh: payload.dinh_muc_mac_dinh !== undefined ? Number(payload.dinh_muc_mac_dinh) : existing.dinh_muc_mac_dinh,
+          ton_kho: payload.ton_kho !== undefined ? Number(payload.ton_kho) : existing.ton_kho,
+          ghi_chu: String(payload.ghi_chu ?? existing.ghi_chu),
+        });
+        recordAudit(store, actor, 'UPDATE_CONSUMABLE', 'Consumables', consumable_id, existing, updated, now);
+        return { data: updated };
+      } else {
+        const rec = {
+          consumable_id,
+          ten,
+          nhom: String(payload.nhom || 'Vật tư chung').trim(),
+          dvt: String(payload.dvt || 'Cái').trim(),
+          dinh_muc_mac_dinh: Number(payload.dinh_muc_mac_dinh) || 1,
+          ton_kho: Number(payload.ton_kho) || 0,
+          ghi_chu: String(payload.ghi_chu || '').trim(),
+        };
+        store.append('Consumables', rec);
+        recordAudit(store, actor, 'CREATE_CONSUMABLE', 'Consumables', consumable_id, null, rec, now);
+        return { data: rec };
+      }
+    }
+
+    case 'autoDispatchEquipment': {
+      if (!canPerform(actor, 'review_sim_class_tech')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Kỹ thuật có quyền điều phối thiết bị tự động.');
+      }
+      const sim_id = String(payload.sim_id || '');
+      const existingSim = db.SimClasses.find((s) => s.sim_id === sim_id);
+      if (!existingSim) throw new DomainError('NOT_FOUND', 'Không tìm thấy lớp mô phỏng.');
+
+      const catalog_id = payload.catalog_id ? String(payload.catalog_id) : undefined;
+      const count = Number(payload.count) || 1;
+      const campus_id = String(payload.campus_id || existingSim.campus_id);
+      const ngay = String(payload.ngay || existingSim.ngay);
+      const gio_bd = String(payload.gio_bd || existingSim.gio_bd);
+      const gio_kt = String(payload.gio_kt || existingSim.gio_kt);
+
+      const { dispatchLeastUsedEquipment: dispatchFn } = { dispatchLeastUsedEquipment };
+      const result = dispatchFn(
+        {
+          catalog_id,
+          count,
+          campus_id,
+          ngay,
+          gio_bd,
+          gio_kt,
+          sim_id,
+          exclude_equipment_ids: Array.isArray(payload.exclude_equipment_ids) ? payload.exclude_equipment_ids.map(String) : [],
+        },
+        db
+      );
+
+      return { data: result };
     }
 
     case 'reportIncident': {

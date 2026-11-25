@@ -1,0 +1,563 @@
+TRƯỜNG ĐẠI HỌC Y KHOA PHẠM NGỌC THẠCH,,,,,,,
+ Khoa:Trung tâm CECICS,,,,,,,
+,,,,,,,
+BÁO CÁO TỔNG HỢP VỊ TRÍ LẮP ĐẶT VÀ NHÂN SỰ TRỰC TIẾP QUẢN LÝ THIẾT BỊ - NHÓM THIẾT BỊ CÓ TRONG PHẦN MỀM AMS,,,,,,,
+Kỳ báo cáo: từ 01/01/2024 đến 01/06/2024,,,,,,,
+Ngày báo cáo: ……………….,,,,,,,
+,,,,,,,
+STT,Tên thiết bị,"Model, Hãng sản xuất, Xuất xứ",Số seri,Năm sản xuất,Thời gian đưa vào sử dụng,Vị trí lắp đặt đã cập nhật vào phần mềm AMS,Vị trí lắp đặt hiện tại
+,,,,,,,
+(1),(2),(3),(3'),(4),(5),(6),(7)
+1,Máy siêu âm cầm tay có đầu dò kép,VSCAN extend,VH260992N1,2020,2020,Lầu 8 Khu C,
+2,Máy siêu âm cầm tay có đầu dò kép,VSCAN extend,VH260888UY,2020,2020,Lầu 8 Khu C,
+3,Máy siêu âm cầm tay có đầu dò kép,VSCAN extend,VH261105TE,2020,2020,Lầu 8 Khu C,
+4,Máy đo độ bão hoà ô-xy máu (monitor),Model: 7500,502850154,2020,2020,Lầu 8 Khu C,
+5,Máy đo độ bão hoà ô-xy máu (monitor),Model: 7500,502846877,2020,2020,Lầu 8 Khu C,
+6,Bộ giả lập tiếng tim nghe tại giường bệnh nhân ,718-7003,03201123,2020,2020,Lầu 8 Khu C,
+7,Bộ giả lập tiếng tim nghe tại giường bệnh nhân ,718-7003,03201122,2020,2020,Lầu 8 Khu C,
+8,"Mô hình bán thân huấn luyện khám tim, phổi ",718-8802,N/A,2020,2020,Lầu 8 Khu C,
+9,Mô hình cánh tay thực hành tiêm trẻ em 1 tuổi,S406,N/A,2020,2020,Lầu 8 Khu C,
+10,Mô hình cánh tay thực hành tiêm trẻ em 5 tuổi ,S405,N/A,2020,2020,Lầu 8 Khu C,
+11,Mô hình cánh tay thực hành tiêm trẻ em sơ sinh,S408,N/A,2020,2020,Lầu 8 Khu C,
+12,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+13,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+14,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+15,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+16,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+17,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+18,Mô hình cắt may tầng sinh môn,S500.6,N/A,2020,2020,Lầu 8 Khu C,
+19,"Mô hình khung chậu nữ (tử cung, vòi trứng, buồng trứng)",H20/4,N/A,2019,2019,Lầu 8 Khu C,
+20,"Mô hình khung chậu nữ (tử cung, vòi trứng, buồng trứng)",H20/4,N/A,2019,2019,Lầu 8 Khu C,
+21,"Mô hình khung chậu nữ (tử cung, vòi trứng, buồng trứng)",H20/4,N/A,2019,2019,Lầu 8 Khu C,
+22,"Mô hình khung chậu nữ (tử cung, vòi trứng, buồng trứng)",H20/4,N/A,2019,2019,Lầu 8 Khu C,
+23,"Mô hình khung chậu nữ (tử cung, vòi trứng, buồng trứng)",H20/4,N/A,2019,2019,Lầu 8 Khu C,
+24,Mô hình tiêm nội khớp gối,70103,N/A,2020,2020,Lầu 8 Khu C,
+25,Mô hình tiêm nội khớp gối,70103,N/A,2020,2020,Lầu 8 Khu C,
+26,Mô hình tiêm nội khớp khuỷu tay,30080,N/A,2020,2020,Lầu 8 Khu C,
+27,Mô hình tiêm nội khớp khuỷu tay,30080,N/A,2020,2020,Lầu 8 Khu C,
+28,Mô hình thực hành cấp cứu lấy dị vật đường thở trẻ em,130-01050,N/A,2020,2020,Lầu 8 Khu C,
+29,Mô hình thực hành cấp cứu lấy dị vật đường thở trẻ em,130-01050,N/A,2020,2020,Lầu 8 Khu C,
+30,Mô hình thực hành cấp cứu lấy dị vật đường thở trẻ em,130-01050,N/A,2020,2020,Lầu 8 Khu C,
+31,Mô hình thực hành tiêm nội tủy xương trẻ em 1 tuổi ,S407,N/A,2020,2020,Lầu 8 Khu C,
+32,Mô hình thực hành tiêm nội tủy xương trẻ em 1 tuổi ,S407,N/A,2020,2020,Lầu 8 Khu C,
+33,Mô hình thực hành tiêm nội tủy xương trẻ em 1 tuổi ,S407,N/A,2020,2020,Lầu 8 Khu C,
+34,Mô hình thực hành tiêm nội tủy xương trẻ em sơ sinh,S409,N/A,2020,2020,Lầu 8 Khu C,
+35,Mô hình thực hành tiêm nội tủy xương trẻ em sơ sinh,S409,N/A,2020,2020,Lầu 8 Khu C,
+36,Mô hình thực hành tiêm nội tủy xương trẻ em sơ sinh,S409,N/A,2020,2020,Lầu 8 Khu C,
+37,Mô hình thực hành thăm khám hậu môn trực tràng,M92,N/A,2020,2020,Lầu 8 Khu C,
+38,Mô hình thực hành thăm khám hậu môn trực tràng,M92,N/A,2020,2020,Lầu 8 Khu C,
+39,Mô hình thực hành thăm khám hậu môn trực tràng,M92,N/A,2020,2020,Lầu 8 Khu C,
+40,Mô hình thực hành thăm khám mắt,M82,N/A,2020,2020,Lầu 8 Khu C,
+41,Mô hình thực hành thăm khám mắt,M82,N/A,2020,2020,Lầu 8 Khu C,
+42,Mô hình thực hành thăm khám mắt,M82,N/A,2020,2020,Lầu 8 Khu C,
+43,Mô hình thực hành thăm khám mắt,M82,N/A,2020,2020,Lầu 8 Khu C,
+44,Mô hình thực hành thăm khám mắt,M82,N/A,2020,2020,Lầu 8 Khu C,
+45,Mô hình thực hành thăm khám tai,MW12,N/A,2020,2020,Lầu 8 Khu C,
+46,Mô hình thực hành thăm khám tai,MW12,N/A,2020,2020,Lầu 8 Khu C,
+47,Mô hình thực hành thăm khám tai,MW12,N/A,2020,2020,Lầu 8 Khu C,
+48,Mô hình thực hành thăm khám tai,MW12,N/A,2020,2020,Lầu 8 Khu C,
+49,Mô hình thực hành thăm khám tai,MW12,N/A,2020,2020,Lầu 8 Khu C,
+50,Mô hình bệnh nhân hồi sức cấp cứu nam giới,Model: 212-02350 (SimMan3G),21239196600,2020,2020,Lầu 8 Khu C,
+51,Mô hình bệnh nhân hồi sức cấp cứu nam giới,Model: 212-02350 (SimMan3G),21240196608,2020,2020,Lầu 8 Khu C,
+52,Mô hình bệnh nhân hồi sức cấp cứu trẻ em lớn (≥5 tuổi),Model: 232-05050 (SimJunior),232UMS4019017,2020,2020,Lầu 8 Khu C,
+53,Mô hình bệnh nhân hồi sức cấp cứu trẻ em lớn (≥5 tuổi),Model: 232-05050 (SimJunior),232UMS4119001,2020,2020,Lầu 8 Khu C,
+54,Mô hình bệnh nhân hồi sức cấp cứu trẻ em nhỏ (≤ 2 tuổi),Model: 246-00050 (SimBaby),24647190696,2020,2020,Lầu 8 Khu C,
+55,Giường hồi sức cấp cứu bệnh nhân người lớn điều khiển điện,Model: 9LI5 (INSPIRE),200050540016,2020,2020,Lầu 8 Khu C,
+56,Giường hồi sức cấp cứu bệnh nhân người lớn điều khiển điện,Model: 9LI5,200050540017,2020,2020,Lầu 8 Khu C,
+57,Giường hồi sức cấp cứu trẻ em ,Model: 9LP0070 (EMPRICE),200050540020,2020,2020,Lầu 8 Khu C,
+58,Giường hồi sức cấp cứu trẻ em,Model: 9LP0070 (EMPRICE),200050540021,2020,2020,Lầu 8 Khu C,
+59,Giường hồi sức cấp cứu trẻ em,Model: 9LP0070 (EMPRICE),200050540022,2020,2020,Lầu 8 Khu C,
+60,"Mô hình thực hành quản lý đường thở (CPR, mở khí quản và đặt nội khí quản)",Model: S315.400,S315M2-02426,2020,2020,Lầu 8 Khu C,
+61,"Mô hình thực hành quản lý đường thở (CPR, mở khí quản và đặt nội khí quản)",Model: S315.400,S315M2-02427,2020,2020,Lầu 8 Khu C,
+62,Giường bệnh nhân hồi sức tích cực và chăm sóc đặc biệt,Model: PA-66250DXS,9004064,2020,2020,Lầu 8 Khu C,
+63,Monitor theo dõi bệnh nhân (đầu giường mỗi bệnh nhân),Model: BSM-3562,28532,2020,2020,Lầu 8 Khu C,
+64,Monitor theo dõi bệnh nhân (đầu giường mỗi bệnh nhân),Model: BSM-3562,28537,2020,2020,Lầu 8 Khu C,
+65,Monitor theo dõi bệnh nhân (đầu giường mỗi bệnh nhân),Model: BSM-3562,28539,2020,2020,Lầu 8 Khu C,
+66,Giường vận chuyển bệnh nhân,Model: PK-8031B,9001565INDO,2020,2020,Lầu 8 Khu C,
+67,Máy truyền dịch,Model: TE-LF600,1905010004,2020,2020,Lầu 8 Khu C,
+68,Mô hình huấn luyện ECG 12 kênh có chứng nhồi máu cơ tim,Model: S1020,E2001089,2020,2020,Lầu 8 Khu C,
+69,Mô hình huấn luyện ECG 12 kênh có chứng nhồi máu cơ tim,Model: S1020,E2001090,2020,2020,Lầu 8 Khu C,
+70,"Mô hình huấn luyện kỹ năng nội soi đại tràng, dạ dày, phế quản",EndoVR,UniES0165,2020,2020,Lầu 8 Khu C,
+71,Thiết bị mô phỏng 3D can thiệp nội mạch,CathlabVR,Cat000094,2020,2020,Lầu 8 Khu C,
+72,Mô hình huấn luyện kỹ năng siêu âm ổ bụng ,BPP- 024,N/A,2019,2019,Lầu 8 Khu C,
+73,Mô hình huấn luyện kỹ năng siêu âm tìm chấn thương ,BPP-024,N/A,2019,2019,Lầu 8 Khu C,
+74,Mô hình huấn luyện kỹ năng chọc dịch màng tim - Màng phổi có hướng dẫn siêu âm,BPP-020,N/A,2019,2019,Lầu 8 Khu C,
+75,Hệ thống mô phỏng huấn luyện kỹ năng siêu âm tim qua thành ngực và qua nội soi thực quản,Vimedix,VMDX2086,2020,2020,Lầu 8 Khu C,
+76,Hệ thống mô phỏng phẫu thuật nội soi ổ bụng LAPAROSCOPY,LapVR,UniLap0195,2020,2020,Lầu 8 Khu C,
+77,Hệ thống mô hình huấn luyện thực hành phẫu thuật và chăm sóc sau mổ,Juno,JNE001470,2020,2020,Lầu 8 Khu C,
+78,"Máy siêu âm màu, xách tay(kèm theo xe đẩy máy chính hãng)",EPIDOT SC,200317AE,2020,2020,Lầu 8 Khu C,
+79,"Máy siêu âm màu Doppler, 4D",HS-40,SIK0M3HN300004A,2020,2020,Lầu 8 Khu C,
+80,Mô hình thực hành khám thai và xoay thai nhi ngoài tử cung (ECV),LM-080,0107,2020,2020,Lầu 8 Khu C,
+81,Mô hình thực hành khám thai và xoay thai nhi ngoài tử cung (ECV),LM-080,0106,2020,2020,Lầu 8 Khu C,
+82,Mô hình thực hành khám khung chậu,LM-055,1268,2020,2020,Lầu 8 Khu C,
+83,Mô hình thực hành khám khung chậu,LM-055,1269,2020,2020,Lầu 8 Khu C,
+84,Mô hình thực hành khám khung chậu,LM-055,1270,2020,2020,Lầu 8 Khu C,
+85,Mô hình thực hành khám khung chậu,LM-055,1271,2020,2020,Lầu 8 Khu C,
+86,Mô hình khám tử cung buồng trứng,LM-110,0329,2020,2020,Lầu 8 Khu C,
+87,Mô hình khám tử cung buồng trứng,LM-110,0330,2020,2020,Lầu 8 Khu C,
+88,Mô hình khám tử cung buồng trứng,LM-110,0331,2020,2020,Lầu 8 Khu C,
+89,Mô hình khám tử cung buồng trứng,LM-110,0332,2020,2020,Lầu 8 Khu C,
+90,Mô hình vùng bụng chậu thăm khám phụ khoa,S504.100,N/A,2020,2020,Lầu 8 Khu C,
+91,Mô hình vùng bụng chậu thăm khám phụ khoa,S504.100,N/A,2020,2020,Lầu 8 Khu C,
+92,Mô hình vùng bụng chậu thăm khám phụ khoa,S504.100,N/A,2020,2020,Lầu 8 Khu C,
+93,Mô hình thực hành thăm khám âm đạo bằng mỏ vịt,S607,N/A,2020,2020,Lầu 8 Khu C,
+94,Mô hình thực hành thăm khám âm đạo bằng mỏ vịt,S607,N/A,2020,2020,Lầu 8 Khu C,
+95,Mô hình soi cổ tử cung kết hợp giải phẫu bệnh,US-10,H-200226-230,2020,2020,Lầu 8 Khu C,
+96,Mô hình soi cổ tử cung kết hợp giải phẫu bệnh,US-10,H-200226-229,2020,2020,Lầu 8 Khu C,
+97,Mô hình thực hành thăm khám vú,LM-018,11533,2020,2020,Lầu 8 Khu C,
+98,Mô hình thực hành thăm khám vú,LM-018,11534,2020,2020,Lầu 8 Khu C,
+99,Mô hình thực hành thăm khám vú,LM-018,11535,2020,2020,Lầu 8 Khu C,
+100,Mô hình thực hành thăm khám vú,LM-018,11536,2020,2020,Lầu 8 Khu C,
+101,Mô hình thực hành thăm khám vú,LM-018,11537,2020,2020,Lầu 8 Khu C,
+102,Mô hình thực hành tự thăm khám vú,LM-017,7647,2020,2020,Lầu 8 Khu C,
+103,Mô hình thực hành tự thăm khám vú,LM-017,7646,2020,2020,Lầu 8 Khu C,
+104,Mô hình thực hành tự thăm khám vú,LM-017,7645,2020,2020,Lầu 8 Khu C,
+105,Mô hình thực hành tự thăm khám vú,LM-017,7644,2020,2020,Lầu 8 Khu C,
+106,Mô hình thực hành tự thăm khám vú,LM-017,7643,2020,2020,Lầu 8 Khu C,
+107,Mô hình khung chậu thực hành đỡ sinh (tăng số lượng),S500,N/A,2020,2020,Lầu 8 Khu C,
+108,Mô hình khung chậu thực hành đỡ sinh (tăng số lượng),S500,N/A,2020,2020,Lầu 8 Khu C,
+109,Mô hình khung chậu thực hành đỡ sinh (tăng số lượng),S500,N/A,2020,2020,Lầu 8 Khu C,
+110,Mô hình sản phụ,SimMom (377-03050),377UMS4819003 ,2020,2020,Lầu 8 Khu C,
+111,Bàn sản khoa đa năng,CHS-EX820,EX81909623,2020,2020,Lầu 8 Khu C,
+112,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+113,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+114,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+115,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+116,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+117,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+118,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+119,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+120,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+121,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+122,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+123,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+124,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+125,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+126,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+127,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+128,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+129,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+130,Bàn khám bệnh nhân có thể điều chỉnh,4000,N/A,2020,2020,Lầu 8 Khu C,
+131,Mô hình sản vùng bụng chậu Susie (thực hành thăm khám thai và đỡ sinh) (tăng số lượng),S500.200,S500.200-2004144,2020,2020,Lầu 8 Khu C,
+132,Mô hình sản vùng bụng chậu Susie (thực hành thăm khám thai và đỡ sinh) (tăng số lượng),S500.200,S500.200-2004145,2020,2020,Lầu 8 Khu C,
+133,Mô hình sản vùng bụng chậu Susie (thực hành thăm khám thai và đỡ sinh) (tăng số lượng),S500.200,S500.200-2004146,2020,2020,Lầu 8 Khu C,
+134,Mô hình thực hành quản lý đường thở trẻ sơ sinh (CPR + đặt nội khí quản) ,S320,N/A,2020,2020,Lầu 8 Khu C,
+135,Mô hình thực hành quản lý đường thở trẻ sơ sinh (CPR + đặt nội khí quản) ,S320,N/A,2020,2020,Lầu 8 Khu C,
+136,Mô hình thực hành quản lý đường thở trẻ em (CPR + đặt nội khí quản),S314,N/A,2020,2020,Lầu 8 Khu C,
+137,Mô hình thực hành quản lý đường thở trẻ em (CPR + đặt nội khí quản),S314,N/A,2020,2020,Lầu 8 Khu C,
+138,"Mô hình huấn luyện điều dưỡng, chăm sóc bệnh nhân đa năng (có các vết thương kèm theo)",325-05050,325UMS1120002,2020,2020,Lầu 8 Khu C,
+139,"Mô hình huấn luyện điều dưỡng, chăm sóc bệnh nhân đa năng (có các vết thương kèm theo)",325-05050,325UMS1020012,2020,2020,Lầu 8 Khu C,
+140,Mô hình thực hành thăm khám bụng,MW43,N/A,2020,2020,Lầu 8 Khu C,
+141,Mô hình thực hành thăm khám bụng,MW43,N/A,2020,2020,Lầu 8 Khu C,
+142,Mô hình thực hành thăm khám bụng,MW43,N/A,2020,2020,Lầu 8 Khu C,
+143,Mô hình thực hành thăm khám bụng,MW43,N/A,2020,2020,Lầu 8 Khu C,
+144,Mô hình thực hành thăm khám bụng,MW43,N/A,2020,2020,Lầu 8 Khu C,
+145,Hệ thống huấn luyện thăm khám ổ bụng,AbSim,20-05,2020,2020,Lầu 8 Khu C,
+146,Hệ thống huấn luyện thăm khám ổ bụng,AbSim,20-06,2020,2020,Lầu 8 Khu C,
+147,"Mô hình thực hành tiêm đa năng (tiêm bắp, tĩnh mạch và dưới da...)",LM-074,1642,2020,2020,Lầu 8 Khu C,
+148,"Mô hình thực hành tiêm đa năng (tiêm bắp, tĩnh mạch và dưới da...)",LM-074,1657,2020,2020,Lầu 8 Khu C,
+149,"Mô hình thực hành tiêm đa năng (tiêm bắp, tĩnh mạch và dưới da...)",LM-074,1658(1659),2020,2020,Lầu 8 Khu C,
+150,Mô hình cánh tay thủ thuật tiêm động mạch,LF00995U,N/A,2019,2019,Lầu 8 Khu C,
+151,Mô hình cánh tay thủ thuật tiêm động mạch,LF00995U,N/A,2019,2019,Lầu 8 Khu C,
+152,Mô hình cánh tay thủ thuật tiêm động mạch,LF00995U,N/A,2019,2019,Lầu 8 Khu C,
+153,Mô hình cánh tay thủ thuật tiêm động mạch,LF00995U,N/A,2019,2019,Lầu 8 Khu C,
+154,Mô hình cánh tay thủ thuật tiêm động mạch,LF00995U,N/A,2019,2019,Lầu 8 Khu C,
+155,Mô hình bàn tay trẻ em cho thủ thuật tiêm truyền,M95,N/A,2020,2020,Lầu 8 Khu C,
+156,Mô hình bàn tay trẻ em cho thủ thuật tiêm truyền,M95,N/A,2020,2020,Lầu 8 Khu C,
+157,Mô hình thực hành đo huyết áp cánh tay,S415,BP-11208072,2020,2020,Lầu 8 Khu C,
+158,Mô hình thực hành đo huyết áp cánh tay,S415,BP-11208071,2020,2020,Lầu 8 Khu C,
+159,Mô hình thực hành đo huyết áp cánh tay,S415,BP-11208070,2020,2020,Lầu 8 Khu C,
+160,Mô hình đặt thông tiểu nam,MW2A,N/A,2020,2020,Lầu 8 Khu C,
+161,Mô hình đặt thông tiểu nam,MW2A,N/A,2020,2020,Lầu 8 Khu C,
+162,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720036,2020,2020,Lầu 8 Khu C,
+163,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720035,2020,2020,Lầu 8 Khu C,
+164,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720028,2020,2020,Lầu 8 Khu C,
+165,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720026,2020,2020,Lầu 8 Khu C,
+166,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720017,2020,2020,Lầu 8 Khu C,
+167,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720016,2020,2020,Lầu 8 Khu C,
+168,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720014,2020,2020,Lầu 8 Khu C,
+169,Mô hình thực hành hồi sinh tim phổi người lớn bán thân có kiểm soát ,171-00160,1710720013,2020,2020,Lầu 8 Khu C,
+170,Mô hình thực hành hồi sinh tim phổi trẻ em có kiểm soát,181-00150,1814719014,2020,2020,Lầu 8 Khu C,
+171,Mô hình huấn luyện chọc hút dịch màng bụng có hướng dẫn của siêu âm,PAC-20,N/A,2020,2020,Lầu 8 Khu C,
+172,Mô hình huấn luyện chọc hút dịch màng bụng có hướng dẫn của siêu âm,PAC-20,N/A,2020,2020,Lầu 8 Khu C,
+173,"Mô hình khám vùng cổ, tuyến giáp",074,N/A,2020,2020,Lầu 8 Khu C,
+174,"Mô hình khám vùng cổ, tuyến giáp",074,N/A,2020,2020,Lầu 8 Khu C,
+175,"Thiết bị huấn luyện kỹ năng nghe tiếng tim, phổi",718-2710,N/A,2020,2020,Lầu 8 Khu C,
+176,"Mô hình bán thân huấn luyện kĩ năng khám tim, phổi ",Harvey,UM758,2020,2020,Lầu 8 Khu C,
+177,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+178,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+179,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+180,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+181,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+182,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+183,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+184,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+185,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+186,Đèn Clar khám Tai Mũi Họng,TL-06A,N/A,2020,2020,Lầu 8 Khu C,
+187,Mô hình huấn luyện đặt đường truyền tĩnh mạch trung tâm từ ngoại vi có hướng dẫn siêu âm,MW18,N/A,2020,2020,Lầu 8 Khu C,
+188,Mô hình huấn luyện đặt đường truyền tĩnh mạch trung tâm từ ngoại vi có hướng dẫn siêu âm,MW18,N/A,2020,2020,Lầu 8 Khu C,
+189,Lồng ấp trẻ sơ sinh,Model: CHS-i1000,I1K1906312,2019,2019,Lầu 8 Khu C,
+190,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+191,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+192,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+193,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+194,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+195,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+196,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+197,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+198,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+199,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+200,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+201,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+202,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+203,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+204,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+205,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+206,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+207,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+208,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2020,2020,Lầu 8 Khu C,
+209,Ống nghe điện tử Littmann 3200,3200,20010002159860,2020,2020,Lầu 8 Khu C,
+210,Ống nghe điện tử Littmann 3200,3200,160033,2020,2020,Lầu 8 Khu C,
+211,Ống nghe điện tử Littmann 3200,3200,160019,2020,2020,Lầu 8 Khu C,
+212,Ống nghe điện tử Littmann 3200,3200,160088,2020,2020,Lầu 8 Khu C,
+213,Ống nghe điện tử Littmann 3200,3200,159853,2020,2020,Lầu 8 Khu C,
+214,Ống nghe điện tử Littmann 3200,3200,121482,2020,2020,Lầu 8 Khu C,
+215,Ống nghe điện tử Littmann 3200,3200,121123,2020,2020,Lầu 8 Khu C,
+216,Ống nghe điện tử Littmann 3200,3200,121567,2020,2020,Lầu 8 Khu C,
+217,Ống nghe điện tử Littmann 3200,3200,160095,2020,2020,Lầu 8 Khu C,
+218,Ống nghe điện tử Littmann 3200,3200,159952,2020,2020,Lầu 8 Khu C,
+219,Ống nghe điện tử Littmann 3200,3200,160026,2020,2020,Lầu 8 Khu C,
+220,Ống nghe điện tử Littmann 3200,3200,159877,2020,2020,Lầu 8 Khu C,
+221,Ống nghe điện tử Littmann 3200,3200,160118,2020,2020,Lầu 8 Khu C,
+222,Ống nghe điện tử Littmann 3200,3200,160040,2020,2020,Lầu 8 Khu C,
+223,Ống nghe điện tử Littmann 3200,3200,164192,2020,2020,Lầu 8 Khu C,
+224,Ống nghe điện tử Littmann 3200,3200,164314,2020,2020,Lầu 8 Khu C,
+225,Ống nghe điện tử Littmann 3200,3200,164406,2020,2020,Lầu 8 Khu C,
+226,Ống nghe điện tử Littmann 3200,3200,164338,2020,2020,Lầu 8 Khu C,
+227,Ống nghe điện tử Littmann 3200,3200,161047,2020,2020,Lầu 8 Khu C,
+228,Ống nghe điện tử Littmann 3200,3200,164437,2020,2020,Lầu 8 Khu C,
+229,"Thiết bị tạo nhịp tim, rung miu, ECG",200-20250 (HEARTSIM 200),N/A,2020,2020,Lầu 8 Khu C,
+230,Mô hình đặt thông tiểu nữ,MW2B,N/A,2020,2020,Lầu 8 Khu C,
+231,Mô hình đặt thông tiểu nữ,MW2B,N/A,2020,2020,Lầu 8 Khu C,
+232,Mô hình thực hành đặt nội khí quản trẻ em,255-00001,255UTS4419001,2020,2020,Lầu 8 Khu C,
+233,Mô hình thực hành đặt nội khí quản trẻ em,255-00001,255UTS4419004,2020,2020,Lầu 8 Khu C,
+234,Mô hình thực hành đặt nội khí quản trẻ em,255-00001,255UTS4419005,2020,2020,Lầu 8 Khu C,
+235,Mô hình cổ ngực huấn luyện kỹ năng đặt CVC,2400,N/A,2020,2020,Lầu 8 Khu C,
+236,Mô hình cổ ngực huấn luyện kỹ năng đặt CVC,2400,N/A,2020,2020,Lầu 8 Khu C,
+237,Mô hình thực hành đặt nội khí quản người lớn,250-00033,N/A,2020,2020,Lầu 8 Khu C,
+238,Mô hình thực hành đặt nội khí quản người lớn,250-00033,N/A,2020,2020,Lầu 8 Khu C,
+239,Mô hình thực hành đặt nội khí quản người lớn,250-00033,N/A,2020,2020,Lầu 8 Khu C,
+,,,,,,,
+TRƯỜNG ĐẠI HỌC Y KHOA PHẠM NGỌC THẠCH,,,,,,,
+ Khoa: Trung tâm CECICS,,,,,,,
+,,,,,,,
+BÁO CÁO TỔNG HỢP VỊ TRÍ LẮP ĐẶT VÀ NHÂN SỰ TRỰC TIẾP QUẢN LÝ THIẾT BỊ - NHÓM THIẾT BỊ CHƯA CÓ TRONG PHẦN MỀM AMS,,,,,,,
+Kỳ báo cáo: từ 01/01/2024 đến 01/06/2024,,,,,,,
+Ngày báo cáo: ……………….,,,,,,,
+,,,,,,,
+STT,Tên thiết bị,"Model, Hãng sản xuất, Xuất xứ",Số seri,Năm sản xuất,Thời gian đưa vào sử dụng,Vị trí lắp đặt trước khi di dời,Vị trí lắp đặt hiện tại
+,,,,,,,
+(1),(2),(3),(3'),(4),(5),(6),(7)
+1,Hệ thống Learning Space Enterprise,CAE,,2020,2020,Lầu 8 Khu C ,
+2,Máy đo điện tim 6 kênh,FX-8200,80200669,2020,2020,Lầu 8 Khu C ,
+3,Bơm tiêm điện,TE-SS700,1906010275,2020,2020,Lầu 8 Khu C ,
+4,Máy sốc điện và tạo nhịp,TEC-5631,10080,2020,2020,Lầu 8 Khu C ,
+5,"Monitor theo dõi bệnh nhân trung tâm (đặt tại phòng trực trung tâm, kết nối mạng)",CNS-6201,02138,2020,2020,Lầu 8 Khu C ,
+6,Máy trợ thở,Savina,ASND-0208,2020,2020,Lầu 8 Khu C ,
+7,Mô hình thực hành siêu âm sản phụ khoa,BODYWORKS,BW0106,2020,2020,Lầu 8 Khu C ,
+8,Mô hình thực hành thăm khám thai và nghe tim thai,LM-043N,0683,2020,2020,Lầu 8 Khu C ,
+9,Mô hình thực hành thăm khám thai và nghe tim thai,LM-043N,0685,2020,2020,Lầu 8 Khu C ,
+10,Mô hình thực hành thăm khám khung chậu (có mô phỏng 3D),LM-095N,091,2020,2020,Lầu 8 Khu C ,
+11,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),20005054001,2020,2020,Lầu 8 Khu C ,
+12,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),20005054002,2020,2020,Lầu 8 Khu C ,
+13,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),20005054003,2020,2020,Lầu 8 Khu C ,
+14,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),20005054004,2020,2020,Lầu 8 Khu C ,
+15,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),20005054005,2020,2020,Lầu 8 Khu C ,
+16,Mô hình thực hành nghe tim phổi trẻ em 1 tuổi cơ bản,S312.200,VS-1644-857,2020,2020,Lầu 8 Khu C ,
+17,Mô hình thực hành nghe tim phổi trẻ em 1 tuổi cơ bản,S312.200,VS-1644-858,2020,2020,Lầu 8 Khu C ,
+18,Mô hình thực hành nghe tim phổi trẻ em 1 tuổi cơ bản,S312.200,VS-1644-859,2020,2020,Lầu 8 Khu C ,
+19,Mô hình thực hành nghe tim phổi trẻ em 5 tuổi cơ bản,S314.200,VS-1644-860,2020,2020,Lầu 8 Khu C ,
+20,Mô hình thực hành nghe tim phổi trẻ em 5 tuổi cơ bản,S314.200,VS-1644-861,2020,2020,Lầu 8 Khu C ,
+21,Mô hình thực hành nghe tim phổi trẻ em 5 tuổi cơ bản,S314.200,VS-1644-862,2020,2020,Lầu 8 Khu C ,
+22,Mô hình thực hành chọc dò tủy sống người lớn,M43B,N/A,2020,2020,Lầu 8 Khu C ,
+23,Mô hình thực hành chọc dò tủy sống trẻ em,M43D,N/A,2020,2020,Lầu 8 Khu C ,
+24,Mô hình tiêm nội khớp vai,70200,200285,2020,2020,Lầu 8 Khu C ,
+25,Mô hình tiêm nội khớp vai,70200,200288,2020,2020,Lầu 8 Khu C ,
+26,Máy đo điện tim 6 kênh,EPG 6 VIEW,R6-19031759,2020,2020,Lầu 8 Khu C ,
+27,Máy sốc tim tự động (NIHON KOHKEN CARDIOLIFE AED-3100),AED-3100,13695,2021,2021,Lầu 8 Khu C ,
+28,Mô hình cánh tay thủ thuật tiêm động mạch,S402.100,1408525,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+29,Mô hình cánh tay thủ thuật tiêm động mạch,S402.100,1408526,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+30,Máy Doppler cầm tay,BT-200,CAG70197,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+31,Ống nghe điện tử Littmann 3200,3200,15010001271196,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+32,Ống nghe điện tử Littmann 3200,3200,17070001597557,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+33,Ống nghe điện tử Littmann 3200,3200,17070001626158,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+34,Ống nghe điện tử Littmann 3200,3200,17030001558927,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+35,"Thiết bị huấn luyện kỹ năng nghe tiếng tim, phổi",718-2710,8170097,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+36,Bộ giả lập tiếng tim nghe tại giường bệnh nhân ,718-7003,8171058,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+37,"Mô hình khám vùng cổ, tuyến giáp",074,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+38,"Mô hình khám vùng cổ, tuyến giáp",074,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+39,"Mô hình khám vùng cổ, tuyến giáp",074,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+40,Mô hình thực hành tự thăm khám vú,L50,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+41,Mô hình thực hành tự thăm khám vú,L50,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+42,Mô hình thực hành tự thăm khám vú,L50,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+43,Mô hình đặt thông tiểu nữ,MW2B,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+44,Mô hình đặt thông tiểu nữ,MW2B,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+45,Mô hình đặt thông tiểu nữ,MW2B,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+46,Mô hình đặt Catheter tĩnh mạch trung tâm có siêu âm,M93UB,N/A,2017,2017,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+47,Mô hình thực tập CPR trẻ sơ sinh,S104,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+48,Mô hình thực tập CPR trẻ sơ sinh,S104,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+49,Mô hình thực tập CPR trẻ sơ sinh,S104,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+50,Mô hình thực tập CPR trẻ sơ sinh,S104,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+51,Mô hình thực tập CPR trẻ sơ sinh,S104,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+52,Mô hình thực tập CPR trẻ em 5 tuổi,S154,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+53,Mô hình thực tập CPR trẻ em 5 tuổi,S154,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+54,Mô hình thực tập CPR trẻ em 5 tuổi,S154,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+55,Mô hình thực tập CPR trẻ em 5 tuổi,S154,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+56,Mô hình thực tập CPR người lớn bán thân,S309,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+57,Mô hình thực tập CPR người lớn bán thân,S309,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+58,Mô hình thực tập CPR người lớn bán thân,S309,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+59,Mô hình thực tập CPR người lớn bán thân,S309,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+60,Mô hình thực tập quản lý đường thở người lớn ,MW13,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+61,Mô hình thực tập quản lý đường thở người lớn ,MW13,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+62,Mô hình thực tập quản lý đường thở người lớn ,MW13,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+63,Mô hình thực tập quản lý đường thở người lớn ,MW13,N/A,2016,2016,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+64,Máy tạo oxy gen 7F-5,7F-5,140600277,2015,2015,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+65,Máy tạo oxy gen 7F-5,7F-5,140600255,2015,2015,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+66,Máy tạo oxy gen 7F-5,7F-5,140600259,2015,2015,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+67,Bàn sản khoa đa năng,KL-2E,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+68,Mô hình chăm sóc trẻ sơ sinh nữ,LM-026G,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+69,Giường nhũ nhi,HORIZON 10,140053840006,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+70,Bộ treo đầu giường bệnh nhân,6200A,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+71,Bộ treo đầu giường bệnh nhân,6200A,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+72,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+73,Trạm khám dấu hiệu sinh tồn treo tường,DW-1050,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+74,Bàn cho ăn bệnh nhân,JR-011,15232,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+75,Bàn cho ăn bệnh nhân,ASSIST,,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+76,Tủ đầu giường bệnh nhân,9CR0050,140053840004,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+77,Tủ đầu giường bệnh nhân,9CR0050,140053840005,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+78,Giường hồi sức cấp cứu bệnh nhân người lớn điều khiển điện,INSPIRE,140053840007,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+79,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),140054360001,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+80,Xe đẩy dụng cụ và thuốc cấp cứu,9CL0050 (EUROFUTURA),140054360002,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+81,Mô hình cổ ngực huấn luyện kỹ năng đặt CVC,2400,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+82,Mô hình cổ ngực huấn luyện kỹ năng đặt CVC,2400,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+83,"Mô hình chọc dò màng tim, màng phổi ",LM093,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+84,"Mô hình chọc dò màng tim, màng phổi ",LM093,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+85,"Mô hình chọc dò màng tim, màng phổi ",LM093,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+86,Mô hình thực hành chọc dò tủy sống người lớn,M43B,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+87,Mô hình thực hành chọc dò tủy sống người lớn,M43B,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+88,Mô hình thực hành khám mắt ,M82,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+89,Mô hình thực hành khám tai,M88,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+90,Mô hình thực hành thăm khám tiền liệt tuyến ,S230.3,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+91,Mô hình thực hành thăm khám tiền liệt tuyến ,S230.3,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+92,Mô hình thực hành thăm khám tiền liệt tuyến ,S230.3,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+93,Mô hình thăm khám hậu môn trực tràng ,60120,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+94,Mô hình thăm khám hậu môn trực tràng ,60120,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+95,Mô hình thăm khám hậu môn trực tràng ,60120,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+96,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+97,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+98,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+99,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+100,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+101,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+102,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+103,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+104,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+105,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+106,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+107,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+108,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+109,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+110,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+111,Mô hình hồi sinh tim phổi đầu trắng mình xanh,ACTAR 911,N/A,2014,2014,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+112,Giường JOSONCARE,ES-96HD,1208043463,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+113,Giường JOSONCARE,ES-96HD,1208043462,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+114,Mô hình thăm khám hậu môn trực tràng ,,N/A,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+115,Mô hình thăm khám hậu môn trực tràng ,,N/A,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+116,Mô hình thăm khám hậu môn trực tràng ,,N/A,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+117,Mô hình thăm khám hậu môn trực tràng ,,N/A,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+118,Mô hình thăm khám hậu môn trực tràng ,,N/A,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
+119,Mô hình thực hành hồi sinh tim phổi người lớn bán thân,153900,,2012,2012,"Kho lưu trữ 
+Lầu 5 Khu A2
+",
