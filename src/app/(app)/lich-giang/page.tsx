@@ -55,6 +55,11 @@ export default function SchedulePage() {
   const [syncing, setSyncing] = useState(false);
   const [syncSuccessMsg, setSyncSuccessMsg] = useState('');
   const [syncErrorMsg, setSyncErrorMsg] = useState('');
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailStatusMsg, setEmailStatusMsg] = useState('');
+  const [emailErrorMsg, setEmailErrorMsg] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState(user?.email || 'cecics@pnt.edu.vn');
   const [editing, setEditing] = useState<SessionRecord | null>(null);
   const [slotSuggestions, setSlotSuggestions] = useState<TimeSlotSuggestion[]>([]);
   const [selectedTemplateCourse, setSelectedTemplateCourse] = useState('');
@@ -477,6 +482,34 @@ export default function SchedulePage() {
               <span>📅</span>
               <span>Đồng bộ Google Calendar</span>
             </button>
+
+            {/* Nút In Ký Lưu và Gửi Email Lịch Tuần dành cho Thư ký / Hành chính */}
+            <div className="flex items-center gap-1.5">
+              <a
+                href="/api/export-weekly-schedule-pdf?week=12&print=true"
+                target="_blank"
+                rel="noreferrer"
+                className="px-3.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-sm font-bold flex items-center gap-1.5 shadow-2xs transition-colors"
+                title="Mở bản in PDF A4 khổ ngang chuẩn chữ ký Người lập bảng & Trưởng Trung tâm"
+              >
+                <span>🖨️</span>
+                <span>In Bản Ký Lưu (PDF)</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setEmailErrorMsg('');
+                  setEmailStatusMsg('');
+                  setEmailModalOpen(true);
+                }}
+                className="px-3.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-300 text-sm font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+                title="Gửi lịch tuần tích hợp trực tiếp vào Body Email Responsive (kèm nút in ký lưu)"
+              >
+                <span>✉️</span>
+                <span>Gửi Email Lịch Tuần</span>
+              </button>
+            </div>
             <label className="inline-flex items-center gap-1.5 text-sm text-slate-700 bg-white border border-slate-300 rounded-lg px-3 py-1.5 cursor-pointer">
               <input
                 type="checkbox"
@@ -1076,6 +1109,98 @@ export default function SchedulePage() {
               className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5"
             >
               {syncing ? '⏳ Đang phát lời mời...' : '🚀 Gửi lịch vào Google Calendar ngay'}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal Phát Email Lịch Tuần Tích Hợp Body Email & Nút In Ký Lưu */}
+      <Modal
+        isOpen={emailModalOpen}
+        onClose={() => setEmailModalOpen(false)}
+        title="✉️ Gửi Email Lịch Tuần CECICS (Responsive & Nút In Ký Lưu)"
+      >
+        <div className="space-y-4">
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Hệ thống sẽ tạo <strong>Body Email chuẩn HTML Responsive</strong> (tối ưu hiển thị bảng trên máy tính và thẻ card trên điện thoại), phân công rõ ràng trách nhiệm thiết bị/mô hình, tích hợp sẵn nút <strong>In Bản Ký Lưu (PDF)</strong> và tự động đính kèm file PDF Tuần 12.
+          </p>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Email người nhận thông báo:
+            </label>
+            <input
+              type="email"
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              placeholder="nhansu@pnt.edu.vn"
+              className={inputCls}
+            />
+            <p className="text-[11px] text-slate-500 mt-1">
+              Có thể gửi cho chính bạn, Trưởng Trung tâm hoặc toàn thể ban thư ký / kỹ thuật viên.
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5">
+            <div className="font-semibold text-slate-800">Thông tin gói phát hành:</div>
+            <div className="text-slate-600">• Tuần: <strong>Tuần 12</strong> (23/11/2026 – 29/11/2026)</div>
+            <div className="text-slate-600">• Đính kèm: <strong>Lich_Tuan_12_20261123_20261129.pdf</strong> (Khổ A4 ngang chuẩn lưu trữ)</div>
+            <div className="text-slate-600">• Trách nhiệm thiết bị: Thống kê mô hình soi đáy mắt, phế quản ống mềm, siêu âm Doppler.</div>
+          </div>
+
+          {emailStatusMsg && (
+            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-800 font-medium">
+              ✅ {emailStatusMsg}
+            </div>
+          )}
+
+          {emailErrorMsg && (
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-300 text-xs text-red-800 font-medium">
+              ❌ {emailErrorMsg}
+            </div>
+          )}
+
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setEmailModalOpen(false)}
+              className="px-4 py-2 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              disabled={sendingEmail || !recipientEmail}
+              onClick={async () => {
+                setSendingEmail(true);
+                setEmailErrorMsg('');
+                setEmailStatusMsg('');
+                try {
+                  const res = await fetch('/api/send-weekly-schedule-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      to: recipientEmail,
+                      weekNumber: 12,
+                      startDate: '23/11/2026',
+                      endDate: '29/11/2026',
+                    }),
+                  });
+                  const data = await res.json();
+                  if (data.ok) {
+                    setEmailStatusMsg(`Đã phát hành email lịch tuần thành công tới ${recipientEmail}. Đã kèm bản PDF ký lưu.`);
+                  } else {
+                    setEmailErrorMsg(data.error || 'Gửi email thất bại.');
+                  }
+                } catch (err: any) {
+                  setEmailErrorMsg(err?.message || 'Lỗi kết nối máy chủ.');
+                } finally {
+                  setSendingEmail(false);
+                }
+              }}
+              className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 disabled:opacity-50 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5"
+            >
+              {sendingEmail ? '⏳ Đang phát hành email...' : '🚀 Phát hành Email Lịch Tuần ngay'}
             </button>
           </div>
         </div>

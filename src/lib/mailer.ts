@@ -262,9 +262,10 @@ export async function sendNotificationEmail(params: {
   to: string;
   subject: string;
   htmlBody: string;
+  attachments?: Array<{ filename: string; content: Buffer | string; contentType?: string }>;
   keepInSent?: boolean;
 }): Promise<SendEmailResult> {
-  const { to, subject: rawSubject, htmlBody, keepInSent = false } = params;
+  const { to, subject: rawSubject, htmlBody, attachments, keepInSent = false } = params;
   const subject = rawSubject.startsWith('[AppCECICS]') ? rawSubject : `[AppCECICS] ${rawSubject}`;
   const from =
     process.env.SMTP_FROM || '"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch" <cecics@pnt.edu.vn>';
@@ -276,6 +277,7 @@ export async function sendNotificationEmail(params: {
       to,
       subject,
       html: htmlBody,
+      attachments,
     });
 
     let movedToTrash = false;
