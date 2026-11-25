@@ -14,8 +14,8 @@ import path from 'path';
 import { getWeeklySimulationDigestData } from '../src/lib/simulation-crawler';
 import { summarizeWeeklySimulationDigest } from '../src/lib/simulation-summarizer';
 import { buildSimulationDigestEmailHtml } from '../src/lib/simulation-digest-email';
+import { filterUnpublishedArticles, recordPublishedDigest } from '../src/lib/simulation-digest-history';
 import { sendNotificationEmail } from '../src/lib/mailer';
-import { getSnapshot } from '../src/lib/repository';
 
 async function run() {
   console.log('=== [CECICS SIMULATION WEEKLY DIGEST] KHỞI ĐỘNG ===');
@@ -26,11 +26,18 @@ async function run() {
   // 1. Thu thập bài báo & thông tin hội nghị
   console.log('1. Đang quét bài báo (PubMed, SSH, SESAM) & Hội nghị mô phỏng quốc tế...');
   const { articles: rawArticles, conferences } = await getWeeklySimulationDigestData();
-  console.log(`-> Tìm thấy ${rawArticles.length} bài viết học thuật & ${conferences.length} sự kiện/báo cáo hội nghị.`);
+  console.log(`-> Tìm thấy ${rawArticles.length} bài viết học thuật thô.`);
+
+  // 1b. Lọc chống trùng lặp tin cũ (Deduplication History Filter)
+  const freshArticles = filterUnpublishedArticles(rawArticles);
+  console.log(`-> Sau khi đối soát sổ cái lịch sử: ${freshArticles.length} bài báo MỚI 100% (đã loại ${rawArticles.length - freshArticles.length} bài cũ).`);
+
+  // Nếu tất cả bài cào về đã từng đăng, vẫn giữ lại các bài mới nhất của batch
+  const finalArticles = freshArticles.length > 0 ? freshArticles : rawArticles.slice(0, 4);
 
   // 2. Tóm tắt AI Tầng 1
   console.log('2. Đang tóm tắt học thuật & xây dựng khuyến nghị cho CECICS (AI Tầng 1)...');
-  const summarizedArticles = await summarizeWeeklySimulationDigest(rawArticles);
+  const summarizedArticles = await summarizeWeeklySimulationDigest(finalArticles);
 
   // 3. Render HTML Email
   console.log('3. Đang render HTML Email...');
@@ -115,6 +122,13 @@ async function run() {
     } catch (e) {
       console.error(`-> Lỗi gửi mail tới ${recipient}:`, e);
     }
+  }
+
+  // 7. Ghi nhận vào sổ cái lịch sử chống trùng lặp
+  try {
+    recordPublishedDigest(finalArticles, conferences);
+  } catch (err) {
+    console.error('-> Lỗi ghi nhận sổ cái lịch sử:', err);
   }
 
   console.log('=== [CECICS SIMULATION WEEKLY DIGEST] HOÀN TẤT THÀNH CÔNG ===');
