@@ -27,7 +27,7 @@ export function LoginClient({
             <div>
               <h1 className="text-xl font-bold tracking-tight">CECICS — Hệ thống Vận hành Số hóa</h1>
               <p className="text-teal-100 text-xs sm:text-sm">
-                Trung tâm Kỹ năng &amp; Sáng tạo Mô phỏng Lâm sàng · Cơ sở Hòa Hưng &amp; Tân Nhật
+                Trung tâm Kỹ năng &amp; Sáng tạo Mô phỏng Lâm sàng · Cơ sở Hòa Hưng &amp; Tân Nhựt
               </p>
             </div>
           </div>

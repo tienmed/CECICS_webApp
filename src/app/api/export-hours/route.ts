@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   });
 
   const campusRecord = db.Campuses.find((c) => c.campus_id === campus);
-  const campusName = campusRecord ? campusRecord.ten : 'Cả 2 cơ sở (Hòa Hưng & Tân Nhật)';
+  const campusName = campusRecord ? campusRecord.ten : 'Cả 2 cơ sở (Hòa Hưng & Tân Nhựt)';
 
   const deptRecord = db.Departments.find((d) => d.bo_mon_id === departmentId);
   const departmentName =

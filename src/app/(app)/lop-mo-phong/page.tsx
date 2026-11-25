@@ -583,7 +583,7 @@ export default function SimClassesPage() {
                         </span>
                       )}
                       {sc.dang_ky_tre && <Badge tone="red">Trễ hạn (&lt; 14 ngày)</Badge>}
-                      <Badge tone="teal">{sc.campus_id === 'HH' ? 'Cơ sở Hòa Hưng' : 'Cơ sở Tân Nhật'}</Badge>
+                      <Badge tone="teal">{sc.campus_id === 'HH' ? 'Cơ sở Hòa Hưng' : 'Cơ sở Tân Nhựt'}</Badge>
                       <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
                         {deptMap.get(sc.bo_mon_id)?.ten || sc.bo_mon_id}
                       </span>

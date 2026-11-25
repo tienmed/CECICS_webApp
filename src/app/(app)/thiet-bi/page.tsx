@@ -763,7 +763,7 @@ export default function EquipmentPage() {
               <label className={labelCls}>Cơ sở đào tạo *</label>
               <select value={testCampus} onChange={(e) => setTestCampus(e.target.value)} className={inputCls}>
                 <option value="HH">Cơ sở A (Hòa Hưng - Lầu 8 Khu C)</option>
-                <option value="TT">Trụ sở Tân Nhật (Lầu 5 Khu A2)</option>
+                <option value="TT">Trụ sở Tân Nhựt (Lầu 5 Khu A2)</option>
               </select>
             </div>
           </div>
@@ -891,7 +891,7 @@ export default function EquipmentPage() {
               <label className={labelCls}>Cơ sở quản lý *</label>
               <select value={newEq.campus_id} onChange={(e) => setNewEq({ ...newEq, campus_id: e.target.value })} className={inputCls}>
                 <option value="HH">Khu C (Hòa Hưng)</option>
-                <option value="TT">Khu A2 (Tân Nhật)</option>
+                <option value="TT">Khu A2 (Tân Nhựt)</option>
               </select>
             </div>
           </div>

@@ -275,7 +275,7 @@ export default function OsceFloorPlanPage() {
                 currentCampus === 'TN' ? 'bg-teal-700 text-white' : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
-              🏢 Cơ sở Tân Nhật (12 Trạm)
+              🏢 Cơ sở Tân Nhựt (12 Trạm)
             </button>
           </div>
 
@@ -562,7 +562,7 @@ export default function OsceFloorPlanPage() {
                   <div className="flex items-center gap-1 font-semibold text-slate-700">
                     <span>🧭 Sơ đồ Vòng Trạm Khép Kín:</span>
                     <span className="text-teal-700 font-bold">
-                      {currentCampus === 'HH' ? '8 Trạm Cơ sở Hòa Hưng' : '12 Trạm Cơ sở Tân Nhật'}
+                      {currentCampus === 'HH' ? '8 Trạm Cơ sở Hòa Hưng' : '12 Trạm Cơ sở Tân Nhựt'}
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 text-slate-600">

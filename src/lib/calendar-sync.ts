@@ -43,7 +43,7 @@ export function generateSessionIcs(session: SessionRecord, options?: {
 
   const lecturerName = options?.lecturerName || session.giang_vien_id;
   const roomName = options?.roomName || session.room_id || 'Chưa gán phòng (chờ sắp xếp)';
-  const campusLabel = options?.campusName || (session.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhật' : 'Cơ sở Hoà Hưng');
+  const campusLabel = options?.campusName || (session.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhựt' : 'Cơ sở Hoà Hưng');
   const sequence = options?.sequence ?? 0;
   const method = options?.isCancel ? 'CANCEL' : 'REQUEST';
   const status = options?.isCancel ? 'CANCELLED' : 'CONFIRMED';
@@ -184,7 +184,7 @@ export async function sendCalendarEventInvite(params: {
           <tr>
             <td style="padding: 8px 0; color: #64748b;">📍 Cơ sở & Phòng:</td>
             <td style="padding: 8px 0; font-weight: bold; color: #d97706;">
-              ${params.roomName || params.session.room_id || 'Chờ Hành chính gán phòng'} (${params.campusName || (params.session.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhật' : 'Cơ sở Hoà Hưng')})
+              ${params.roomName || params.session.room_id || 'Chờ Hành chính gán phòng'} (${params.campusName || (params.session.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhựt' : 'Cơ sở Hoà Hưng')})
             </td>
           </tr>
           ${params.session.ghi_chu ? `

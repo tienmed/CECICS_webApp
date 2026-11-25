@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
       const roomName = rids.length > 0
         ? rids.map((id) => roomMap.get(id)?.ten || id).join(', ')
         : 'Chờ Hành chính gán phòng';
-      const campusName = campusMap.get(s.campus_id)?.ten || (s.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhật' : 'Cơ sở Hoà Hưng');
+      const campusName = campusMap.get(s.campus_id)?.ten || (s.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhựt' : 'Cơ sở Hoà Hưng');
 
       const res = await sendCalendarEventInvite({
         session: s,

@@ -56,7 +56,7 @@ flowchart TD
 ## II. Danh Mục Các Phân Hệ Chức Năng Cốt Lõi
 
 ### 1. 📊 Phân Hệ Tổng Quan Điều Hành (Executive Dashboard)
-- Trung tâm giám sát thời gian thực toàn bộ hoạt động đào tạo tại 2 cơ sở (Cơ sở Hòa Hưng & Cơ sở Tân Nhật).
+- Trung tâm giám sát thời gian thực toàn bộ hoạt động đào tạo tại 2 cơ sở (Cơ sở Hòa Hưng & Cơ sở Tân Nhựt).
 - Cung cấp các chỉ số vận hành quan trọng: Tổng số buổi giảng trong tuần, tỷ lệ lấp đầy phòng mô phỏng, số lượng lớp đang chờ thẩm định, số ca sự cố thiết bị cần xử lý và cảnh báo các ca chưa được phân bổ phòng trước ngày diễn ra.
 
 ### 2. 📅 Phân Hệ Lịch Giảng & Lịch Coi Thi (Master Clinical Schedule)
@@ -80,7 +80,7 @@ flowchart TD
 - **Biểu mẫu hành chính E-Office chuẩn hóa**: Tự động kết xuất Giấy đề xuất mở lớp, Bảng dự trù vật tư - thiết bị và Bảng thẩm định cơ sở vật chất (Mẫu 1, 2, 3) theo đúng thể thức văn bản hành chính Nhà nước (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm) sẵn sàng ký số.
 
 ### 6. 🧭 Phân Hệ Sơ Đồ Trực Quan Trạm Thi OSCE (OSCE Circuit & Live Floor Plan)
-- **Mặt bằng trạm thi khép kín**: Trực quan hóa mặt bằng 8 trạm tại Cơ sở Hòa Hưng và 12 trạm tại Cơ sở Tân Nhật.
+- **Mặt bằng trạm thi khép kín**: Trực quan hóa mặt bằng 8 trạm tại Cơ sở Hòa Hưng và 12 trạm tại Cơ sở Tân Nhựt.
 - **Bảo mật luồng di chuyển một chiều**: Phân định nghiêm ngặt 3 phân khu:
   - *Phòng Chờ Trước Thi (Holding Room A)*: Vùng cách ly cấp 1, thu giữ thiết bị liên lạc, điểm danh danh sách thí sinh hàng chờ.
   - *Vòng Trạm Thi Lâm Sàng*: Thể hiện số trạm, mã phòng, tên kỹ năng, giảng viên chấm thi, thí sinh đang thi, đèn báo Camera giám sát trực tiếp và mũi tên chỉ dẫn di chuyển một chiều giữa các trạm chống rò rỉ đề thi.

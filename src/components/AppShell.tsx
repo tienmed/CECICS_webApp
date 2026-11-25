@@ -287,7 +287,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </button>
             <div className="hidden sm:block text-sm text-slate-500">
               Trung tâm Kỹ năng &amp; Sáng tạo Mô phỏng Lâm sàng ·{' '}
-              <span className="font-medium text-slate-700">Hòa Hưng &amp; Tân Nhật</span>
+              <span className="font-medium text-slate-700">Hòa Hưng &amp; Tân Nhựt</span>
             </div>
             <div className="sm:hidden font-bold text-slate-900 text-base flex items-center gap-1.5">
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-teal-600 text-[10px] font-bold text-white">

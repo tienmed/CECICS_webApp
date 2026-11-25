@@ -196,7 +196,7 @@ export default function RoomAssignmentPage() {
             const searchKeyword = (roomFilterSearch[s.session_id] || '').trim().toLowerCase();
             const filteredSuggestions = suggestions.filter((sg) => {
               if (!searchKeyword) return true;
-              const campusName = sg.room.campus_id === 'HH' ? 'hòa hưng hoa hung' : 'tân nhật tan nhut tan nhat';
+              const campusName = sg.room.campus_id === 'HH' ? 'hòa hưng hoa hung' : 'tân nhựt tan nhut tan nhat';
               const text = `${sg.room.room_id} ${sg.room.ten} ${sg.room.loai} ${sg.reason} ${campusName}`.toLowerCase();
               return text.includes(searchKeyword);
             });
@@ -233,7 +233,7 @@ export default function RoomAssignmentPage() {
                       </Badge>
                       {/* Thẻ cơ sở chỉ hiển thị khi buổi học đã được gán phòng */}
                       {s.room_id && (
-                        <Badge tone="teal">{s.campus_id === 'HH' ? 'Hòa Hưng' : 'Tân Nhật'}</Badge>
+                        <Badge tone="teal">{s.campus_id === 'HH' ? 'Hòa Hưng' : 'Tân Nhựt'}</Badge>
                       )}
                       <Badge tone="slate">
                         {s.loai} · {s.he}

@@ -404,7 +404,7 @@ export function executeAction(
           op: 'upsert',
           session: rec,
           lecturerEmail: lecturer?.email || 'cecics@pnt.edu.vn',
-          roomName: roomObj?.ten || (campus_id === 'TN' ? 'Trụ sở chính — Tân Nhật (chờ gán phòng)' : 'Cơ sở Hoà Hưng (chờ gán phòng)'),
+          roomName: roomObj?.ten || (campus_id === 'TN' ? 'Trụ sở chính — Tân Nhựt (chờ gán phòng)' : 'Cơ sở Hoà Hưng (chờ gán phòng)'),
         });
       }
 

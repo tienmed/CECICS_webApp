@@ -33,7 +33,7 @@ function applyCalendarEffects_(store, calendarSyncList) {
       var title = '[' + s.loai + ' - ' + s.he + '] ' + s.hoc_phan + ' — ' + s.bai_giang;
       var start = parseVnDateTime_(s.ngay, s.gio_bd);
       var end = parseVnDateTime_(s.ngay, s.gio_kt);
-      var location = (item.roomName ? item.roomName + ' - ' : '') + (s.campus_id === 'HH' ? 'Cơ sở Hòa Hưng' : 'Trụ sở Tân Nhật');
+      var location = (item.roomName ? item.roomName + ' - ' : '') + (s.campus_id === 'HH' ? 'Cơ sở Hòa Hưng' : 'Trụ sở Tân Nhựt');
       var desc = 'Mã buổi: ' + s.session_id + '\nGhi chú: ' + (s.ghi_chu || 'Không có');
 
       var ev = s.calendar_event_id ? cal.getEventById(s.calendar_event_id) : null;

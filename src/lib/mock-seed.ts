@@ -10,7 +10,7 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
   return {
     Campuses: [
       { campus_id: 'HH', ten: 'Cơ sở A — Hòa Hưng', dia_chi: 'Hòa Hưng, Quận 10, TP.HCM' },
-      { campus_id: 'TN', ten: 'Trụ sở chính — Tân Nhật', dia_chi: 'Tân Nhật, Bình Chánh, TP.HCM' },
+      { campus_id: 'TN', ten: 'Trụ sở chính — Tân Nhựt', dia_chi: 'Tân Nhựt, Bình Chánh, TP.HCM' },
     ],
 
     Users: [

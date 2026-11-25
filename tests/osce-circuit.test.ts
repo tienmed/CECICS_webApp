@@ -36,7 +36,7 @@ describe('OSCE Circuit & Visual Floor Plan Logic', () => {
     }
   });
 
-  it('danh sách trạm Tân Nhật có đủ 12 trạm chuẩn quốc tế', () => {
+  it('danh sách trạm Tân Nhựt có đủ 12 trạm chuẩn quốc tế', () => {
     expect(INITIAL_TN_STATIONS.length).toBe(12);
     const restStation = INITIAL_TN_STATIONS.find((s) => s.type === 'REST');
     expect(restStation).toBeDefined();

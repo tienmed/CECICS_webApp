@@ -324,7 +324,7 @@ export const INITIAL_HH_STATIONS: OsceStation[] = [
   },
 ];
 
-// Danh sách trạm mẫu cho Cơ sở Tân Nhật (12 Trạm chuẩn quốc tế)
+// Danh sách trạm mẫu cho Cơ sở Tân Nhựt (12 Trạm chuẩn quốc tế)
 export const INITIAL_TN_STATIONS: OsceStation[] = [
   {
     id: 'ST-TN-01',

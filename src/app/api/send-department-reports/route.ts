@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     });
 
     const campusRecord = db.Campuses.find((c) => c.campus_id === campus);
-    const campusName = campusRecord ? campusRecord.ten : 'Cả 2 cơ sở (Hòa Hưng & Tân Nhật)';
+    const campusName = campusRecord ? campusRecord.ten : 'Cả 2 cơ sở (Hòa Hưng & Tân Nhựt)';
     const periodKey = `${year}-${String(periodIndex).padStart(2, '0')}`;
 
     const hostHeader = request.headers.get('host') || 'localhost:3000';

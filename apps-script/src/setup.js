@@ -1,7 +1,7 @@
 /**
  * Chạy HÀM NÀY 1 LẦN trong Apps Script Editor để:
  * 1) Khởi tạo đủ 17 tab Google Sheets kèm dòng tiêu đề chuẩn.
- * 2) Nạp sẵn 2 cơ sở (Hòa Hưng, Tân Nhật) và cấu hình mặc định.
+ * 2) Nạp sẵn 2 cơ sở (Hòa Hưng, Tân Nhựt) và cấu hình mặc định.
  * 3) Cài đặt trigger 15 phút (đồng bộ RSVP) và trigger 07:00 hằng ngày (quét leo thang).
  */
 function setupCecicsSheets() {
@@ -27,7 +27,7 @@ function setupCecicsSheets() {
   var campusSheet = ss.getSheetByName('Campuses');
   if (campusSheet.getLastRow() <= 1) {
     campusSheet.appendRow(['HH', 'Cơ sở A — Hòa Hưng', 'Hòa Hưng, Quận 10, TP.HCM']);
-    campusSheet.appendRow(['TN', 'Trụ sở chính — Tân Nhật', 'Tân Nhật, Bình Chánh, TP.HCM']);
+    campusSheet.appendRow(['TN', 'Trụ sở chính — Tân Nhựt', 'Tân Nhựt, Bình Chánh, TP.HCM']);
   }
 
   // 3. Nạp Settings mặc định nếu đang trống
