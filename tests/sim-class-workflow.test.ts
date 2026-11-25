@@ -140,7 +140,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
         sim_id: created.sim_id,
         decision: 'Đã duyệt',
         room_ids: ['P-HH-101'],
-        equipment_ids: ['TB-US-01'],
+        equipment_ids: ['SA-01-01'],
         ktv_phu_trach: 'U-2026-0006',
         ghi_chu_ky_thuat: 'Đã chuẩn bị máy tại P.HH-101',
       },
@@ -175,7 +175,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
       fixedNow
     ).data as SimClassRecord;
 
-    // Cố tình gán thiết bị TB-SIM-02 đang ở trạng thái 'Hỏng'
+    // Cố tình gán thiết bị CPR-04-02 đang ở trạng thái 'Hỏng'
     expect(() =>
       executeAction(
         store,
@@ -184,7 +184,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
           sim_id: created.sim_id,
           decision: 'Đã duyệt',
           room_ids: ['P-HH-101'],
-          equipment_ids: ['TB-SIM-02'],
+          equipment_ids: ['CPR-04-02'],
         },
         'kythuat@pnt.edu.vn',
         fixedNow
@@ -398,7 +398,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
         sim_id: created.sim_id,
         decision: 'Đã duyệt',
         room_ids: ['P-HH-101'],
-        equipment_ids: ['TB-US-01'],
+        equipment_ids: ['SA-01-01'],
         ktv_phu_trach: 'U-2026-0006',
         session_overrides: [
           { buoi_so: 2, room_id: 'P-HH-102', ktv_phu_trach: 'U-2026-0006' },

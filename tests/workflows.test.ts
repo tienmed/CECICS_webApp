@@ -135,7 +135,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       fixedNow
     );
 
-    // Cố tình gán thiết bị đang hỏng (TB-SIM-02) -> phải bị chặn
+    // Cố tình gán thiết bị đang hỏng (CPR-04-02) -> phải bị chặn
     expect(() =>
       executeAction(
         store,
@@ -144,14 +144,14 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
           sim_id: created.sim_id,
           trang_thai: 'Đã duyệt',
           room_id: 'P-HH-101',
-          equipment_ids: ['TB-SIM-02'],
+          equipment_ids: ['CPR-04-02'],
         },
         'ktv.hung@pnt.edu.vn',
         fixedNow
       )
     ).toThrowError(DomainError);
 
-    // Gán thiết bị hoạt động (TB-CPR-01) -> thành công
+    // Gán thiết bị hoạt động (CPR-04-01) -> thành công
     const reviewed = executeAction(
       store,
       'reviewSimClass',
@@ -159,7 +159,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         sim_id: created.sim_id,
         trang_thai: 'Đã duyệt',
         room_id: 'P-HH-101',
-        equipment_ids: ['TB-CPR-01'],
+        equipment_ids: ['CPR-04-01'],
       },
       'ktv.hung@pnt.edu.vn',
       fixedNow
@@ -169,12 +169,12 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
 
   it('báo hỏng thiết bị tự động quét lớp tương lai bị ảnh hưởng và cho phép Bộ môn xác nhận phương án', () => {
     const store = createMemoryStore(buildMockSeed(fixedNow));
-    // TB-SIM-01 đang được gán cho lớp MP-2026-0001 ở tương lai
+    // CPR-04-01 đang được gán cho lớp MP-2026-0001 ở tương lai
     const report = executeAction(
       store,
       'reportIncident',
       {
-        equipment_id: 'TB-SIM-01',
+        equipment_id: 'CPR-04-01',
         mo_ta: 'Hỏng nguồn bo mạch chính',
         danh_gia: 'Không kịp',
       },
@@ -353,7 +353,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         sim_id: created.sim_id,
         trang_thai: 'Đã duyệt',
         room_ids: ['P-HH-101', 'P-HH-102'],
-        equipment_ids: ['TB-SIM-01'],
+        equipment_ids: ['CPR-04-01'],
       },
       'ktv.hung@pnt.edu.vn',
       fixedNow

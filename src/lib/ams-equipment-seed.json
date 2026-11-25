@@ -1847,14 +1847,14 @@
       "ten": "Mô hình bệnh nhân hồi sức cấp cứu nam giới #02",
       "nhom": "Hồi sức cấp cứu & Tim mạch",
       "campus_id": "HH",
-      "trang_thai": "Hoạt động",
+      "trang_thai": "Hỏng",
       "so_seri": "21240196608",
       "nam_sx": "2020",
       "vi_tri": "Lầu 8 Khu C",
       "so_luot_dung": 0,
       "so_gio_dung": 0,
-      "tu_ngay": "2024-01-01",
-      "ghi_chu": "Model: Model: 212-02350 (SimMan3G)"
+      "tu_ngay": "2026-11-15",
+      "ghi_chu": "Lỗi van khí nén phổi trái, chờ linh kiện thay thế"
     },
     {
       "equipment_id": "CPR-05-01",
