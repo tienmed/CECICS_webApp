@@ -95,6 +95,13 @@ export type AuditLogRecord = Rec<'AuditLog'>;
 export type SettingRecord = Rec<'Settings'>;
 export type OutboxRecord = Rec<'Outbox'>;
 export type VerificationLockRecord = Rec<'VerificationLocks'>;
+export type CmeCourseRecord = Rec<'CmeCourses'>;
+export type CmeStudentRecord = Rec<'CmeStudents'>;
+export type CmeRegistrationRecord = Rec<'CmeRegistrations'>;
+export type CmeAttendanceRecord = Rec<'CmeAttendance'>;
+export type CmeAssessmentRecord = Rec<'CmeAssessments'>;
+export type CmeSurveyRecord = Rec<'CmeSurveys'>;
+export type CmeSettlementRecord = Rec<'CmeSettlements'>;
 
 export interface DefaultSettings {
   GAN_PHONG_TRUOC_NGAY: number;
