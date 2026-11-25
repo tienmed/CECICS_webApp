@@ -271,7 +271,14 @@ export type ActionName =
   | 'upsertDepartment'
   | 'upsertTarget'
   | 'updateSetting'
-  | 'updateVerificationLock';
+  | 'updateVerificationLock'
+  | 'upsertCmeCourse'
+  | 'reviewCmeRegistration'
+  | 'recordCmeAttendance'
+  | 'submitCmeAssessment'
+  | 'submitCmeSurvey'
+  | 'upsertCmeSettlement'
+  | 'importLegacyCme';
 
 export function executeAction(
   store: DataStore,
