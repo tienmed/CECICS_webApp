@@ -2488,10 +2488,10 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
       },
     ],
     CmeAttendance: [
-      { att_id: 'ATT-01-01', course_id: 'CME-2025-01', student_id: 'STU-079090001234', buoi_so: 1, ngay: '2025-11-15', ca: 'Sáng', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 08:15:00' },
-      { att_id: 'ATT-01-02', course_id: 'CME-2025-01', student_id: 'STU-079090001234', buoi_so: 2, ngay: '2025-11-15', ca: 'Chiều', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 13:40:00' },
-      { att_id: 'ATT-01-03', course_id: 'CME-2025-01', student_id: 'STU-079192005678', buoi_so: 1, ngay: '2025-11-15', ca: 'Sáng', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 08:10:00' },
-      { att_id: 'ATT-01-04', course_id: 'CME-2025-01', student_id: 'STU-079192005678', buoi_so: 2, ngay: '2025-11-15', ca: 'Chiều', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 13:45:00' },
+      { att_id: 'ATT-01-01', course_id: 'CME-2025-01', student_id: 'STU-079090001234', buoi_so: 1, ngay: '2025-11-15', ca_hoc: 'Sáng', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 08:15:00' },
+      { att_id: 'ATT-01-02', course_id: 'CME-2025-01', student_id: 'STU-079090001234', buoi_so: 2, ngay: '2025-11-15', ca_hoc: 'Chiều', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 13:40:00' },
+      { att_id: 'ATT-01-03', course_id: 'CME-2025-01', student_id: 'STU-079192005678', buoi_so: 1, ngay: '2025-11-15', ca_hoc: 'Sáng', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 08:10:00' },
+      { att_id: 'ATT-01-04', course_id: 'CME-2025-01', student_id: 'STU-079192005678', buoi_so: 2, ngay: '2025-11-15', ca_hoc: 'Chiều', co_mat: true, ghi_chu: '', nguoi_diem_danh: 'cecics@pnt.edu.vn', luc: '2025-11-15 13:45:00' },
     ],
     CmeAssessments: [
       {
