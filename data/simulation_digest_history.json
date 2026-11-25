@@ -1,13 +1,29 @@
 {
-  "totalDigestsSent": 3,
-  "lastSentAt": "2026-11-25T13:19:53.530Z",
+  "totalDigestsSent": 4,
+  "lastSentAt": "2026-11-25T13:31:01.819Z",
   "publishedArticleIds": [
     "doi-milmed-2026",
     "10.1093/milmed/usag470",
-    "42886566"
+    "42886566",
+    "doi-sih-2026",
+    "10.1097/sih.0000000000000973",
+    "42804744",
+    "doi-jmir-llm-2026",
+    "10.2196/101797",
+    "43044104",
+    "doi-insitu-ed-2026",
+    "10.5070/m5.52393",
+    "43011620",
+    "doi-frontiers-2026",
+    "10.3389/fmed.2026.1896558",
+    "42889020"
   ],
   "publishedArticleKeys": [
-    "insimulationversuspostsimulationdebriefinginmedicaltrainingascopingreviewandtheoreticalframeworkformilitaryapplication"
+    "insimulationversuspostsimulationdebriefinginmedicaltrainingascopingreviewandtheoreticalframeworkformilitaryapplication",
+    "impactoftransportteamsimulationsaqualitativeanalysisofdebriefsfromtheimpactstransportsimulationstudy",
+    "useoflargelanguagemodelsforstructuredquantitativeandqualitativeanalysisofsimulationdebriefingsusingthedashframeworkaidestudy",
+    "awaitingstressaninterprofessionalinsitusimulationtooptimizeteammanagementofcardiacarrestinanemergencydepartmentobservationunit",
+    "unlockingthepowerofreflectionhowsimulationdebriefingshapesclinicaldecisionmakingandcompetenceinnursingstudents"
   ],
   "publishedConferenceIds": [
     "aspih-conference-official",
