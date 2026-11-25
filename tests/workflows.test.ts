@@ -41,25 +41,33 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
     expect(evaluateLoginAccess('nguoila@gmail.com', db.Users).allowed).toBe(false);
   });
 
-  it('gán phòng thành công và chặn gán phòng sai cơ sở', () => {
+  it('gán phòng thành công và tự động đồng bộ cơ sở theo phòng đã chọn', () => {
     const store = createMemoryStore(buildMockSeed(fixedNow));
     const db = store.getAll();
     const pendingSession = db.Sessions.find((s) => !s.room_id && s.campus_id === 'HH')!;
 
-    // Sai cơ sở (gán phòng TN cho buổi HH) -> lỗi
-    expect(() =>
-      executeAction(store, 'assignRoom', { session_id: pendingSession.session_id, room_id: 'P-TN-101' }, 'hanhchinh@pnt.edu.vn', fixedNow)
-    ).toThrowError(DomainError);
+    // Gán phòng TN cho buổi học -> thành công và tự động cập nhật cơ sở sang TN
+    const resTN = executeAction(
+      store,
+      'assignRoom',
+      { session_id: pendingSession.session_id, room_id: 'P-TN-101' },
+      'hanhchinh@pnt.edu.vn',
+      fixedNow
+    );
+    expect((resTN.data as { room_id: string }).room_id).toBe('P-TN-101');
+    const updatedSession = store.getAll().Sessions.find((s) => s.session_id === pendingSession.session_id)!;
+    expect(updatedSession.campus_id).toBe('TN');
 
-    // Đúng cơ sở -> thành công và đóng leo thang CHUA_GAN_PHONG tương ứng
-    const res = executeAction(
+    // Gán lại phòng HH -> tự động cập nhật cơ sở về HH
+    const resHH = executeAction(
       store,
       'assignRoom',
       { session_id: pendingSession.session_id, room_id: 'P-HH-201' },
       'hanhchinh@pnt.edu.vn',
       fixedNow
     );
-    expect((res.data as { room_id: string }).room_id).toBe('P-HH-201');
+    expect((resHH.data as { room_id: string }).room_id).toBe('P-HH-201');
+    expect(store.getAll().Sessions.find((s) => s.session_id === pendingSession.session_id)!.campus_id).toBe('HH');
   });
 
   it('hoán đổi lịch tự do: người nhận đồng ý -> tự động cập nhật giảng viên không cần duyệt', () => {

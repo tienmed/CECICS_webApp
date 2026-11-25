@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { buildMockSeed } from '../src/lib/mock-seed';
 import { executeAction, type DataStore } from '../src/core/mutations';
 import { lookupStudentByCccdAndDob, registerCmeCourseAction, importLegacyCmeData } from '../src/core/cme';
-import type { DatabaseSnapshot, Rec, TableName } from '../src/core/schema';
+import type { Rec, TableName } from '../src/core/schema';
+import type { DatabaseSnapshot } from '../src/core/types';
 
 class MemoryDataStore implements DataStore {
   db: DatabaseSnapshot;

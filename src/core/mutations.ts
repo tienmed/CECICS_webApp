@@ -545,11 +545,13 @@ export function executeAction(
       if (!existing || existing.trang_thai === 'Đã hủy') {
         throw new DomainError('NOT_FOUND', 'Buổi học không tồn tại hoặc đã bị hủy.');
       }
+      let assignedCampusId = existing.campus_id;
       for (const rid of roomIds) {
         const room = db.Rooms.find((r) => r.room_id === rid && r.kich_hoat);
         if (!room) throw new DomainError('NOT_FOUND', `Phòng học ${rid} không tồn tại hoặc đã ngừng sử dụng.`);
-        if (room.campus_id !== existing.campus_id) {
-          throw new DomainError('CAMPUS_MISMATCH', `Phòng ${room.ten} không thuộc đúng cơ sở của buổi học.`);
+        // Đồng bộ cơ sở của buổi học theo cơ sở của phòng được chọn
+        if (room.campus_id) {
+          assignedCampusId = room.campus_id;
         }
       }
 
@@ -561,7 +563,7 @@ export function executeAction(
       if (conflicts.length > 0) {
         const suggestions = suggestAvailableRooms({
           excludeId: session_id,
-          campus_id: existing.campus_id,
+          campus_id: assignedCampusId,
           ngay: existing.ngay,
           gio_bd: existing.gio_bd,
           gio_kt: existing.gio_kt,
@@ -579,6 +581,7 @@ export function executeAction(
 
       const updated = store.update('Sessions', session_id, {
         room_id: roomIds.join(','),
+        campus_id: assignedCampusId,
         cap_nhat_luc: nowIso,
       });
       recordAudit(store, actor, 'ASSIGN_ROOM', 'Sessions', session_id, existing, updated, now);

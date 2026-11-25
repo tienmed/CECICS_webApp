@@ -185,7 +185,6 @@ export default function RoomAssignmentPage() {
             const urgent = daysLeft <= settings.CANH_BAO_CHUA_GAN_PHONG_NGAY;
             const suggestions = suggestAvailableRooms({
               excludeId: s.session_id,
-              campus_id: s.campus_id,
               ngay: s.ngay,
               gio_bd: s.gio_bd,
               gio_kt: s.gio_kt,
@@ -197,7 +196,8 @@ export default function RoomAssignmentPage() {
             const searchKeyword = (roomFilterSearch[s.session_id] || '').trim().toLowerCase();
             const filteredSuggestions = suggestions.filter((sg) => {
               if (!searchKeyword) return true;
-              const text = `${sg.room.room_id} ${sg.room.ten} ${sg.room.loai} ${sg.reason}`.toLowerCase();
+              const campusName = sg.room.campus_id === 'HH' ? 'hòa hưng hoa hung' : 'tân nhật tan nhut tan nhat';
+              const text = `${sg.room.room_id} ${sg.room.ten} ${sg.room.loai} ${sg.reason} ${campusName}`.toLowerCase();
               return text.includes(searchKeyword);
             });
 
@@ -231,7 +231,10 @@ export default function RoomAssignmentPage() {
                       <Badge tone={urgent ? 'red' : 'amber'}>
                         {daysLeft === 0 ? 'Hôm nay!' : `Còn ${daysLeft} ngày`}
                       </Badge>
-                      <Badge tone="teal">{s.campus_id === 'HH' ? 'Hòa Hưng' : 'Tân Nhật'}</Badge>
+                      {/* Thẻ cơ sở chỉ hiển thị khi buổi học đã được gán phòng */}
+                      {s.room_id && (
+                        <Badge tone="teal">{s.campus_id === 'HH' ? 'Hòa Hưng' : 'Tân Nhật'}</Badge>
+                      )}
                       <Badge tone="slate">
                         {s.loai} · {s.he}
                       </Badge>
@@ -344,7 +347,7 @@ export default function RoomAssignmentPage() {
                         ) : (
                           filteredSuggestions.map((sg) => (
                             <option key={sg.room.room_id} value={sg.room.room_id}>
-                              [{sg.room.loai}] {sg.room.ten} ({sg.room.suc_chua} chỗ) — {sg.reason}
+                              [{sg.room.campus_id === 'HH' ? 'Hòa Hưng' : 'Tân Nhựt'}] [{sg.room.loai}] {sg.room.ten} ({sg.room.suc_chua} chỗ) — {sg.reason}
                             </option>
                           ))
                         )}
@@ -431,7 +434,7 @@ export default function RoomAssignmentPage() {
                                       onChange={() => toggleMultiRoom(s.session_id, r.room_id)}
                                       className="accent-teal-700 h-3.5 w-3.5"
                                     />
-                                    <span className="flex-1 truncate">{r.ten}</span>
+                                    <span className="flex-1 truncate">[{r.campus_id === 'HH' ? 'HH' : 'TN'}] {r.ten}</span>
                                     <span className="text-[10px] text-slate-400 font-mono">
                                       {r.suc_chua}c
                                     </span>

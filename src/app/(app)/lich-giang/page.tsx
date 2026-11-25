@@ -1116,7 +1116,7 @@ export default function SchedulePage() {
 
       {/* Modal Phát Email Lịch Tuần Tích Hợp Body Email & Nút In Ký Lưu */}
       <Modal
-        isOpen={emailModalOpen}
+        open={emailModalOpen}
         onClose={() => setEmailModalOpen(false)}
         title="✉️ Gửi Email Lịch Tuần CECICS (Responsive & Nút In Ký Lưu)"
       >

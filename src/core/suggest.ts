@@ -13,7 +13,7 @@ export interface RoomSuggestion {
  */
 export function suggestAvailableRooms(params: {
   excludeId: string;
-  campus_id: string;
+  campus_id?: string;
   ngay: string;
   gio_bd: string;
   gio_kt: string;
@@ -24,7 +24,9 @@ export function suggestAvailableRooms(params: {
   simClasses: SimClassRecord[];
 }): RoomSuggestion[] {
   const minCap = params.minCapacity ?? 0;
-  const candidates = params.rooms.filter((r) => r.kich_hoat && r.campus_id === params.campus_id);
+  const candidates = params.rooms.filter(
+    (r) => r.kich_hoat && (!params.campus_id || params.campus_id === 'ALL' || r.campus_id === params.campus_id)
+  );
 
   const suggestions: RoomSuggestion[] = [];
   for (const room of candidates) {
