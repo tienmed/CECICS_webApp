@@ -28,6 +28,9 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 - [`.agent/skills/cecics-auth-cookies/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/cecics-auth-cookies/SKILL.md): Auth.js v5 cookie debugging, Google OAuth & Demo Login.
 
 ## 5. Quy Chuẩn Vận Hành Nghiệp Vụ Lâm Sàng Nâng Cao
+- **Chỉ Sử Dụng Duy Nhất Email `cecics@pnt.edu.vn` để Gửi Thư ([P0-CECICS-EMAIL-SENDER-INVARIANT])**:
+  - Toàn bộ các luồng gửi email tự động (Lịch tuần, Lịch mời Google Calendar `.ics / VEVENT`, Báo cáo đối soát giờ giảng bộ môn, Cảnh báo lớp mô phỏng, Thông báo hệ thống) **BẮT BUỘC CHỈ SỬ DỤNG DUY NHẤT** email công vụ của Trung tâm: **`cecics@pnt.edu.vn`** (Tên hiển thị: `"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch"`).
+  - Tuyệt đối **KHÔNG ĐƯỢC** sử dụng bất kỳ email nào khác (kể cả email nghiệp vụ phòng khám `nghiepvupk@pnt.edu.vn` hay email cá nhân) làm địa chỉ gửi (Sender / From) của hệ thống CECICS.
 - **Đồng bộ Google Calendar cá nhân**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) để gửi lời mời `.ics / VEVENT`, tự động gán vào ứng dụng Google Calendar trên điện thoại/máy tính của giảng viên.
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).
 - **Chuẩn hóa Văn bản Ký số E-Office**: Biểu mẫu đề xuất mở lớp mô phỏng và dự trù dụng cụ - vật tư phải hỗ trợ xuất PDF theo đúng thể thức văn bản hành chính (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm CECICS) để liên thông ký số trên hệ thống E-Office của Trường.
