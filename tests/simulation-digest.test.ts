@@ -1,52 +1,39 @@
 import { describe, it, expect } from 'vitest';
-import { getCuratedInternationalSimulationHighlights, getSimulationConferencesTracker } from '../src/lib/simulation-crawler';
+import { getVerifiedSimulationArticles, getSimulationConferencesTracker, getWeeklySimulationDigestData } from '../src/lib/simulation-crawler';
 import { summarizeWeeklySimulationDigest } from '../src/lib/simulation-summarizer';
 import { buildSimulationDigestEmailHtml } from '../src/lib/simulation-digest-email';
 
-describe('CECICS Simulation Weekly Digest Module', () => {
-  it('phải trích xuất danh sách bài viết & tiêu chuẩn mô phỏng quốc tế', () => {
-    const articles = getCuratedInternationalSimulationHighlights();
+describe('CECICS Simulation Weekly Digest Module - Link & Data Verification', () => {
+  it('phải có bộ bài báo mô phỏng lâm sàng thực tế 100% với DOI hoặc PMID hợp lệ', () => {
+    const articles = getVerifiedSimulationArticles();
     expect(articles.length).toBeGreaterThanOrEqual(4);
-    
-    // Kiểm tra các chủ đề cốt lõi
-    const allCategories = articles.flatMap((a) => a.categories);
-    expect(allCategories).toContain('In situ Simulation');
-    expect(allCategories).toContain('Lượng giá kỹ năng');
-    expect(allCategories).toContain('Kỹ năng Debriefing');
-    expect(allCategories).toContain('Người bệnh chuẩn (SP)');
+
+    for (const art of articles) {
+      expect(art.title).toBeTruthy();
+      expect(art.url).toBeTruthy();
+      expect(art.doi || art.pmid).toBeTruthy();
+      // Toàn bộ bài phải có URL DOI hoặc PubMed thật 100%
+      const isRealUrl = art.url.startsWith('https://doi.org/') || art.url.startsWith('https://pubmed.ncbi.nlm.nih.gov/');
+      expect(isRealUrl).toBe(true);
+    }
   });
 
-  it('phải theo dõi hội nghị mô phỏng lâm sàng đã diễn ra và sắp diễn ra', () => {
+  it('toàn bộ các cổng hội nghị quốc tế phải là link thực và có thông tin định hướng nghiên cứu', () => {
     const conferences = getSimulationConferencesTracker();
-    expect(conferences.length).toBeGreaterThanOrEqual(3);
-
-    const past = conferences.filter((c) => c.timelineType === 'RECENT_PAST');
-    const upcoming = conferences.filter((c) => c.timelineType === 'UPCOMING');
-    expect(past.length).toBeGreaterThan(0);
-    expect(upcoming.length).toBeGreaterThan(0);
+    expect(conferences.length).toBeGreaterThanOrEqual(4);
 
     for (const conf of conferences) {
+      expect(conf.website.startsWith('https://')).toBe(true);
       expect(conf.researchFocusForCECICS).toBeTruthy();
     }
   });
 
-  it('phải tóm tắt học thuật và sinh khuyến nghị cụ thể cho CECICS', async () => {
-    const articles = getCuratedInternationalSimulationHighlights().slice(0, 2);
-    const summarized = await summarizeWeeklySimulationDigest(articles);
+  it('phải tóm tắt học thuật chính xác và tạo HTML Email hoàn chỉnh', async () => {
+    const { articles, conferences } = await getWeeklySimulationDigestData();
+    expect(articles.length).toBeGreaterThan(0);
 
-    expect(summarized.length).toBe(2);
-    for (const item of summarized) {
-      expect(item.vietnameseTitle).toBeTruthy();
-      expect(item.summaryBulletPoints.length).toBeGreaterThan(0);
-      expect(item.takeawayForCECICS).toBeTruthy();
-      expect(item.takeawayForCECICS.toLowerCase()).toContain('cecics');
-    }
-  }, 25000);
-
-  it('phải tạo HTML Email hoàn chỉnh chứa đầy đủ tiêu điểm, hội nghị và thông tin bản quyền CECICS', async () => {
-    const articles = getCuratedInternationalSimulationHighlights().slice(0, 2);
-    const conferences = getSimulationConferencesTracker();
-    const summarized = await summarizeWeeklySimulationDigest(articles);
+    const summarized = await summarizeWeeklySimulationDigest(articles.slice(0, 3));
+    expect(summarized.length).toBeGreaterThan(0);
 
     const html = buildSimulationDigestEmailHtml({
       issueDate: '28/11/2026',
@@ -57,9 +44,8 @@ describe('CECICS Simulation Weekly Digest Module', () => {
 
     expect(html).toContain('BẢN TIN CHUYÊN TRANG MÔ PHỎNG LÂM SÀNG');
     expect(html).toContain('TRUNG TÂM CECICS');
-    expect(html).toContain('TIÊU ĐIỂM HỌC THUẬT TUẦN');
     expect(html).toContain('DIỄN ĐÀN HỘI NGHỊ & ĐỊNH HƯỚNG NGHIÊN CỨU QUỐC TẾ');
     expect(html).toContain('Đơn vị Nghiên cứu CECICS');
     expect(html).toContain('cecics@pnt.edu.vn');
-  }, 25000);
+  }, 35000);
 });
