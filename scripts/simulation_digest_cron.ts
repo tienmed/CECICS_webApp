@@ -50,30 +50,39 @@ async function run() {
   fs.writeFileSync(latestPath, emailHtml, 'utf-8');
   console.log(`-> Đã lưu bản sao lưu trữ tại: ${previewPath}`);
 
-  // 5. Lấy danh sách email CBNV thực tế (Loại bỏ 100% tài khoản mock/demo seed)
-  console.log('4. Đang lấy danh sách CBNV & Giảng viên thực tế nhận bản tin...');
+  // 5. Lấy danh sách email CBNV CECICS chính thức (Quy tắc [P0-CECICS-OFFICIAL-STAFF-INVARIANT])
+  console.log('4. Đang lấy danh sách 18 nhân sự chính thức của Trung tâm CECICS...');
   let recipients: string[] = [];
   try {
-    const db = await getSnapshot();
-    const mockEmailSet = new Set([
-      'admin@pnt.edu.vn',
-      'truongtt@pnt.edu.vn',
-      'phott@pnt.edu.vn',
-      'hanhchinh@pnt.edu.vn',
-      'daotao@pnt.edu.vn',
-      'kythuat@pnt.edu.vn',
-      'ktv.hung@pnt.edu.vn',
-      'bomon.noi@pnt.edu.vn',
-      'gv.khoa@pnt.edu.vn',
-      'gv.thinhgiang@gmail.com',
-      'cecics@pnt.edu.vn', // Hòm thư gửi, không gửi ngược lại
-    ]);
-
-    recipients = (db.Users || [])
-      .map((u) => (u.email || '').trim().toLowerCase())
-      .filter((e): e is string => Boolean(e && e.includes('@') && !mockEmailSet.has(e) && (!e.endsWith('@gmail.com') || e.includes('tienmed'))));
+    const staffFilePath = path.join(process.cwd(), 'data', 'cecics_official_staff.json');
+    if (fs.existsSync(staffFilePath)) {
+      const staffList = JSON.parse(fs.readFileSync(staffFilePath, 'utf8'));
+      recipients = staffList.map((s: { email: string }) => s.email.trim().toLowerCase());
+    } else {
+      console.warn('-> Không tìm thấy data/cecics_official_staff.json, fallback danh sách cứng.');
+      recipients = [
+        'nguyenngocphuongthu@pnt.edu.vn',
+        'bsquynhphuong@pnt.edu.vn',
+        'linhntm@pnt.edu.vn',
+        'bstien@pnt.edu.vn',
+        'bichctn@pnt.edu.vn',
+        'bsminhluan@pnt.edu.vn',
+        'thuyntt.ttmpls@pnt.edu.vn',
+        'chinhctk.ttmpls@pnt.edu.vn',
+        'vanpnt@pnt.edu.vn',
+        'quynhnn@pnt.edu.vn',
+        'trinhtt@pnt.edu.vn',
+        'taict@pnt.edu.vn',
+        'huu_nhan@pnt.edu.vn',
+        'trangntk@pnt.edu.vn',
+        'cuongnt.ttmpls@pnt.edu.vn',
+        'anhntl@pnt.edu.vn',
+        'phapmtt@pnt.edu.vn',
+        'thuttt@pnt.edu.vn',
+      ];
+    }
   } catch (err) {
-    console.warn('-> Không đọc được DB người dùng, dùng danh sách fallback.');
+    console.error('-> Lỗi đọc danh sách nhân sự CECICS:', err);
   }
 
   // Lọc trùng

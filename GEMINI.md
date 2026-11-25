@@ -31,6 +31,28 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 - **Chỉ Sử Dụng Duy Nhất Email `cecics@pnt.edu.vn` để Gửi Thư ([P0-CECICS-EMAIL-SENDER-INVARIANT])**:
   - Toàn bộ các luồng gửi email tự động (Lịch tuần, Lịch mời Google Calendar `.ics / VEVENT`, Báo cáo đối soát giờ giảng bộ môn, Cảnh báo lớp mô phỏng, Thông báo hệ thống) **BẮT BUỘC CHỈ SỬ DỤNG DUY NHẤT** email công vụ của Trung tâm: **`cecics@pnt.edu.vn`** (Tên hiển thị: `"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch"`).
   - Tuyệt đối **KHÔNG ĐƯỢC** sử dụng bất kỳ email nào khác (kể cả email nghiệp vụ phòng khám `nghiepvupk@pnt.edu.vn` hay email cá nhân) làm địa chỉ gửi (Sender / From) của hệ thống CECICS.
+- **Quy Chuẩn Danh Sách Nhân Viên Trung Tâm CECICS ([P0-CECICS-OFFICIAL-STAFF-INVARIANT])**:
+  - **ĐỊNH NGHĨA BẮT BUỘC:** Danh sách nhân viên Trung tâm CECICS **CHỈ BAO GỒM DUY NHẤT 18 NHÂN SỰ CHÍNH THỨC** (theo họ tên & email công vụ trong `data/cecics_official_staff.json`):
+    1. *Nguyễn Ngọc Phương Thư* (`nguyenngocphuongthu@pnt.edu.vn`)
+    2. *Bùi Phan Quỳnh Phương* (`bsquynhphuong@pnt.edu.vn`)
+    3. *Nguyễn Thị Mỹ Linh* (`linhntm@pnt.edu.vn`)
+    4. *Trịnh Trung Tiến* (`bstien@pnt.edu.vn`)
+    5. *Cao Thị Ngọc Bích* (`bichctn@pnt.edu.vn`)
+    6. *Nguyễn Minh Luân* (`bsminhluan@pnt.edu.vn`)
+    7. *Nguyễn Thị Thu Thủy* (`thuyntt.ttmpls@pnt.edu.vn`)
+    8. *Châu Thị Kiều Chinh* (`chinhctk.ttmpls@pnt.edu.vn`)
+    9. *Phạm Nguyễn Tường Vân* (`vanpnt@pnt.edu.vn`)
+    10. *Nguyễn Như Quỳnh* (`quynhnn@pnt.edu.vn`)
+    11. *Trần Tú Trinh* (`trinhtt@pnt.edu.vn`)
+    12. *Cao Tấn Tải* (`taict@pnt.edu.vn`)
+    13. *Nguyễn Hữu Nhân* (`huu_nhan@pnt.edu.vn`)
+    14. *Nguyễn Thị Kiều Trang* (`trangntk@pnt.edu.vn`)
+    15. *Nguyễn Thái Cường* (`cuongnt.ttmpls@pnt.edu.vn`)
+    16. *Nguyễn Thị Lan Anh* (`anhntl@pnt.edu.vn`)
+    17. *Mai Trần Thái Pháp* (`phapmtt@pnt.edu.vn`)
+    18. *Trần Thái Thiên Thư* (`thuttt@pnt.edu.vn`)
+  - **TẤT CẢ CÁC TÀI KHOẢN KHÁC** (Giảng viên Bộ môn, Lãnh đạo Khoa, Giảng viên thỉnh giảng, tài khoản demo seed) đều được phân loại là **"NGOÀI CECICS"**.
+  - Khi có yêu cầu *"gửi tới nhân viên CECICS"*, hệ thống bắt buộc sử dụng danh sách 18 nhân sự chuẩn hóa này, tuyệt đối không gửi nhầm sang danh sách ngoài CECICS.
 - **Đồng bộ Google Calendar cá nhân**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) để gửi lời mời `.ics / VEVENT`, tự động gán vào ứng dụng Google Calendar trên điện thoại/máy tính của giảng viên.
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).
 - **Chuẩn hóa Văn bản Ký số E-Office**: Biểu mẫu đề xuất mở lớp mô phỏng và dự trù dụng cụ - vật tư phải hỗ trợ xuất PDF theo đúng thể thức văn bản hành chính (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm CECICS) để liên thông ký số trên hệ thống E-Office của Trường.
