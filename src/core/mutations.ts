@@ -444,26 +444,29 @@ export function executeAction(
       const room_id = String(payload.room_id ?? existing.room_id);
       validateTimeWindow(ngay, gio_bd, gio_kt);
 
-      const lecConflicts = findLecturerConflicts(
-        { id: session_id, ngay, gio_bd, gio_kt, giang_vien_id },
-        db.Sessions
-      );
-      if (lecConflicts.length > 0) {
-        throw new DomainError(
-          'LECTURER_CONFLICT',
-          `Giảng viên bị trùng lịch với ${lecConflicts[0].hoc_phan} (${lecConflicts[0].gio_bd}–${lecConflicts[0].gio_kt}).`,
-          {
-            conflicts: lecConflicts,
-            suggestions: suggestFreeLecturerSlots({
-              excludeId: session_id,
-              giang_vien_id,
-              ngay,
-              gio_bd,
-              gio_kt,
-              sessions: db.Sessions,
-            }),
-          }
+      const loai = String(payload.loai ?? existing.loai);
+      if (giang_vien_id !== 'U-CECICS-ALL' && loai !== 'Họp') {
+        const lecConflicts = findLecturerConflicts(
+          { id: session_id, ngay, gio_bd, gio_kt, giang_vien_id },
+          db.Sessions
         );
+        if (lecConflicts.length > 0) {
+          throw new DomainError(
+            'LECTURER_CONFLICT',
+            `Giảng viên bị trùng lịch với ${lecConflicts[0].hoc_phan} (${lecConflicts[0].gio_bd}–${lecConflicts[0].gio_kt}).`,
+            {
+              conflicts: lecConflicts,
+              suggestions: suggestFreeLecturerSlots({
+                excludeId: session_id,
+                giang_vien_id,
+                ngay,
+                gio_bd,
+                gio_kt,
+                sessions: db.Sessions,
+              }),
+            }
+          );
+        }
       }
       if (room_id) {
         const roomObj = db.Rooms.find((r) => r.room_id === room_id);

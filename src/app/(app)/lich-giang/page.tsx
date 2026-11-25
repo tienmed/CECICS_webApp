@@ -5,11 +5,12 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { type EventResizeDoneArg } from '@fullcalendar/interaction';
+import type { EventDropArg } from '@fullcalendar/core';
 import viLocale from '@fullcalendar/core/locales/vi';
 import { canPerform } from '@/core/permissions';
 import { suggestAvailableRooms, type TimeSlotSuggestion } from '@/core/suggest';
-import { formatVnDate, todayVnYmd } from '@/core/time';
+import { formatVnDate, parseTimeToMinutes, minutesToTime, todayVnYmd } from '@/core/time';
 import { parseRoomIds } from '@/core/conflict';
 import { parseSimSessions, resolveSessionRoom, simSessionLabel } from '@/core/sim-sessions';
 import { ROLES, SESSION_PROGRAMS, SESSION_TYPES, type SessionRecord, type UserRecord } from '@/core/types';
@@ -270,12 +271,16 @@ export default function SchedulePage() {
           end: `${s.ngay}T${s.gio_kt}:00`,
           backgroundColor: isExam ? '#7c3aed' : isMeeting ? '#2563eb' : missingRoom ? '#d97706' : '#0f766e',
           borderColor: isExam ? '#6d28d9' : isMeeting ? '#1d4ed8' : missingRoom ? '#b45309' : '#115e59',
+          editable: canEdit,
           extendedProps: { session: s, gvName },
         };
       }),
-      ...simEvents,
+      ...simEvents.map((se) => ({
+        ...se,
+        editable: false,
+      })),
     ],
-    [visibleSessions, simEvents, roomMap, userMap]
+    [visibleSessions, simEvents, roomMap, userMap, canEdit]
   );
 
   const todayStr = todayVnYmd();
@@ -375,6 +380,110 @@ export default function SchedulePage() {
     if (!confirm('Xác nhận hủy buổi học này? Sự kiện trên Google Calendar cũng sẽ bị xóa.')) return;
     const res = await execute('cancelSession', { session_id }, 'Đã hủy buổi học.');
     if (res.ok) setModalOpen(false);
+  }
+
+  function formatTimeHHmm(date: Date): string {
+    const h = String(date.getHours()).padStart(2, '0');
+    const m = String(date.getMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  function formatDateYYYYMMDD(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  async function handleEventDrop(info: EventDropArg) {
+    if (!canEdit) {
+      info.revert();
+      return;
+    }
+    const session = info.event.extendedProps.session as SessionRecord | undefined;
+    if (!session || info.event.extendedProps.isSim) {
+      info.revert();
+      return;
+    }
+
+    const newStart = info.event.start;
+    if (!newStart) {
+      info.revert();
+      return;
+    }
+
+    const newNgay = formatDateYYYYMMDD(newStart);
+    let newGioBd = formatTimeHHmm(newStart);
+    let newGioKt = info.event.end ? formatTimeHHmm(info.event.end) : '';
+
+    // Nếu drop trong month view hoặc sự kiện không có end time, tính end time dựa vào thời lượng ban đầu
+    if (!newGioKt || newGioKt === newGioBd) {
+      const origStartMins = parseTimeToMinutes(session.gio_bd);
+      const origEndMins = parseTimeToMinutes(session.gio_kt);
+      const duration = !Number.isNaN(origStartMins) && !Number.isNaN(origEndMins) && origEndMins > origStartMins
+        ? origEndMins - origStartMins
+        : 150; // mặc định 2h30 nếu không xác định
+      const startMins = parseTimeToMinutes(newGioBd);
+      if (!Number.isNaN(startMins)) {
+        newGioKt = minutesToTime(Math.min(23 * 60 + 59, startMins + duration));
+      } else {
+        newGioBd = session.gio_bd;
+        newGioKt = session.gio_kt;
+      }
+    }
+
+    const res = await execute(
+      'updateSession',
+      {
+        session_id: session.session_id,
+        ngay: newNgay,
+        gio_bd: newGioBd,
+        gio_kt: newGioKt,
+      },
+      `Đã dời thời điểm buổi học ${session.bai_giang || session.hoc_phan} sang ${formatVnDate(newNgay)} (${newGioBd}–${newGioKt}).`
+    );
+
+    if (!res.ok) {
+      info.revert();
+    }
+  }
+
+  async function handleEventResize(info: EventResizeDoneArg) {
+    if (!canEdit) {
+      info.revert();
+      return;
+    }
+    const session = info.event.extendedProps.session as SessionRecord | undefined;
+    if (!session || info.event.extendedProps.isSim) {
+      info.revert();
+      return;
+    }
+
+    const newStart = info.event.start;
+    const newEnd = info.event.end;
+    if (!newStart || !newEnd) {
+      info.revert();
+      return;
+    }
+
+    const newNgay = formatDateYYYYMMDD(newStart);
+    const newGioBd = formatTimeHHmm(newStart);
+    const newGioKt = formatTimeHHmm(newEnd);
+
+    const res = await execute(
+      'updateSession',
+      {
+        session_id: session.session_id,
+        ngay: newNgay,
+        gio_bd: newGioBd,
+        gio_kt: newGioKt,
+      },
+      `Đã cập nhật thời lượng buổi học: ${newGioBd}–${newGioKt} (${formatVnDate(newNgay)}).`
+    );
+
+    if (!res.ok) {
+      info.revert();
+    }
   }
 
   function openSyncModal() {
@@ -531,19 +640,27 @@ export default function SchedulePage() {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-teal-700" /> Giảng dạy (đã có phòng)
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-amber-600" /> Chưa gán phòng
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-violet-600" /> Coi thi
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-blue-600" /> Họp đơn vị / CECICS
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded bg-teal-700" /> Giảng dạy (đã có phòng)
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded bg-amber-600" /> Chưa gán phòng
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded bg-violet-600" /> Coi thi
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded bg-blue-600" /> Họp đơn vị / CECICS
+          </span>
+        </div>
+        {canEdit && (
+          <div className="inline-flex items-center gap-1.5 text-xs text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
+            <span>✨</span>
+            <span>Kéo thả (drag & drop) hoặc co giãn mép để dời ngày/giờ trực quan trên lịch tuần</span>
+          </div>
+        )}
       </div>
 
       <Card>
@@ -557,6 +674,9 @@ export default function SchedulePage() {
             slotMaxTime="18:30:00"
             allDaySlot={false}
             height="auto"
+            editable={canEdit}
+            eventStartEditable={canEdit}
+            eventDurationEditable={canEdit}
             headerToolbar={{ left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' }}
             events={calendarEvents}
             dateClick={(info) => {
@@ -569,6 +689,8 @@ export default function SchedulePage() {
               }
               if (canEdit) openExisting(info.event.extendedProps.session as SessionRecord, false);
             }}
+            eventDrop={handleEventDrop}
+            eventResize={handleEventResize}
           />
         ) : (
           <div className="h-96 w-full bg-slate-50 animate-pulse rounded-lg flex items-center justify-center text-sm text-slate-400">

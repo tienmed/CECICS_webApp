@@ -373,4 +373,30 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
     const saved = store.getAll().SimClasses.find((s) => s.sim_id === created.sim_id)!;
     expect(saved.room_id).toBe('P-HH-101,P-HH-102');
   });
+
+  it('hỗ trợ cập nhật dời ngày và giờ buổi học (drag & drop / reschedule) khi không có xung đột', () => {
+    const store = createMemoryStore(buildMockSeed(fixedNow));
+    const db = store.getAll();
+    const session = db.Sessions.find((s) => s.trang_thai !== 'Đã hủy' && s.giang_vien_id)!;
+
+    const newDate = addDaysYmd(session.ngay, 2);
+    const res = executeAction(
+      store,
+      'updateSession',
+      {
+        session_id: session.session_id,
+        ngay: newDate,
+        gio_bd: '14:00',
+        gio_kt: '16:30',
+      },
+      'daotao@pnt.edu.vn',
+      fixedNow
+    );
+
+    expect(res.data).toBeDefined();
+    const updated = store.getAll().Sessions.find((s) => s.session_id === session.session_id)!;
+    expect(updated.ngay).toBe(newDate);
+    expect(updated.gio_bd).toBe('14:00');
+    expect(updated.gio_kt).toBe('16:30');
+  });
 });
