@@ -11,13 +11,21 @@ export async function GET(request: Request) {
   }
   const url = new URL(request.url);
   const fresh = url.searchParams.get('fresh') === '1';
-  const db = await getSnapshot(fresh);
+
+  let sheetsError: string | null = null;
+  let db;
+  try {
+    db = await getSnapshot(fresh);
+  } catch (e) {
+    sheetsError = e instanceof Error ? e.message : String(e);
+  }
 
   return NextResponse.json({
     ok: true,
     user,
     dataMode: getDataMode(),
     demoMode: isDemoModeEnabled(),
+    sheetsError,
     db,
   });
 }

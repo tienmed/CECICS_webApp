@@ -19,8 +19,11 @@ export async function getSnapshot(bypassCache = false): Promise<DatabaseSnapshot
     try {
       return await readAllFromSheets(bypassCache);
     } catch (err) {
-      console.error('[getSnapshot] Lỗi kết nối Google Sheets API, tự động dự phòng sang Local Store:', err);
-      return readLocalDb();
+      const errMsg = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+      console.error('[getSnapshot] Lỗi kết nối Google Sheets API, tự động dự phòng sang Local Store:', errMsg);
+      const fallback = readLocalDb();
+      (fallback as unknown as { _sheetsError?: string })._sheetsError = errMsg;
+      return fallback;
     }
   }
   return readLocalDb();
