@@ -29,6 +29,7 @@ const ALLOWED_ACTIONS: ActionName[] = [
   'upsertTarget',
   'updateSetting',
   'updateVerificationLock',
+  'generateRecurringMeetings',
 ];
 
 const BodySchema = z.object({

@@ -16,7 +16,7 @@ import {
 import { findEquipmentConflicts, findLecturerConflicts, findRoomConflicts, parseRoomIds } from './conflict';
 import { suggestAvailableRooms, suggestFreeLecturerSlots } from './suggest';
 import { canPerform, canViewAllSimClasses, canViewSimClass } from './permissions';
-import { addDaysYmd, diffDaysYmd, formatVnDate, nowVnIso, parseTimeToMinutes, todayVnYmd, toVnDateTimeMs } from './time';
+import { addDaysYmd, dayOfWeekYmd, diffDaysYmd, formatVnDate, nowVnIso, parseTimeToMinutes, todayVnYmd, toVnDateTimeMs } from './time';
 import { detectPendingEscalations } from './analytics';
 import {
   type SimSessionItem,
@@ -276,6 +276,7 @@ export type ActionName =
   | 'upsertTarget'
   | 'updateSetting'
   | 'updateVerificationLock'
+  | 'generateRecurringMeetings'
   | 'upsertCmeCourse'
   | 'reviewCmeRegistration'
   | 'recordCmeAttendance'
@@ -1874,7 +1875,10 @@ export function executeAction(
         }
       }
 
-      return { data: { expiredSwaps, createdEscalations } };
+      // 3. Tự động sinh lịch họp định kỳ Trung tâm (nếu được kích hoạt hoặc duy trì gối đầu)
+      const recurringMeetingResult = generateCenterRecurringMeetingsInternal(store, db, actor, now);
+
+      return { data: { expiredSwaps, createdEscalations, recurringMeetings: recurringMeetingResult } };
     }
 
     case 'markNotificationsRead': {
@@ -2070,6 +2074,15 @@ export function executeAction(
       store.append('VerificationLocks', created);
       recordAudit(store, actor, 'CREATE_VERIFICATION_LOCK', 'VerificationLocks', lock_id, null, created, now);
       return { data: created };
+    }
+
+    case 'generateRecurringMeetings': {
+      if (!canPerform(actor, 'create_session') && !canPerform(actor, 'assign_room')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Hành chính hoặc Đào tạo có quyền sinh lịch họp định kỳ.');
+      }
+      const weeksAhead = Math.max(2, Math.min(52, Number(payload.weeksAhead || 26)));
+      const result = generateCenterRecurringMeetingsInternal(store, db, actor, now, weeksAhead);
+      return { data: result };
     }
 
     case 'upsertCmeCourse': {
@@ -2272,4 +2285,96 @@ export function executeAction(
     default:
       throw new DomainError('UNKNOWN_ACTION', `Hành động không hỗ trợ: ${String(action)}`);
   }
+}
+
+/**
+ * Tự động sinh lịch họp định kỳ Trung tâm CECICS 2 tuần/lần vào chiều Thứ 4 (14:00 - 16:00).
+ * Mặc định phòng P-2026-0001 (P.302 lầu 3 khu A2 Hoà Hưng).
+ */
+export function generateCenterRecurringMeetingsInternal(
+  store: DataStore,
+  db: DatabaseSnapshot,
+  actor: UserRecord,
+  now: Date,
+  weeksAhead: number = 26
+): { createdCount: number; sessions: SessionRecord[] } {
+  const currentSessions = [...db.Sessions];
+  const currentIds = currentSessions.map((s) => s.session_id);
+  const nowIso = nowVnIso(now);
+  const today = todayVnYmd(now);
+
+  // Tìm các buổi họp CECICS hiện có vào các ngày thứ 4
+  const existingMeetingDates = new Set<string>();
+  let lastMeetingDate = '';
+
+  for (const s of currentSessions) {
+    if (s.trang_thai === 'Đã hủy') continue;
+    const isMeeting = s.loai === 'Họp' || s.hoc_phan === 'CECICS' || s.session_id.includes('MEET');
+    if (isMeeting && s.ngay) {
+      existingMeetingDates.add(s.ngay);
+      if (s.ngay >= lastMeetingDate) {
+        lastMeetingDate = s.ngay;
+      }
+    }
+  }
+
+  // Xác định ngày Thứ 4 đầu tiên để bắt đầu chuỗi
+  // Nếu hôm nay là Thứ 4 (14h-16h) và chưa có lịch: có thể tạo từ hôm nay hoặc tuần sau
+  let startWednesday = '';
+  let cur = today;
+  // Tìm thứ 4 gần nhất từ hôm nay trở đi
+  for (let i = 0; i < 14; i++) {
+    const d = addDaysYmd(today, i);
+    if (dayOfWeekYmd(d) === 3) { // 3 là Thứ Tư
+      startWednesday = d;
+      break;
+    }
+  }
+
+  const created: SessionRecord[] = [];
+  const defaultRoom = db.Rooms?.find((r) => r.room_id === 'P-2026-0001' && r.kich_hoat) || db.Rooms?.[0];
+  const roomId = defaultRoom?.room_id || 'P-2026-0001';
+  const campusId = defaultRoom?.campus_id || 'HH';
+
+  // Sinh lịch 2 tuần 1 lần (khoảng cách 14 ngày)
+  const numCycles = Math.ceil(weeksAhead / 2);
+
+  for (let cycle = 0; cycle < numCycles; cycle++) {
+    const meetingDate = addDaysYmd(startWednesday, cycle * 14);
+    if (existingMeetingDates.has(meetingDate)) {
+      continue;
+    }
+
+    const meetingYear = Number(meetingDate.slice(0, 4)) || now.getFullYear();
+    const session_id = nextId('B', currentIds, meetingYear);
+    currentIds.push(session_id);
+
+    const rec: SessionRecord = {
+      session_id,
+      loai: 'Họp',
+      he: 'Hành chính',
+      hoc_phan: 'CECICS',
+      bai_giang: 'Họp định kỳ',
+      lop: 'Toàn thể nhân sự Trung tâm CECICS',
+      ngay: meetingDate,
+      gio_bd: '14:00',
+      gio_kt: '16:00',
+      campus_id: campusId,
+      giang_vien_id: 'U-CECICS-ALL',
+      room_id: roomId,
+      trang_thai: 'Đã lên lịch',
+      calendar_event_id: `gcal-${session_id}`,
+      rsvp: 'Đã đồng ý',
+      ghi_chu: 'Họp giao ban định kỳ Trung tâm CECICS (Chiều Thứ Tư, 2 tuần/lần, 14:00 - 16:00). Thành phần: Toàn bộ nhân viên CECICS.',
+      tao_boi: actor.user_id || 'admin@pnt.edu.vn',
+      cap_nhat_luc: nowIso,
+    };
+
+    store.append('Sessions', rec);
+    recordAudit(store, actor, 'CREATE_SESSION', 'Sessions', rec.session_id, null, rec, now);
+    created.push(rec);
+    existingMeetingDates.add(meetingDate);
+  }
+
+  return { createdCount: created.length, sessions: created };
 }

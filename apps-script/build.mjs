@@ -33,4 +33,26 @@ for (const file of fs.readdirSync(srcDir)) {
   }
 }
 
+// 3. Tạo file ALL_IN_ONE_CODE.js gộp toàn bộ để dễ dàng copy vào Apps Script Editor
+const allInOneHeader = `// ============================================================================
+// CECICS WEB APP - APPS SCRIPT ALL-IN-ONE GATEWAY
+// Tự động đóng gói toàn bộ Core, Store, Calendar, Mail, Triggers và Web App Endpoint
+// ============================================================================
+`;
+
+const order = ['core.bundle.js', 'store.js', 'calendar.js', 'mail.js', 'setup.js', 'triggers.js', 'main.js'];
+const concatenated = [allInOneHeader];
+
+for (const name of order) {
+  const filePath = path.join(distDir, name);
+  if (fs.existsSync(filePath)) {
+    concatenated.push(`\n// --- BEGIN ${name} ---\n`);
+    concatenated.push(fs.readFileSync(filePath, 'utf8'));
+    concatenated.push(`\n// --- END ${name} ---\n`);
+  }
+}
+
+fs.writeFileSync(path.join(distDir, 'ALL_IN_ONE_CODE.js'), concatenated.join('\n'), 'utf8');
+
 console.log('Đã đóng gói Apps Script thành công tại:', distDir);
+console.log('File All-In-One sẵn sàng:', path.join(distDir, 'ALL_IN_ONE_CODE.js'));

@@ -52,6 +52,14 @@ function doPost(e) {
     try {
       var ss = getTargetSpreadsheet_();
       var store = createSheetsStore_(ss);
+
+      // Hỗ trợ Action đặc biệt: Quét và cập nhật lại toàn bộ Calendar
+      if (req.action === 'retrofitCalendar') {
+        var fromDate = req.payload && req.payload.fromDate ? String(req.payload.fromDate) : '2026-11-23';
+        var result = retrofitCalendarEventsFromDate_(fromDate);
+        return jsonOut_({ ok: true, data: result });
+      }
+
       var res = CECICS_CORE.executeAction(store, req.action, req.payload || {}, req.actor, new Date());
 
       if (res.effects && res.effects.calendarSync) {
