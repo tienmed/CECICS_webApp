@@ -263,6 +263,8 @@ export type ActionName =
   | 'upsertEquipmentCatalog'
   | 'upsertConsumable'
   | 'autoDispatchEquipment'
+  | 'recordEquipmentMaintenance'
+  | 'updateEquipmentLocation'
   | 'reportIncident'
   | 'assessIncident'
   | 'confirmIncidentImpact'
@@ -1474,10 +1476,14 @@ export function executeAction(
         so_seri: String(payload.so_seri || '').trim(),
         nam_sx: String(payload.nam_sx || '').trim(),
         vi_tri: String(payload.vi_tri || '').trim(),
+        vi_tri_hien_tai: String(payload.vi_tri_hien_tai || payload.vi_tri || '').trim(),
         so_luot_dung: Number(payload.so_luot_dung) || 0,
         so_gio_dung: Number(payload.so_gio_dung) || 0,
         tu_ngay: todayVnYmd(now),
         ghi_chu: String(payload.ghi_chu || '').trim(),
+        ngay_bao_tri_cuoi: String(payload.ngay_bao_tri_cuoi || '').trim(),
+        ngay_bao_tri_tiep: String(payload.ngay_bao_tri_tiep || '').trim(),
+        chu_ky_bao_tri_ngay: Number(payload.chu_ky_bao_tri_ngay) || 30,
       };
       if (!rec.ten) throw new DomainError('VALIDATION', 'Vui lòng nhập tên thiết bị.');
       store.append('Equipment', rec);
@@ -1503,10 +1509,14 @@ export function executeAction(
         so_seri: String(payload.so_seri ?? existing.so_seri ?? ''),
         nam_sx: String(payload.nam_sx ?? existing.nam_sx ?? ''),
         vi_tri: String(payload.vi_tri ?? existing.vi_tri ?? ''),
+        vi_tri_hien_tai: String(payload.vi_tri_hien_tai ?? existing.vi_tri_hien_tai ?? existing.vi_tri ?? ''),
         so_luot_dung: payload.so_luot_dung !== undefined ? Number(payload.so_luot_dung) : existing.so_luot_dung,
         so_gio_dung: payload.so_gio_dung !== undefined ? Number(payload.so_gio_dung) : existing.so_gio_dung,
         tu_ngay: statusChanged ? todayVnYmd(now) : existing.tu_ngay,
         ghi_chu: String(payload.ghi_chu ?? existing.ghi_chu),
+        ngay_bao_tri_cuoi: String(payload.ngay_bao_tri_cuoi ?? existing.ngay_bao_tri_cuoi ?? ''),
+        ngay_bao_tri_tiep: String(payload.ngay_bao_tri_tiep ?? existing.ngay_bao_tri_tiep ?? ''),
+        chu_ky_bao_tri_ngay: payload.chu_ky_bao_tri_ngay !== undefined ? Number(payload.chu_ky_bao_tri_ngay) : (existing.chu_ky_bao_tri_ngay || 30),
       });
       recordAudit(store, actor, 'UPDATE_EQUIPMENT', 'Equipment', equipment_id, existing, updated, now);
 
@@ -1625,6 +1635,95 @@ export function executeAction(
       );
 
       return { data: result };
+    }
+
+    case 'recordEquipmentMaintenance': {
+      if (!canPerform(actor, 'manage_equipment')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Kỹ thuật có quyền ghi nhận bảo dưỡng, bảo trì thiết bị.');
+      }
+      const equipment_id = String(payload.equipment_id || '').trim();
+      const eq = db.Equipment.find((e) => e.equipment_id === equipment_id);
+      if (!eq) throw new DomainError('NOT_FOUND', `Không tìm thấy thiết bị ${equipment_id}.`);
+
+      const maintenance_id =
+        String(payload.maintenance_id || '').trim() ||
+        nextId('BT', (db.EquipmentMaintenance || []).map((m) => m.maintenance_id), year);
+
+      const loai = String(payload.loai || 'Sau buổi học'); // 'Sau buổi học' | 'Định kỳ' | 'Đột xuất / Sửa chữa'
+      const ngay_thuc_hien = String(payload.ngay_thuc_hien || todayVnYmd(now));
+      const noi_dung = String(payload.noi_dung || '').trim();
+      if (!noi_dung) throw new DomainError('VALIDATION', 'Vui lòng nhập nội dung công việc bảo dưỡng / bảo trì.');
+
+      const tinh_trang_sau = String(payload.tinh_trang_sau || 'Tốt - Sẵn sàng');
+      const vi_tri_sau = String(payload.vi_tri_sau || eq.vi_tri || '').trim();
+      const sim_id = String(payload.sim_id || '').trim();
+      const chu_ky = Number(eq.chu_ky_bao_tri_ngay) || 30;
+      const ngay_bao_tri_tiep = String(payload.ngay_bao_tri_tiep || addDaysYmd(ngay_thuc_hien, chu_ky));
+
+      const rec = {
+        maintenance_id,
+        equipment_id,
+        sim_id,
+        loai,
+        ngay_thuc_hien,
+        nguoi_thuc_hien: actor.email,
+        noi_dung,
+        tinh_trang_sau,
+        vi_tri_sau,
+        ngay_bao_tri_tiep,
+        ghi_chu: String(payload.ghi_chu || '').trim(),
+        tao_luc: nowIso,
+      };
+
+      store.append('EquipmentMaintenance', rec);
+
+      // Cập nhật tình trạng & vị trí của thiết bị
+      let nextTrangThai = eq.trang_thai;
+      if (tinh_trang_sau === 'Tốt - Sẵn sàng' && (eq.trang_thai === 'Bảo trì' || eq.trang_thai === 'Hỏng')) {
+        nextTrangThai = 'Hoạt động';
+      } else if (tinh_trang_sau === 'Hỏng - Chờ sửa') {
+        nextTrangThai = 'Hỏng';
+      }
+
+      // Nếu có cập nhật thời gian dùng sau buổi học
+      const addHours = Number(payload.so_gio_dung_them) || 0;
+      const addRuns = Number(payload.so_luot_dung_them) || 0;
+
+      const updatedEq = store.update('Equipment', equipment_id, {
+        trang_thai: nextTrangThai,
+        vi_tri: vi_tri_sau || eq.vi_tri,
+        vi_tri_hien_tai: vi_tri_sau || eq.vi_tri_hien_tai || eq.vi_tri,
+        ngay_bao_tri_cuoi: ngay_thuc_hien,
+        ngay_bao_tri_tiep,
+        so_gio_dung: Math.round(((Number(eq.so_gio_dung) || 0) + addHours) * 10) / 10,
+        so_luot_dung: (Number(eq.so_luot_dung) || 0) + addRuns,
+      });
+
+      recordAudit(store, actor, 'RECORD_EQUIPMENT_MAINTENANCE', 'EquipmentMaintenance', maintenance_id, null, rec, now);
+      return { data: { maintenance: rec, equipment: updatedEq } };
+    }
+
+    case 'updateEquipmentLocation': {
+      if (!canPerform(actor, 'manage_equipment')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Đơn vị Kỹ thuật có quyền cập nhật vị trí thiết bị.');
+      }
+      const equipment_id = String(payload.equipment_id || '').trim();
+      const vi_tri_moi = String(payload.vi_tri_moi || '').trim();
+      if (!vi_tri_moi) throw new DomainError('VALIDATION', 'Vui lòng nhập vị trí mới của thiết bị.');
+
+      const existing = db.Equipment.find((e) => e.equipment_id === equipment_id);
+      if (!existing) throw new DomainError('NOT_FOUND', `Không tìm thấy thiết bị ${equipment_id}.`);
+
+      const updated = store.update('Equipment', equipment_id, {
+        vi_tri_hien_tai: vi_tri_moi,
+        vi_tri: payload.set_as_default_location ? vi_tri_moi : existing.vi_tri,
+        ghi_chu: payload.ly_do_di_chuyen
+          ? `${existing.ghi_chu ? existing.ghi_chu + ' | ' : ''}[${todayVnYmd(now)}] Di chuyển tới ${vi_tri_moi}: ${payload.ly_do_di_chuyen}`
+          : existing.ghi_chu,
+      });
+
+      recordAudit(store, actor, 'UPDATE_EQUIPMENT_LOCATION', 'Equipment', equipment_id, existing, updated, now);
+      return { data: updated };
     }
 
     case 'reportIncident': {

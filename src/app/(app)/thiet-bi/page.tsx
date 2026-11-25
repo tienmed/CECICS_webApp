@@ -4,14 +4,14 @@ import React, { useMemo, useState } from 'react';
 import { canPerform } from '@/core/permissions';
 import { diffDaysYmd, formatVnDate, todayVnYmd } from '@/core/time';
 import { EQUIPMENT_STATUSES, INCIDENT_ASSESSMENTS, type ConsumableRecord, type EquipmentCatalogRecord, type EquipmentRecord } from '@/core/types';
-import { calculateEquipmentUsageMap, dispatchLeastUsedEquipment } from '@/core/equipment-dispatch';
+import { calculateEquipmentUsageMap, dispatchLeastUsedEquipment, suggestEquipmentAndConsumablesForLesson } from '@/core/equipment-dispatch';
 import { useApp } from '@/components/AppProvider';
 import { Badge, Card, Modal, PageHeader } from '@/components/ui';
 
 const inputCls = 'w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none';
 const labelCls = 'block text-xs font-semibold text-slate-700 mb-1';
 
-type TabKey = 'EQUIPMENT' | 'CATALOG' | 'CONSUMABLES' | 'REPORT';
+type TabKey = 'EQUIPMENT' | 'CATALOG' | 'CONSUMABLES' | 'MAINTENANCE' | 'REPORT';
 
 export default function EquipmentPage() {
   const { user, db, execute } = useApp();
@@ -27,6 +27,39 @@ export default function EquipmentPage() {
   const [addConsumableOpen, setAddConsumableOpen] = useState(false);
   const [reportTarget, setReportTarget] = useState<EquipmentRecord | null>(null);
   const [simTestOpen, setSimTestOpen] = useState(false);
+
+  // KTV Features State
+  const [maintenanceOpen, setMaintenanceOpen] = useState(false);
+  const [maintenanceTarget, setMaintenanceTarget] = useState<EquipmentRecord | null>(null);
+  const [maintenanceForm, setMaintenanceForm] = useState({
+    loai: 'Sau buổi học',
+    sim_id: '',
+    noi_dung: '',
+    tinh_trang_sau: 'Tốt - Sẵn sàng',
+    vi_tri_sau: '',
+    ngay_bao_tri_tiep: '',
+    so_gio_dung_them: 0,
+    so_luot_dung_them: 0,
+    ghi_chu: '',
+  });
+
+  const [locationMoveTarget, setLocationMoveTarget] = useState<EquipmentRecord | null>(null);
+  const [locationMoveForm, setLocationMoveForm] = useState({
+    vi_tri_moi: '',
+    ly_do_di_chuyen: '',
+    set_as_default_location: false,
+  });
+
+  const [lessonHelperOpen, setLessonHelperOpen] = useState(false);
+  const [lessonHelperForm, setLessonHelperForm] = useState({
+    noi_dung: '',
+    boi_canh_lam_sang: '',
+    ky_nang_mong_doi: '',
+    so_hoc_vien: 16,
+    so_nhom: 3,
+    campus_id: 'HH',
+  });
+  const [lessonSuggestion, setLessonSuggestion] = useState<ReturnType<typeof suggestEquipmentAndConsumablesForLesson> | null>(null);
 
   // Forms state
   const [newEq, setNewEq] = useState({
@@ -216,6 +249,86 @@ export default function EquipmentPage() {
     setTestResult(res);
   }
 
+  function handleOpenMaintenance(eq: EquipmentRecord, loai = 'Sau buổi học') {
+    setMaintenanceTarget(eq);
+    setMaintenanceForm({
+      loai,
+      sim_id: '',
+      noi_dung: loai === 'Sau buổi học'
+        ? 'Vệ sinh mô hình, khử khuẩn bề mặt, sạc pin thiết bị, kiểm tra hoàn chỉnh phụ kiện.'
+        : 'Bảo trì định kỳ: Kiểm tra vi mạch, bôi trơn linh kiện cơ khí, kiểm định cảm biến.',
+      tinh_trang_sau: 'Tốt - Sẵn sàng',
+      vi_tri_sau: eq.vi_tri || '',
+      ngay_bao_tri_tiep: '',
+      so_gio_dung_them: loai === 'Sau buổi học' ? 3.5 : 0,
+      so_luot_dung_them: loai === 'Sau buổi học' ? 1 : 0,
+      ghi_chu: '',
+    });
+    setMaintenanceOpen(true);
+  }
+
+  async function handleSaveMaintenance(e: React.FormEvent) {
+    e.preventDefault();
+    if (!maintenanceTarget) return;
+
+    const res = await execute(
+      'recordEquipmentMaintenance',
+      {
+        equipment_id: maintenanceTarget.equipment_id,
+        ...maintenanceForm,
+      },
+      'Đã ghi nhận bảo dưỡng/bảo trì và cập nhật hồ sơ thiết bị.'
+    );
+
+    if (res.ok) {
+      setMaintenanceOpen(false);
+      setMaintenanceTarget(null);
+    }
+  }
+
+  function handleOpenLocationMove(eq: EquipmentRecord) {
+    setLocationMoveTarget(eq);
+    setLocationMoveForm({
+      vi_tri_moi: eq.vi_tri_hien_tai || eq.vi_tri || '',
+      ly_do_di_chuyen: '',
+      set_as_default_location: false,
+    });
+  }
+
+  async function handleSaveLocationMove(e: React.FormEvent) {
+    e.preventDefault();
+    if (!locationMoveTarget) return;
+
+    const res = await execute(
+      'updateEquipmentLocation',
+      {
+        equipment_id: locationMoveTarget.equipment_id,
+        ...locationMoveForm,
+      },
+      `Đã cập nhật vị trí thiết bị ${locationMoveTarget.equipment_id}.`
+    );
+
+    if (res.ok) {
+      setLocationMoveTarget(null);
+    }
+  }
+
+  function handleRunLessonSuggestion(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    const result = suggestEquipmentAndConsumablesForLesson(
+      {
+        noi_dung: lessonHelperForm.noi_dung,
+        boi_canh_lam_sang: lessonHelperForm.boi_canh_lam_sang,
+        ky_nang_mong_doi: lessonHelperForm.ky_nang_mong_doi,
+        so_hoc_vien: Number(lessonHelperForm.so_hoc_vien) || 12,
+        so_nhom: Number(lessonHelperForm.so_nhom) || 2,
+        campus_id: lessonHelperForm.campus_id,
+      },
+      db
+    );
+    setLessonSuggestion(result);
+  }
+
   return (
     <div className="space-y-6 pb-12">
       <PageHeader
@@ -223,6 +336,15 @@ export default function EquipmentPage() {
         subtitle="Quản lý 358 thiết bị/mô hình · Danh mục phân cấp theo mã Code · Điều phối cân bằng tải Least-Used First · Báo cáo PNT Mẫu 02/03"
         actions={
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => {
+                setLessonHelperOpen(true);
+                if (lessonHelperForm.noi_dung) handleRunLessonSuggestion();
+              }}
+              className="px-3.5 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              <span>🎓</span> Hỗ trợ GV chọn Mô hình &amp; Vật tư
+            </button>
             <button
               onClick={() => {
                 setTestCatalogId(db.EquipmentCatalogs[0]?.catalog_id || '');
@@ -283,6 +405,14 @@ export default function EquipmentPage() {
           }`}
         >
           <span>🧪</span> Vật tư tiêu hao ({db.Consumables.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('MAINTENANCE')}
+          className={`px-5 py-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'MAINTENANCE' ? 'border-teal-600 text-teal-700' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <span>🔧</span> Bảo dưỡng &amp; Bảo trì định kỳ ({(db.EquipmentMaintenance || []).length})
         </button>
         <button
           onClick={() => setActiveTab('REPORT')}
@@ -474,9 +604,25 @@ export default function EquipmentPage() {
                       <td className="px-3.5 py-2.5 text-xs text-slate-600">{eq.nhom}</td>
                       <td className="px-3.5 py-2.5 font-mono text-xs text-slate-600">{eq.so_seri || '—'}</td>
                       <td className="px-3.5 py-2.5 text-xs text-slate-600">
-                        <span className="inline-block px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700">
-                          {eq.vi_tri || (eq.campus_id === 'HH' ? 'Lầu 8 Khu C' : 'Lầu 5 Khu A2')}
-                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="inline-block px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-800 font-medium">
+                            {eq.vi_tri_hien_tai || eq.vi_tri || (eq.campus_id === 'HH' ? 'Lầu 8 Khu C' : 'Lầu 5 Khu A2')}
+                          </span>
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenLocationMove(eq)}
+                              title="Cập nhật vị trí / Di chuyển phòng"
+                              className="text-teal-700 hover:text-teal-900 text-xs px-1 hover:bg-teal-50 rounded"
+                            >
+                              📍
+                            </button>
+                          )}
+                        </div>
+                        {eq.ngay_bao_tri_tiep && (
+                          <div className="text-[11px] text-slate-400 mt-0.5">
+                            Bảo trì tiếp: {formatVnDate(eq.ngay_bao_tri_tiep)}
+                          </div>
+                        )}
                       </td>
                       <td className="px-3.5 py-2.5 text-center">
                         <div className="font-bold text-slate-800">{usage.so_luot_dung} lượt</div>
@@ -499,6 +645,15 @@ export default function EquipmentPage() {
                                 </option>
                               ))}
                             </select>
+                          )}
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenMaintenance(eq, 'Sau buổi học')}
+                              title="Ghi nhận bảo dưỡng sau buổi học"
+                              className="px-2 py-1 rounded bg-teal-50 text-teal-700 hover:bg-teal-100 text-xs font-semibold"
+                            >
+                              🧹 Bảo dưỡng
+                            </button>
                           )}
                           {canManage && (
                             <button
@@ -651,7 +806,128 @@ export default function EquipmentPage() {
         </div>
       )}
 
-      {/* TAB 4: BÁO CÁO MẪU 02 & 03 PNT */}
+      {/* TAB 4: BẢO DƯỠNG & BẢO TRÌ ĐỊNH KỲ */}
+      {activeTab === 'MAINTENANCE' && (
+        <div className="space-y-6">
+          {/* Thống kê hạn bảo trì */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-500 font-medium">Tổng đợt bảo dưỡng / bảo trì</div>
+                <div className="text-2xl font-bold text-slate-900 mt-1">{(db.EquipmentMaintenance || []).length}</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 text-lg">
+                🔧
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-500 font-medium">Thiết bị bảo dưỡng sau buổi học</div>
+                <div className="text-2xl font-bold text-teal-800 mt-1">
+                  {(db.EquipmentMaintenance || []).filter((m) => m.loai === 'Sau buổi học').length}
+                </div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-700 text-lg">
+                🧹
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-500 font-medium">Bảo trì định kỳ / Đột xuất</div>
+                <div className="text-2xl font-bold text-amber-700 mt-1">
+                  {(db.EquipmentMaintenance || []).filter((m) => m.loai !== 'Sau buổi học').length}
+                </div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-700 text-lg">
+                📅
+              </div>
+            </div>
+          </div>
+
+          {/* Lịch sử bảo trì và checklist */}
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+              <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
+                <span>📋</span> Sổ Ghi Nhận Bảo Dưỡng Sau Ca Học &amp; Bảo Trì Thiết Bị
+              </h3>
+              <span className="text-xs text-slate-500">
+                Ghi nhận thời gian sử dụng, khấu hao và cập nhật vị trí thiết bị
+              </span>
+            </div>
+            {(db.EquipmentMaintenance || []).length === 0 ? (
+              <div className="p-8 text-center text-slate-500 text-sm">
+                Chưa có nhật ký bảo dưỡng nào được ghi nhận. KTV có thể bấm nút &quot;🧹 Bảo dưỡng&quot; ở danh sách thiết bị sau mỗi buổi học.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                    <tr>
+                      <th className="px-4 py-3">Mã Đợt</th>
+                      <th className="px-4 py-3">Thiết Bị / Mô Hình</th>
+                      <th className="px-4 py-3">Loại Bảo Trì</th>
+                      <th className="px-4 py-3">Lớp Học (Nếu có)</th>
+                      <th className="px-4 py-3">Nội Dung Thực Hiện</th>
+                      <th className="px-4 py-3 text-center">Tình Trạng Sau</th>
+                      <th className="px-4 py-3">Vị Trí Cất Giữ</th>
+                      <th className="px-4 py-3">KTV Thực Hiện</th>
+                      <th className="px-4 py-3">Hạn Kế Tiếp</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[...(db.EquipmentMaintenance || [])].reverse().map((m) => {
+                      const eq = eqMap.get(m.equipment_id);
+                      const sc = m.sim_id ? db.SimClasses.find((s) => s.sim_id === m.sim_id) : undefined;
+                      return (
+                        <tr key={m.maintenance_id} className="hover:bg-slate-50">
+                          <td className="px-4 py-3 font-mono text-xs font-bold text-slate-700">{m.maintenance_id}</td>
+                          <td className="px-4 py-3">
+                            <div className="font-semibold text-slate-900">{eq?.ten || m.equipment_id}</div>
+                            <div className="font-mono text-xs text-teal-800">{m.equipment_id}</div>
+                          </td>
+                          <td className="px-4 py-3 text-xs">
+                            <span className={`inline-block px-2 py-0.5 rounded font-medium ${
+                              m.loai === 'Sau buổi học' ? 'bg-blue-50 text-blue-800' : 'bg-amber-50 text-amber-800'
+                            }`}>
+                              {m.loai}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-600">
+                            {sc ? (
+                              <div>
+                                <span className="font-semibold text-slate-800">{sc.noi_dung}</span>
+                                <div className="text-[11px] text-slate-400 font-mono">{sc.sim_id}</div>
+                              </div>
+                            ) : (
+                              m.sim_id || '—'
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-800 max-w-xs">{m.noi_dung}</td>
+                          <td className="px-4 py-3 text-center">
+                            <Badge tone={m.tinh_trang_sau.includes('Tốt') ? 'emerald' : m.tinh_trang_sau.includes('Hỏng') ? 'red' : 'amber'}>
+                              {m.tinh_trang_sau}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-700 font-medium">{m.vi_tri_sau || '—'}</td>
+                          <td className="px-4 py-3 text-xs text-slate-600">
+                            <div>{m.nguoi_thuc_hien}</div>
+                            <div className="text-[11px] text-slate-400">{formatVnDate(m.ngay_thuc_hien)}</div>
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-600 font-mono">
+                            {m.ngay_bao_tri_tiep ? formatVnDate(m.ngay_bao_tri_tiep) : '—'}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 5: BÁO CÁO MẪU 02 & 03 PNT */}
       {activeTab === 'REPORT' && (
         <div className="space-y-6">
           <div className="bg-white p-5 rounded-xl border border-slate-200 space-y-4">
@@ -1075,6 +1351,365 @@ export default function EquipmentPage() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* Modal Ghi nhận Bảo Dưỡng / Bảo Trì (KTV) */}
+      <Modal
+        open={maintenanceOpen}
+        onClose={() => {
+          setMaintenanceOpen(false);
+          setMaintenanceTarget(null);
+        }}
+        title={`Ghi nhận Bảo Dưỡng / Bảo Trì — ${maintenanceTarget?.ten || ''} (${maintenanceTarget?.equipment_id || ''})`}
+      >
+        <form onSubmit={handleSaveMaintenance} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Loại hình thực hiện *</label>
+              <select
+                value={maintenanceForm.loai}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, loai: e.target.value })}
+                className={inputCls}
+              >
+                <option value="Sau buổi học">Sau buổi học (Post-session)</option>
+                <option value="Định kỳ">Định kỳ (Periodic)</option>
+                <option value="Đột xuất / Sửa chữa">Đột xuất / Khắc phục lỗi</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>Lớp mô phỏng liên quan (nếu có)</label>
+              <select
+                value={maintenanceForm.sim_id}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, sim_id: e.target.value })}
+                className={inputCls}
+              >
+                <option value="">-- Không gắn lớp cụ thể --</option>
+                {db.SimClasses.slice(0, 30).map((s) => (
+                  <option key={s.sim_id} value={s.sim_id}>
+                    [{s.sim_id}] {s.noi_dung} ({formatVnDate(s.ngay)})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Nội dung công việc thực hiện *</label>
+            <textarea
+              required
+              rows={3}
+              value={maintenanceForm.noi_dung}
+              onChange={(e) => setMaintenanceForm({ ...maintenanceForm, noi_dung: e.target.value })}
+              placeholder="VD: Vệ sinh đường thở, khử khuẩn lồng ngực, thay pin cảm biến, kiểm tra van 1 chiều..."
+              className={inputCls}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Tình trạng thiết bị sau bảo dưỡng *</label>
+              <select
+                value={maintenanceForm.tinh_trang_sau}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, tinh_trang_sau: e.target.value })}
+                className={inputCls}
+              >
+                <option value="Tốt - Sẵn sàng">Tốt - Sẵn sàng phục vụ</option>
+                <option value="Cần theo dõi">Cần theo dõi thêm</option>
+                <option value="Hỏng - Chờ sửa">Hỏng - Cần chuyển sửa chữa</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>Vị trí cất giữ / hoàn trả *</label>
+              <input
+                required
+                value={maintenanceForm.vi_tri_sau}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, vi_tri_sau: e.target.value })}
+                placeholder="VD: Lầu 8 Khu C - Kho A1"
+                className={inputCls}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <div>
+              <label className={labelCls}>Cộng thêm giờ dùng (giờ)</label>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                value={maintenanceForm.so_gio_dung_them}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, so_gio_dung_them: Number(e.target.value) })}
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Cộng thêm lượt dùng</label>
+              <input
+                type="number"
+                min="0"
+                value={maintenanceForm.so_luot_dung_them}
+                onChange={(e) => setMaintenanceForm({ ...maintenanceForm, so_luot_dung_them: Number(e.target.value) })}
+                className={inputCls}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Hạn bảo trì định kỳ kế tiếp (tùy chọn)</label>
+            <input
+              type="date"
+              value={maintenanceForm.ngay_bao_tri_tiep}
+              onChange={(e) => setMaintenanceForm({ ...maintenanceForm, ngay_bao_tri_tiep: e.target.value })}
+              className={inputCls}
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMaintenanceOpen(false);
+                setMaintenanceTarget(null);
+              }}
+              className="px-4 py-2 rounded-lg border border-slate-300 text-sm"
+            >
+              Hủy
+            </button>
+            <button type="submit" className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold">
+              Hoàn tất &amp; Lưu hồ sơ
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal Di Chuyển / Truy Vết Vị Trí (Location Tracking) */}
+      <Modal
+        open={Boolean(locationMoveTarget)}
+        onClose={() => setLocationMoveTarget(null)}
+        title={`Cập nhật Vị Trí & Truy Vết — ${locationMoveTarget?.ten || ''}`}
+      >
+        <form onSubmit={handleSaveLocationMove} className="space-y-4">
+          <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg text-xs text-teal-900">
+            <div>Mã TB: <strong>{locationMoveTarget?.equipment_id}</strong></div>
+            <div>Vị trí gốc ban đầu: <strong>{locationMoveTarget?.vi_tri}</strong></div>
+            <div>Vị trí hiện thời: <strong>{locationMoveTarget?.vi_tri_hien_tai || locationMoveTarget?.vi_tri}</strong></div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Vị trí mới chuyển đến *</label>
+            <input
+              required
+              value={locationMoveForm.vi_tri_moi}
+              onChange={(e) => setLocationMoveForm({ ...locationMoveForm, vi_tri_moi: e.target.value })}
+              placeholder="VD: Phòng Sim 8.02, Tủ Mô hình Kho C, Khu bảo dưỡng Lầu 7..."
+              className={inputCls}
+            />
+          </div>
+
+          <div>
+            <label className={labelCls}>Mục đích / Lý do di chuyển</label>
+            <input
+              value={locationMoveForm.ly_do_di_chuyen}
+              onChange={(e) => setLocationMoveForm({ ...locationMoveForm, ly_do_di_chuyen: e.target.value })}
+              placeholder="VD: Cấp phát phục vụ lớp Nội soi chiều nay, hoặc thu hồi về kho"
+              className={inputCls}
+            />
+          </div>
+
+          <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={locationMoveForm.set_as_default_location}
+              onChange={(e) => setLocationMoveForm({ ...locationMoveForm, set_as_default_location: e.target.checked })}
+              className="accent-teal-700 rounded"
+            />
+            <span>Đặt làm vị trí lưu trữ mặc định mới của thiết bị</span>
+          </label>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <button type="button" onClick={() => setLocationMoveTarget(null)} className="px-4 py-2 rounded-lg border border-slate-300 text-sm">
+              Hủy
+            </button>
+            <button type="submit" className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold">
+              Cập nhật vị trí
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal Hỗ trợ Giảng viên chọn Mô hình & Vật tư theo bài học */}
+      <Modal
+        open={lessonHelperOpen}
+        onClose={() => setLessonHelperOpen(false)}
+        title="Trợ lý KTV: Đề xuất Mô hình Thiết bị & Vật tư Tiêu hao theo Bài học"
+      >
+        <div className="space-y-4 max-h-[80vh] overflow-y-auto pr-1">
+          <form onSubmit={handleRunLessonSuggestion} className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div>
+              <label className={labelCls}>Nội dung / Tên bài giảng lâm sàng *</label>
+              <input
+                required
+                value={lessonHelperForm.noi_dung}
+                onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, noi_dung: e.target.value })}
+                placeholder="VD: Kỹ năng hồi sức tim phổi CPR nâng cao, đặt nội khí quản, siêu âm FAST..."
+                className={inputCls}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Bối cảnh lâm sàng (tuỳ chọn)</label>
+                <input
+                  value={lessonHelperForm.boi_canh_lam_sang}
+                  onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, boi_canh_lam_sang: e.target.value })}
+                  placeholder="VD: Cấp cứu ngoại viện, phòng mổ, khoa Hồi sức tích cực..."
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Kỹ năng mong đợi</label>
+                <input
+                  value={lessonHelperForm.ky_nang_mong_doi}
+                  onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, ky_nang_mong_doi: e.target.value })}
+                  placeholder="VD: Ép tim đúng biên độ, cắt chỉ, soi thanh quản..."
+                  className={inputCls}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className={labelCls}>Số học viên</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={lessonHelperForm.so_hoc_vien}
+                  onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, so_hoc_vien: Number(e.target.value) })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Số nhóm thực hành</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={lessonHelperForm.so_nhom}
+                  onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, so_nhom: Number(e.target.value) })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Cơ sở đào tạo</label>
+                <select
+                  value={lessonHelperForm.campus_id}
+                  onChange={(e) => setLessonHelperForm({ ...lessonHelperForm, campus_id: e.target.value })}
+                  className={inputCls}
+                >
+                  <option value="HH">Khu C (Hòa Hưng)</option>
+                  <option value="TT">Khu A2 (Tân Nhựt)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button type="submit" className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold flex items-center gap-1.5">
+                <span>🔍</span> Phân tích &amp; Đề xuất danh mục
+              </button>
+            </div>
+          </form>
+
+          {lessonSuggestion && (
+            <div className="space-y-4 pt-2">
+              {/* Đề xuất mô hình thiết bị */}
+              <div>
+                <h4 className="font-bold text-slate-800 text-sm mb-2 flex items-center justify-between">
+                  <span>Mô hình &amp; Thiết bị phù hợp ({lessonSuggestion.suggestedCatalogs.length})</span>
+                  <span className="text-xs text-slate-500 font-normal">Dựa trên từ khóa bài giảng và mục tiêu</span>
+                </h4>
+                {lessonSuggestion.suggestedCatalogs.length === 0 ? (
+                  <div className="p-3 text-xs text-slate-500 bg-slate-50 rounded-lg border border-slate-200">
+                    Không tìm thấy mô hình tương thích trực tiếp. Vui lòng mở rộng từ khóa tìm kiếm.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {lessonSuggestion.suggestedCatalogs.map((sc) => (
+                      <div key={sc.catalog.catalog_id} className="p-3 rounded-lg border border-slate-200 bg-white hover:border-teal-400 transition-colors">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <span className="font-mono text-xs font-bold text-teal-800 mr-2">[{sc.catalog.catalog_id}]</span>
+                            <span className="font-bold text-slate-900 text-sm">{sc.catalog.ten}</span>
+                            <div className="text-xs text-slate-500 mt-0.5">{sc.catalog.nhom} · {sc.catalog.hang_sx || 'Nhiều hãng'}</div>
+                          </div>
+                          <div className="text-right">
+                            <span className="inline-block px-2 py-0.5 rounded text-xs font-bold bg-teal-100 text-teal-900">
+                              Đề xuất: {sc.recommendedCount} {sc.catalog.dvt}
+                            </span>
+                            <div className="text-[11px] text-slate-500 mt-0.5">Khả dụng: {sc.availableCount} máy</div>
+                          </div>
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {sc.matchedKeywords.map((k) => (
+                            <span key={k} className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">
+                              ✓ {k}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Đề xuất vật tư tiêu hao */}
+              <div>
+                <h4 className="font-bold text-slate-800 text-sm mb-2 flex items-center justify-between">
+                  <span>Vật tư tiêu hao ước tính ({lessonSuggestion.suggestedConsumables.length})</span>
+                  <span className="text-xs text-slate-500 font-normal">Tính toán theo số nhóm/học viên</span>
+                </h4>
+                {lessonSuggestion.suggestedConsumables.length === 0 ? (
+                  <div className="p-3 text-xs text-slate-500 bg-slate-50 rounded-lg border border-slate-200">
+                    Chưa có danh mục vật tư tiêu hao đề xuất cho bài này.
+                  </div>
+                ) : (
+                  <div className="border border-slate-200 rounded-lg overflow-hidden">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                        <tr>
+                          <th className="px-3 py-2">Mã VT</th>
+                          <th className="px-3 py-2">Tên Vật Tư Tiêu Hao</th>
+                          <th className="px-3 py-2 text-center">Định Mức Cấp</th>
+                          <th className="px-3 py-2 text-center">Tồn Kho Hiện Có</th>
+                          <th className="px-3 py-2">Khả Năng Đáp Ứng</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {lessonSuggestion.suggestedConsumables.map((con) => (
+                          <tr key={con.consumable.consumable_id}>
+                            <td className="px-3 py-2 font-mono text-teal-800 font-bold">{con.consumable.consumable_id}</td>
+                            <td className="px-3 py-2 font-medium text-slate-900">{con.consumable.ten}</td>
+                            <td className="px-3 py-2 text-center font-bold text-slate-800">
+                              {con.so_luong_de_xuat} {con.consumable.dvt}
+                            </td>
+                            <td className="px-3 py-2 text-center text-slate-600">
+                              {con.ton_kho} {con.consumable.dvt}
+                            </td>
+                            <td className="px-3 py-2">
+                              {con.is_low_stock ? (
+                                <Badge tone="red">Cảnh báo: Thiếu tồn kho</Badge>
+                              ) : (
+                                <Badge tone="emerald">Đủ cấp phát ✓</Badge>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </Modal>
     </div>
   );

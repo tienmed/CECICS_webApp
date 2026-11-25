@@ -89,6 +89,7 @@ export type EquipmentCatalogRecord = Rec<'EquipmentCatalogs'>;
 export type ConsumableRecord = Rec<'Consumables'>;
 export type SimClassConsumableRecord = Rec<'SimClassConsumables'>;
 export type EquipmentRecord = Rec<'Equipment'>;
+export type EquipmentMaintenanceRecord = Rec<'EquipmentMaintenance'>;
 export type IncidentRecord = Rec<'Incidents'>;
 export type IncidentImpactRecord = Rec<'IncidentImpacts'>;
 export type EscalationRecord = Rec<'Escalations'>;

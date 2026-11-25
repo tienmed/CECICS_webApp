@@ -176,27 +176,185 @@ export function dispatchLeastUsedEquipment(
   };
 }
 
+export interface LessonEquipmentConsumableSuggestion {
+  suggestedCatalogs: {
+    catalog: EquipmentCatalogRecord;
+    matchedKeywords: string[];
+    recommendedCount: number;
+    availableCount: number;
+    sampleEquipment: EquipmentRecord[];
+  }[];
+  suggestedConsumables: {
+    consumable: ConsumableRecord;
+    matchedKeywords: string[];
+    so_luong_de_xuat: number;
+    ton_kho: number;
+    is_low_stock: boolean;
+  }[];
+}
+
 /**
- * Đề xuất định mức tiêu hao vật tư cho một lớp mô phỏng dựa vào số học viên hoặc số nhóm
+ * Gợi ý thông minh mô hình thiết bị và vật tư tiêu hao phù hợp với nội dung bài học
+ * Dựa trên từ khóa trong nội dung bài (noi_dung), chuyên khoa/bộ môn (bo_mon_id),
+ * bối cảnh lâm sàng (boi_canh_lam_sang), số học viên và số nhóm.
  */
-export function suggestConsumablesForSimClass(
-  so_hoc_vien: number,
-  so_nhom: number,
-  consumablesList: ConsumableRecord[]
-): { consumable: ConsumableRecord; so_luong_de_xuat: number }[] {
+export function suggestEquipmentAndConsumablesForLesson(
+  params: {
+    noi_dung: string;
+    boi_canh_lam_sang?: string;
+    ky_nang_mong_doi?: string;
+    bo_mon_id?: string;
+    so_hoc_vien?: number;
+    so_nhom?: number;
+    campus_id?: string;
+  },
+  db: Pick<DatabaseSnapshot, 'Equipment' | 'EquipmentCatalogs' | 'Consumables'>
+): LessonEquipmentConsumableSuggestion {
+  const {
+    noi_dung = '',
+    boi_canh_lam_sang = '',
+    ky_nang_mong_doi = '',
+    so_hoc_vien = 12,
+    so_nhom = 2,
+    campus_id = 'HH',
+  } = params;
+
+  const textToScan = `${noi_dung} ${boi_canh_lam_sang} ${ky_nang_mong_doi}`.toLowerCase();
   const effectiveGroups = Math.max(1, so_nhom || Math.ceil(so_hoc_vien / 6));
 
-  return consumablesList.map((c) => {
-    let factor = 1;
-    if (c.dvt === 'Gói' || c.dvt === 'Tép' || c.dvt === 'Cái') {
-      factor = effectiveGroups;
-    } else if (c.dvt === 'Hộp' || c.dvt === 'Bình') {
-      factor = Math.ceil(effectiveGroups / 3);
-    }
-    const qty = Math.max(1, (c.dinh_muc_mac_dinh || 1) * factor);
-    return {
-      consumable: c,
-      so_luong_de_xuat: qty,
-    };
+  // Bộ từ điển ánh xạ từ khóa bài học sang chuyên mục / thiết bị / vật tư
+  const keywordMappings: {
+    keys: string[];
+    categoryHints: string[];
+    consumableHints: string[];
+  }[] = [
+    {
+      keys: ['cpr', 'hồi sức', 'ngừng tuần hoàn', 'tim phổi', 'ép tim', 'sốc điện', 'aed', 'bóp bóng', 'đường thở', 'đặt nội khí quản'],
+      categoryHints: ['cpr', 'hồi sức', 'tim', 'đường thở', 'khí quản', 'cấp cứu'],
+      consumableHints: ['găng', 'gel', 'bóng', 'ống nkq', 'dây oxy', 'canun', 'băng keo'],
+    },
+    {
+      keys: ['siêu âm', 'ultrasound', 'fast', 'doppler', 'đầu dò', 'echo', 'tim mạch'],
+      categoryHints: ['siêu âm', 'đầu dò', 'vscan', 'ultrasound'],
+      consumableHints: ['gel', 'khăn giấy', 'găng', 'cồn'],
+    },
+    {
+      keys: ['nội soi', 'laparoscopy', 'nội soi ổ bụng', 'phẫu thuật nội soi', 'camera'],
+      categoryHints: ['nội soi', 'phẫu thuật', 'trainer'],
+      consumableHints: ['gạc', 'chỉ khâu', 'găng', 'bộ trocar', 'dao mổ'],
+    },
+    {
+      keys: ['tiêm', 'truyền', 'lấy máu', 'ven', 'tiêm bắp', 'tiêm tĩnh mạch', 'đặt catheter', 'tiêm dưới da'],
+      categoryHints: ['tiêm', 'tay tiêm', 'ven', 'catheter'],
+      consumableHints: ['bơm tiêm', 'kim tiêm', 'bông cồn', 'dây truyền', 'găng', 'băng cá nhân'],
+    },
+    {
+      keys: ['khâu', 'vết thương', 'tiểu phẫu', 'cắt chỉ', 'chỉ khâu'],
+      categoryHints: ['mô hình khâu', 'da khâu', 'vết thương'],
+      consumableHints: ['chỉ khâu', 'kim khâu', 'gạc', 'cồn', 'găng', 'lưỡi dao'],
+    },
+    {
+      keys: ['sản', 'đỡ đẻ', 'khám thai', 'phụ khoa', 'đặt vòng', 'sinh khó', 'ngôi thai'],
+      categoryHints: ['sản', 'đỡ đẻ', 'thai', 'khung chậu', 'tử cung'],
+      consumableHints: ['găng sản khoa', 'dầu bôi trơn', 'tấm lót', 'kẹp rốn', 'gạc'],
+    },
+    {
+      keys: ['nhi', 'sơ sinh', 'hồi sức sơ sinh', 'cấp cứu nhi'],
+      categoryHints: ['sơ sinh', 'nhi', 'pediatric', 'em bé'],
+      consumableHints: ['găng', 'ống hút đờm', 'bơm tiêm', 'dây oxy nhi'],
+    },
+  ];
+
+  // Tìm các nhóm khớp từ khóa
+  const matchedRules = keywordMappings.filter((rule) =>
+    rule.keys.some((k) => textToScan.includes(k))
+  );
+
+  const matchedCatHints = new Set<string>();
+  const matchedConsHints = new Set<string>();
+
+  matchedRules.forEach((r) => {
+    r.categoryHints.forEach((h) => matchedCatHints.add(h));
+    r.consumableHints.forEach((h) => matchedConsHints.add(h));
   });
+
+  // 1. Quét EquipmentCatalogs
+  const suggestedCatalogs: LessonEquipmentConsumableSuggestion['suggestedCatalogs'] = [];
+
+  for (const cat of db.EquipmentCatalogs) {
+    const catText = `${cat.ten} ${cat.nhom} ${cat.mo_ta || ''}`.toLowerCase();
+    const hits: string[] = [];
+
+    // Kiểm tra trực tiếp với từ khóa của bài
+    matchedRules.forEach((r) => {
+      r.keys.forEach((k) => {
+        if (textToScan.includes(k) && catText.includes(k)) hits.push(k);
+      });
+    });
+
+    // Kiểm tra với gợi ý chuyên mục
+    matchedCatHints.forEach((h) => {
+      if (catText.includes(h) && !hits.includes(h)) hits.push(h);
+    });
+
+    if (hits.length > 0) {
+      // Đếm số lượng cá thể máy thực tế đang hoạt động ở campus này
+      const availableEq = db.Equipment.filter(
+        (eq) =>
+          eq.catalog_id === cat.catalog_id &&
+          eq.trang_thai === 'Hoạt động' &&
+          (!campus_id || eq.campus_id === campus_id)
+      );
+
+      suggestedCatalogs.push({
+        catalog: cat,
+        matchedKeywords: Array.from(new Set(hits)),
+        recommendedCount: Math.min(Math.max(1, effectiveGroups), Math.max(1, availableEq.length)),
+        availableCount: availableEq.length,
+        sampleEquipment: availableEq.slice(0, 3),
+      });
+    }
+  }
+
+  // 2. Quét Consumables
+  const suggestedConsumables: LessonEquipmentConsumableSuggestion['suggestedConsumables'] = [];
+
+  for (const con of db.Consumables) {
+    const conText = `${con.ten} ${con.nhom} ${con.ghi_chu || ''}`.toLowerCase();
+    const hits: string[] = [];
+
+    matchedConsHints.forEach((h) => {
+      if (conText.includes(h)) hits.push(h);
+    });
+
+    // Các vật tư phổ thông luôn cần trong mọi bài học mô phỏng nếu có thực hành
+    const isUniversal = ['găng', 'cồn', 'khăn giấy'].some((u) => conText.includes(u));
+    if (isUniversal && matchedRules.length > 0) {
+      hits.push('vật tư thiết yếu');
+    }
+
+    if (hits.length > 0) {
+      let factor = 1;
+      if (con.dvt === 'Gói' || con.dvt === 'Tép' || con.dvt === 'Cái' || con.dvt === 'Đôi') {
+        factor = effectiveGroups * 2;
+      } else if (con.dvt === 'Hộp' || con.dvt === 'Bình' || con.dvt === 'Chai') {
+        factor = Math.ceil(effectiveGroups / 2);
+      }
+      const qty = Math.max(1, (con.dinh_muc_mac_dinh || 1) * factor);
+      const stock = con.ton_kho || 0;
+
+      suggestedConsumables.push({
+        consumable: con,
+        matchedKeywords: Array.from(new Set(hits)),
+        so_luong_de_xuat: qty,
+        ton_kho: stock,
+        is_low_stock: stock < qty,
+      });
+    }
+  }
+
+  return {
+    suggestedCatalogs: suggestedCatalogs.sort((a, b) => b.matchedKeywords.length - a.matchedKeywords.length),
+    suggestedConsumables: suggestedConsumables.sort((a, b) => b.matchedKeywords.length - a.matchedKeywords.length),
+  };
 }

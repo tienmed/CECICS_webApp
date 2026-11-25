@@ -2214,6 +2214,37 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
       { row_id: `MP-${year}-0004-2`, sim_id: `MP-${year}-0004`, equipment_id: 'SA-01-02' },
     ],
 
+    EquipmentMaintenance: [
+      {
+        maintenance_id: `BT-${year}-0001`,
+        equipment_id: 'CPR-04-01',
+        sim_id: `MP-${year}-0001`,
+        loai: 'Sau buổi học',
+        ngay_thuc_hien: addDaysYmd(today, -2),
+        nguoi_thuc_hien: 'bstien@pnt.edu.vn',
+        noi_dung: 'Vệ sinh túi khí đường thở mô hình CPR, khử khuẩn lồng ngực, kiểm tra van 1 chiều.',
+        tinh_trang_sau: 'Tốt - Sẵn sàng',
+        vi_tri_sau: 'Lầu 8 Khu C - Kho A1',
+        ngay_bao_tri_tiep: addDaysYmd(today, 28),
+        ghi_chu: 'Hoạt động tốt sau buổi học hồi sức cấp cứu.',
+        tao_luc: addDaysYmd(today, -2) + 'T11:30:00.000Z',
+      },
+      {
+        maintenance_id: `BT-${year}-0002`,
+        equipment_id: 'SA-01-01',
+        sim_id: '',
+        loai: 'Định kỳ',
+        ngay_thuc_hien: addDaysYmd(today, -15),
+        nguoi_thuc_hien: 'bstien@pnt.edu.vn',
+        noi_dung: 'Kiểm tra cáp đầu dò kép, test pin và cập nhật firmware máy siêu âm VSCAN.',
+        tinh_trang_sau: 'Tốt - Sẵn sàng',
+        vi_tri_sau: 'Lầu 8 Khu C - Tủ thiết bị SA',
+        ngay_bao_tri_tiep: addDaysYmd(today, 15),
+        ghi_chu: 'Pin dung lượng 98%, chất lượng ảnh sắc nét.',
+        tao_luc: addDaysYmd(today, -15) + 'T09:00:00.000Z',
+      },
+    ],
+
     Incidents: [
       {
         incident_id: `SC-${year}-0001`,
