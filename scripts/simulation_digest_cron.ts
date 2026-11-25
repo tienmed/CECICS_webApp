@@ -50,21 +50,30 @@ async function run() {
   fs.writeFileSync(latestPath, emailHtml, 'utf-8');
   console.log(`-> Đã lưu bản sao lưu trữ tại: ${previewPath}`);
 
-  // 5. Lấy danh sách email CBNV
-  console.log('4. Đang lấy danh sách CBNV CECICS nhận bản tin...');
+  // 5. Lấy danh sách email CBNV thực tế (Loại bỏ 100% tài khoản mock/demo seed)
+  console.log('4. Đang lấy danh sách CBNV & Giảng viên thực tế nhận bản tin...');
   let recipients: string[] = [];
   try {
     const db = await getSnapshot();
+    const mockEmailSet = new Set([
+      'admin@pnt.edu.vn',
+      'truongtt@pnt.edu.vn',
+      'phott@pnt.edu.vn',
+      'hanhchinh@pnt.edu.vn',
+      'daotao@pnt.edu.vn',
+      'kythuat@pnt.edu.vn',
+      'ktv.hung@pnt.edu.vn',
+      'bomon.noi@pnt.edu.vn',
+      'gv.khoa@pnt.edu.vn',
+      'gv.thinhgiang@gmail.com',
+      'cecics@pnt.edu.vn', // Hòm thư gửi, không gửi ngược lại
+    ]);
+
     recipients = (db.Users || [])
-      .map((u) => u.email)
-      .filter((e): e is string => Boolean(e && e.includes('@')));
+      .map((u) => (u.email || '').trim().toLowerCase())
+      .filter((e): e is string => Boolean(e && e.includes('@') && !mockEmailSet.has(e) && (!e.endsWith('@gmail.com') || e.includes('tienmed'))));
   } catch (err) {
     console.warn('-> Không đọc được DB người dùng, dùng danh sách fallback.');
-  }
-
-  // Luôn đảm bảo có cecics@pnt.edu.vn nhận
-  if (!recipients.includes('cecics@pnt.edu.vn')) {
-    recipients.push('cecics@pnt.edu.vn');
   }
 
   // Lọc trùng
