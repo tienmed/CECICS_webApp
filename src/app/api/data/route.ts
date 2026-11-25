@@ -25,6 +25,7 @@ export async function GET(request: Request) {
     user,
     dataMode: getDataMode(),
     demoMode: isDemoModeEnabled(),
+    targetSheetId: process.env.GOOGLE_SHEETS_ID || 'NONE',
     sheetsError,
     db,
   });
