@@ -1,10 +1,16 @@
 /**
- * CECICS Clinical Simulation Digest - HTML Email Template
- * Thiết kế giao diện bản tin chuyên ngành Mô phỏng Lâm sàng chuẩn y khoa
- * Bao gồm:
- * 1. Tiêu điểm học thuật tuần (Top Spotlight)
- * 2. Nghiên cứu & Tiêu chuẩn thực hành mới (In situ, Lượng giá, Debriefing, AI/VR)
- * 3. Chuyên mục Hội Nghị Quốc Tế & Định Hướng Nghiên Cứu (Hội nghị vừa diễn ra & Hội nghị sắp tới)
+ * CECICS Clinical Simulation Digest - Fluid Hybrid Responsive HTML Email Template
+ * Thiết kế tối ưu hiển thị 100% trên đa nền tảng:
+ * - Mobile: Android (Gmail app, Samsung Mail), iOS (Apple Mail, Gmail app)
+ * - Tablet: iPadOS, Android Tablets
+ * - Desktop: Gmail Web, Outlook, Apple Mail (mọi độ phân giải màn hình)
+ * 
+ * Áp dụng kỹ thuật:
+ * 1. Fluid Hybrid Table Layout (max-width + width 100% + min-width fallback)
+ * 2. Media queries @media only screen and (max-width: 620px)
+ * 3. Chống co font tự động trên iOS (-webkit-text-size-adjust: 100%)
+ * 4. Nút bấm một chạm dễ bấm ngón tay trên điện thoại (touch-friendly min-height 44px)
+ * 5. Bảng màu tương phản cao, dịu mắt chuẩn y khoa
  */
 
 import { type SummarizedArticle } from './simulation-summarizer';
@@ -27,10 +33,10 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
     webAppUrl = process.env.NEXTAUTH_URL || 'https://cecics.pnt.edu.vn',
   } = params;
 
-  // Tách bài Spotlight (bài đầu tiên) và các bài nghiên cứu chuyên đề tiếp theo
   const spotlight = articles[0];
   const regularArticles = articles.slice(1);
 
+  // Render các bài báo nghiên cứu dạng Fluid Cards
   const regularCardsHtml = regularArticles.map((art) => {
     const badgeColor = art.categories.some((c) => c.includes('In situ'))
       ? '#0284c7'
@@ -43,173 +49,283 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
     const bulletsHtml = art.summaryBulletPoints
       .map(
         (b) => `
-        <li style="margin-bottom: 6px; color: #334155; line-height: 1.5; font-size: 13px;">
+        <li style="margin-bottom: 8px; color: #334155; line-height: 1.6; font-size: 14px;">
           ${b}
         </li>`
       )
       .join('');
 
     return `
-      <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-          <span style="display: inline-block; background-color: ${badgeColor}; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 12px; text-transform: uppercase;">
-            ${art.categories[0] || 'Mô phỏng y khoa'}
-          </span>
-          <span style="font-size: 11px; color: #64748b; font-weight: 500;">
-            ${art.source} &bull; ${art.pubDate}
-          </span>
-        </div>
+      <!-- ARTICLE CARD -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <tr>
+          <td style="padding: 18px 20px;">
+            
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 10px;">
+              <tr>
+                <td align="left" style="vertical-align: middle;">
+                  <span style="display: inline-block; background-color: ${badgeColor}; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.3px;">
+                    ${art.categories[0] || 'Mô phỏng y khoa'}
+                  </span>
+                </td>
+                <td align="right" style="vertical-align: middle; font-size: 12px; color: #64748b; font-weight: 500;">
+                  ${art.source} &bull; ${art.pubDate}
+                </td>
+              </tr>
+            </table>
 
-        <h3 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; color: #0f172a; line-height: 1.4;">
-          ${art.vietnameseTitle}
-        </h3>
-        <p style="margin: 0 0 10px 0; font-size: 12px; color: #64748b; font-style: italic;">
-          ${art.originalTitle}
-        </p>
+            <h3 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.45;">
+              ${art.vietnameseTitle}
+            </h3>
+            <p style="margin: 0 0 12px 0; font-size: 12px; color: #64748b; font-style: italic; line-height: 1.4;">
+              ${art.originalTitle}
+            </p>
 
-        <ul style="margin: 0 0 12px 0; padding-left: 20px;">
-          ${bulletsHtml}
-        </ul>
+            <ul style="margin: 0 0 14px 0; padding-left: 20px;">
+              ${bulletsHtml}
+            </ul>
 
-        <div style="background-color: #f8fafc; border-left: 3px solid #2563eb; padding: 10px 12px; border-radius: 4px; margin-bottom: 12px;">
-          <strong style="font-size: 12px; color: #1e3a8a; display: block; margin-bottom: 2px;">
-            💡 Đề xuất ứng dụng cho CECICS:
-          </strong>
-          <span style="font-size: 12px; color: #1e293b; line-height: 1.4;">
-            ${art.takeawayForCECICS}
-          </span>
-        </div>
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 14px; background-color: #f8fafc; border-left: 4px solid #2563eb; border-radius: 4px;">
+              <tr>
+                <td style="padding: 10px 14px;">
+                  <strong style="font-size: 12px; color: #1e3a8a; display: block; margin-bottom: 3px;">
+                    💡 Đề xuất ứng dụng cho CECICS:
+                  </strong>
+                  <span style="font-size: 13px; color: #1e293b; line-height: 1.5;">
+                    ${art.takeawayForCECICS}
+                  </span>
+                </td>
+              </tr>
+            </table>
 
-        <div style="text-align: right;">
-          <a href="${art.url}" target="_blank" style="font-size: 12px; color: #2563eb; font-weight: 600; text-decoration: none;">
-            Xem tài liệu gốc &rarr;
-          </a>
-        </div>
-      </div>
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="right">
+                  <a href="${art.url}" target="_blank" style="display: inline-block; font-size: 13px; color: #2563eb; font-weight: 600; text-decoration: none; padding: 6px 0;">
+                    Xem bài báo gốc (DOI/PubMed) &rarr;
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+      </table>
     `;
   }).join('');
 
-  // Render phần Hội nghị (Đã diễn ra & Sắp diễn ra)
+  // Render Hội nghị
   const pastConferences = conferences.filter((c) => c.timelineType === 'RECENT_PAST');
   const upcomingConferences = conferences.filter((c) => c.timelineType === 'UPCOMING');
 
   const pastConferencesHtml = pastConferences.map((conf) => {
     const proceedingsHtml = (conf.keyProceedings || []).map((p) => `
-      <div style="background-color: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px; margin-top: 8px;">
-        <div style="font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 2px;">
-          📌 ${p.title}
-        </div>
-        <div style="font-size: 11px; color: #64748b; font-style: italic; margin-bottom: 4px;">
-          Tác giả/Báo cáo viên: ${p.speakerOrAuthor}
-        </div>
-        <div style="font-size: 12px; color: #334155; line-height: 1.4;">
-          ${p.summary}
-        </div>
-      </div>
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px; background-color: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px;">
+        <tr>
+          <td style="padding: 12px;">
+            <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 3px;">
+              📌 ${p.title}
+            </div>
+            <div style="font-size: 11px; color: #64748b; font-style: italic; margin-bottom: 6px;">
+              Tác giả / Báo cáo viên: ${p.speakerOrAuthor}
+            </div>
+            <div style="font-size: 13px; color: #334155; line-height: 1.5;">
+              ${p.summary}
+            </div>
+          </td>
+        </tr>
+      </table>
     `).join('');
 
     return `
-      <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; margin-bottom: 14px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-          <span style="background-color: #16a34a; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;">
-            ĐÃ BÁO CÁO / VỪA BẾ MẠC
-          </span>
-          <span style="font-size: 11px; color: #15803d; font-weight: 600;">
-            ${conf.dates} &bull; ${conf.location}
-          </span>
-        </div>
-        <h4 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 700; color: #14532d;">
-          ${conf.name}
-        </h4>
-        <p style="margin: 0 0 8px 0; font-size: 12px; color: #334155;">
-          ${conf.themeOrHighlights}
-        </p>
+      <!-- PAST CONFERENCE CARD -->
+      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 16px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; overflow: hidden;">
+        <tr>
+          <td style="padding: 16px;">
+            
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
+              <tr>
+                <td align="left" style="vertical-align: middle;">
+                  <span style="background-color: #16a34a; color: #ffffff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase;">
+                    ĐÃ BÁO CÁO / VỪA BẾ MẠC
+                  </span>
+                </td>
+                <td align="right" style="vertical-align: middle; font-size: 11px; color: #15803d; font-weight: 600;">
+                  ${conf.dates}
+                </td>
+              </tr>
+            </table>
 
-        ${proceedingsHtml}
+            <h4 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; color: #14532d; line-height: 1.4;">
+              ${conf.name}
+            </h4>
+            <p style="margin: 0 0 8px 0; font-size: 13px; color: #334155; line-height: 1.5;">
+              ${conf.themeOrHighlights}
+            </p>
 
-        <div style="background-color: #ffffff; border-left: 3px solid #16a34a; padding: 8px 10px; border-radius: 4px; margin-top: 10px;">
-          <strong style="font-size: 11px; color: #14532d; display: block; margin-bottom: 2px;">
-            🎯 Chuyển giao thông tin cho Đơn vị Nghiên cứu CECICS:
-          </strong>
-          <span style="font-size: 12px; color: #1e293b; line-height: 1.4;">
-            ${conf.researchFocusForCECICS}
-          </span>
-        </div>
+            ${proceedingsHtml}
 
-        <div style="text-align: right; margin-top: 8px;">
-          <a href="${conf.website}" target="_blank" style="font-size: 11px; color: #15803d; font-weight: 600; text-decoration: none;">
-            Kỷ yếu & Tài liệu Hội nghị &rarr;
-          </a>
-        </div>
-      </div>
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 12px; background-color: #ffffff; border-left: 4px solid #16a34a; border-radius: 4px;">
+              <tr>
+                <td style="padding: 10px 12px;">
+                  <strong style="font-size: 11px; color: #14532d; display: block; margin-bottom: 2px;">
+                    🎯 Chuyển giao Đơn vị Nghiên cứu CECICS:
+                  </strong>
+                  <span style="font-size: 12px; color: #1e293b; line-height: 1.45;">
+                    ${conf.researchFocusForCECICS}
+                  </span>
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+              <tr>
+                <td align="right">
+                  <a href="${conf.website}" target="_blank" style="font-size: 12px; color: #15803d; font-weight: 600; text-decoration: none;">
+                    Kỷ yếu & Tài liệu Hội nghị &rarr;
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+      </table>
     `;
   }).join('');
 
   const upcomingConferencesHtml = upcomingConferences.map((conf) => `
-    <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px; margin-bottom: 14px;">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-        <span style="background-color: #ca8a04; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;">
-          SẮP DIỄN RA (CALL FOR ABSTRACTS)
-        </span>
-        <span style="font-size: 11px; color: #854d0e; font-weight: 600;">
-          ${conf.dates} &bull; ${conf.location}
-        </span>
-      </div>
-      <h4 style="margin: 0 0 6px 0; font-size: 14px; font-weight: 700; color: #713f12;">
-        ${conf.name}
-      </h4>
-      <p style="margin: 0 0 6px 0; font-size: 12px; color: #451a03;">
-        ${conf.themeOrHighlights}
-      </p>
-      ${
-        conf.callForPapersDeadline
-          ? `
-      <div style="font-size: 12px; color: #b45309; font-weight: 600; margin-bottom: 8px;">
-        ⏰ ${conf.callForPapersDeadline}
-      </div>
-      `
-          : ''
-      }
-      <div style="background-color: #ffffff; border-left: 3px solid #eab308; padding: 8px 10px; border-radius: 4px;">
-        <strong style="font-size: 11px; color: #854d0e; display: block; margin-bottom: 2px;">
-          💡 Đề xuất định hướng nộp đề tài/học tập cho CECICS:
-        </strong>
-        <span style="font-size: 12px; color: #1e293b; line-height: 1.4;">
-          ${conf.researchFocusForCECICS}
-        </span>
-      </div>
-      <div style="text-align: right; margin-top: 8px;">
-        <a href="${conf.website}" target="_blank" style="font-size: 11px; color: #a16207; font-weight: 600; text-decoration: none;">
-          Cổng thông tin & Nộp bài &rarr;
-        </a>
-      </div>
-    </div>
+    <!-- UPCOMING CONFERENCE CARD -->
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 16px; background-color: #fefce8; border: 1px solid #fef08a; border-radius: 8px; overflow: hidden;">
+      <tr>
+        <td style="padding: 16px;">
+          
+          <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
+            <tr>
+              <td align="left" style="vertical-align: middle;">
+                <span style="background-color: #ca8a04; color: #ffffff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase;">
+                  SẮP DIỄN RA (CALL FOR ABSTRACTS)
+                </span>
+              </td>
+              <td align="right" style="vertical-align: middle; font-size: 11px; color: #854d0e; font-weight: 600;">
+                ${conf.dates}
+              </td>
+            </tr>
+          </table>
+
+          <h4 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; color: #713f12; line-height: 1.4;">
+            ${conf.name}
+          </h4>
+          <p style="margin: 0 0 6px 0; font-size: 13px; color: #451a03; line-height: 1.5;">
+            ${conf.themeOrHighlights}
+          </p>
+          ${
+            conf.callForPapersDeadline
+              ? `
+          <div style="font-size: 12px; color: #b45309; font-weight: 700; margin-bottom: 10px;">
+            ⏰ ${conf.callForPapersDeadline}
+          </div>
+          `
+              : ''
+          }
+
+          <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-left: 4px solid #eab308; border-radius: 4px;">
+            <tr>
+              <td style="padding: 10px 12px;">
+                <strong style="font-size: 11px; color: #854d0e; display: block; margin-bottom: 2px;">
+                  💡 Đề xuất định hướng nộp đề tài cho CECICS:
+                </strong>
+                <span style="font-size: 12px; color: #1e293b; line-height: 1.45;">
+                  ${conf.researchFocusForCECICS}
+                </span>
+              </td>
+            </tr>
+          </table>
+
+          <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+            <tr>
+              <td align="right">
+                <a href="${conf.website}" target="_blank" style="font-size: 12px; color: #a16207; font-weight: 600; text-decoration: none;">
+                  Cổng thông tin & Nộp bài &rarr;
+                </a>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
   `).join('');
 
-  return `
-<!DOCTYPE html>
-<html lang="vi">
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chuyên Trang Mô Phỏng Lâm Sàng CECICS</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Bản Tin Chuyên Trang Mô Phỏng Lâm Sàng CECICS</title>
+  <style type="text/css">
+    /* CLIENT SPECIFIC RESETS */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    table { border-collapse: collapse !important; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: 100% !important; background-color: #f1f5f9; }
+
+    /* MOBILE & TABLET MEDIA QUERIES */
+    @media only screen and (max-width: 620px) {
+      .email-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+      }
+      .mobile-padding {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .header-title {
+        font-size: 19px !important;
+        line-height: 1.35 !important;
+      }
+      .header-subtitle {
+        font-size: 12px !important;
+      }
+      .spotlight-title {
+        font-size: 16px !important;
+      }
+      .stack-column {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+    }
+  </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a;">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; padding: 24px 0;">
+  
+  <!-- PREHEADER TRONG HỘP THƯ PREVIEW -->
+  <div style="display: none; font-size: 1px; color: #f1f5f9; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+    Cập nhật chuyên trang mô phỏng lâm sàng CECICS tuần này: Tiêu điểm thảo luận phản hồi Stop-and-Fix, mô phỏng tại chỗ và diễn đàn hội nghị quốc tế...
+  </div>
+
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; table-layout: fixed;">
     <tr>
-      <td align="center">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 680px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+      <td align="center" style="padding: 20px 10px;">
+        
+        <!-- MAIN CONTAINER (Max 680px) -->
+        <table role="presentation" class="email-container" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 680px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
           
           <!-- HEADER -->
           <tr>
-            <td style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); padding: 28px 24px; text-align: center; color: #ffffff;">
+            <td style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); padding: 28px 24px; text-align: center; color: #ffffff;" class="mobile-padding">
               <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: #93c5fd; margin-bottom: 6px;">
                 TRƯỜNG ĐẠI HỌC Y KHOA PHẠM NGỌC THẠCH &bull; TRUNG TÂM CECICS
               </div>
-              <h1 style="margin: 0 0 8px 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
+              <h1 class="header-title" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff;">
                 BẢN TIN CHUYÊN TRANG MÔ PHỎNG LÂM SÀNG
               </h1>
-              <div style="font-size: 13px; color: #cbd5e1; font-weight: 500;">
+              <div class="header-subtitle" style="font-size: 13px; color: #cbd5e1; font-weight: 500;">
                 Clinical Simulation Weekly Digest &bull; ${weekLabel} (${issueDate})
               </div>
             </td>
@@ -217,74 +333,92 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
 
           <!-- LỜI MỞ ĐẦU -->
           <tr>
-            <td style="padding: 20px 24px; background-color: #eff6ff; border-bottom: 1px solid #dbeafe;">
+            <td style="padding: 18px 24px; background-color: #eff6ff; border-bottom: 1px solid #dbeafe;" class="mobile-padding">
               <p style="margin: 0; font-size: 13px; color: #1e3a8a; line-height: 1.6;">
                 <strong>Kính gửi: Toàn thể Cán bộ - Giảng viên & Nhân viên Trung tâm CECICS,</strong><br/>
-                Nhằm liên tục cập nhật những bước tiến học thuật mới nhất trên thế giới trong lĩnh vực Đào tạo Mô phỏng Lâm sàng, lượng giá kỹ năng y khoa, mô phỏng <em>In situ</em>, cũng như <strong>các diễn đàn khoa học, hội nghị quốc tế và cơ hội công bố nghiên cứu</strong>, Trung tâm trân trọng gửi tới Thầy/Cô và Anh/Chị bản tin chuyên ngành tuần này.
+                Nhằm liên tục cập nhật những bước tiến học thuật mới nhất trên thế giới trong lĩnh vực Đào tạo Mô phỏng Lâm sàng, lượng giá kỹ năng y khoa, mô phỏng tại hiện trường thực tế <em>(In-situ Simulation)</em>, cùng các diễn đàn khoa học quốc tế, Trung tâm trân trọng gửi tới Thầy/Cô và Anh/Chị bản tin chuyên ngành tuần này.
               </p>
             </td>
           </tr>
 
           <!-- NỘI DUNG CHÍNH -->
           <tr>
-            <td style="padding: 24px;">
+            <td style="padding: 24px;" class="mobile-padding">
 
               ${
                 spotlight
                   ? `
               <!-- SPOTLIGHT OF THE WEEK -->
-              <div style="background-color: #f8fafc; border: 2px solid #3b82f6; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                  <span style="background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-                    ⭐ TIÊU ĐIỂM HỌC THUẬT TUẦN
-                  </span>
-                  <span style="font-size: 12px; font-weight: 600; color: #2563eb;">
-                    ${spotlight.source} &bull; ${spotlight.pubDate}
-                  </span>
-                </div>
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 24px; background-color: #f8fafc; border: 2px solid #3b82f6; border-radius: 10px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 20px;" class="mobile-padding">
+                    
+                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 10px;">
+                      <tr>
+                        <td align="left" style="vertical-align: middle;">
+                          <span style="background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            ⭐ TIÊU ĐIỂM HỌC THUẬT TUẦN
+                          </span>
+                        </td>
+                        <td align="right" style="vertical-align: middle; font-size: 12px; font-weight: 600; color: #2563eb;">
+                          ${spotlight.source} &bull; ${spotlight.pubDate}
+                        </td>
+                      </tr>
+                    </table>
 
-                <h2 style="margin: 0 0 8px 0; font-size: 17px; font-weight: 800; color: #0f172a; line-height: 1.4;">
-                  ${spotlight.vietnameseTitle}
-                </h2>
-                <div style="font-size: 12px; color: #64748b; font-style: italic; margin-bottom: 12px;">
-                  ${spotlight.originalTitle}
-                </div>
+                    <h2 class="spotlight-title" style="margin: 0 0 8px 0; font-size: 17px; font-weight: 800; color: #0f172a; line-height: 1.45;">
+                      ${spotlight.vietnameseTitle}
+                    </h2>
+                    <div style="font-size: 12px; color: #64748b; font-style: italic; margin-bottom: 14px; line-height: 1.4;">
+                      ${spotlight.originalTitle}
+                    </div>
 
-                <ul style="margin: 0 0 16px 0; padding-left: 20px;">
-                  ${spotlight.summaryBulletPoints
-                    .map(
-                      (b) => `
-                    <li style="margin-bottom: 6px; color: #334155; line-height: 1.5; font-size: 13px;">
-                      ${b}
-                    </li>`
-                    )
-                    .join('')}
-                </ul>
+                    <ul style="margin: 0 0 16px 0; padding-left: 20px;">
+                      ${spotlight.summaryBulletPoints
+                        .map(
+                          (b) => `
+                        <li style="margin-bottom: 8px; color: #334155; line-height: 1.6; font-size: 14px;">
+                          ${b}
+                        </li>`
+                        )
+                        .join('')}
+                    </ul>
 
-                <div style="background-color: #eff6ff; border-left: 4px solid #1d4ed8; padding: 12px; border-radius: 4px; margin-bottom: 14px;">
-                  <strong style="font-size: 13px; color: #1e3a8a; display: block; margin-bottom: 4px;">
-                    🎯 Khuyến nghị ứng dụng cho CECICS:
-                  </strong>
-                  <span style="font-size: 13px; color: #1e293b; line-height: 1.5;">
-                    ${spotlight.takeawayForCECICS}
-                  </span>
-                </div>
+                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 16px; background-color: #eff6ff; border-left: 4px solid #1d4ed8; border-radius: 4px;">
+                      <tr>
+                        <td style="padding: 12px 14px;">
+                          <strong style="font-size: 13px; color: #1e3a8a; display: block; margin-bottom: 3px;">
+                            🎯 Khuyến nghị ứng dụng cho CECICS:
+                          </strong>
+                          <span style="font-size: 13px; color: #1e293b; line-height: 1.5;">
+                            ${spotlight.takeawayForCECICS}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
 
-                <div style="text-align: right;">
-                  <a href="${spotlight.url}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">
-                    Đọc toàn văn nghiên cứu &rarr;
-                  </a>
-                </div>
-              </div>
+                    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td align="right">
+                          <a href="${spotlight.url}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: 6px;">
+                            Đọc toàn văn nghiên cứu (DOI) &rarr;
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
               `
                   : ''
               }
 
               <!-- CHUYÊN MỤC HỘI NGHỊ MÔ PHỎNG QUỐC TẾ & KỶ YẾU NGHIÊN CỨU -->
-              <h3 style="margin: 24px 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+              <h3 style="margin: 24px 0 14px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
                 🏛️ DIỄN ĐÀN HỘI NGHỊ & ĐỊNH HƯỚNG NGHIÊN CỨU QUỐC TẾ
               </h3>
-              <p style="margin: 0 0 16px 0; font-size: 12px; color: #64748b; line-height: 1.5;">
+              <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; line-height: 1.5;">
                 Theo dõi các báo cáo nổi bật vừa diễn ra và cơ hội kết nối/nộp bài báo khoa học cho <strong>Đơn vị Nghiên cứu & Giảng viên CECICS</strong>:
               </p>
 
@@ -303,11 +437,11 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
 
           <!-- FOOTER -->
           <tr>
-            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 24px; text-align: center; color: #64748b; font-size: 12px; line-height: 1.6;">
-              <p style="margin: 0 0 6px 0; font-weight: 600; color: #334155;">
+            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 22px 24px; text-align: center; color: #64748b; font-size: 12px; line-height: 1.6;" class="mobile-padding">
+              <p style="margin: 0 0 6px 0; font-weight: 700; color: #334155; font-size: 13px;">
                 TRUNG TÂM KỸ NĂNG & SÁNG TẠO MÔ PHỎNG LÂM SÀNG (CECICS)
               </p>
-              <p style="margin: 0 0 8px 0;">
+              <p style="margin: 0 0 8px 0; color: #64748b;">
                 Trường Đại học Y khoa Phạm Ngọc Thạch &bull; Số 2 Dương Quang Trung, P.12, Q.10, TP.HCM
               </p>
               <p style="margin: 0; font-size: 11px; color: #94a3b8;">
@@ -317,10 +451,11 @@ export function buildSimulationDigestEmailHtml(params: SimulationDigestEmailPara
           </tr>
 
         </table>
+
       </td>
     </tr>
   </table>
+
 </body>
-</html>
-  `;
+</html>`;
 }

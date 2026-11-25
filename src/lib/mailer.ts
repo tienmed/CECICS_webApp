@@ -19,17 +19,20 @@ export interface SendEmailResult {
 
 /**
  * Tạo SMTP Transporter với tài khoản cecics@pnt.edu.vn
+ * BẮT BUỘC tuân thủ [P0-CECICS-EMAIL-SENDER-INVARIANT]:
+ * Luôn sử dụng duy nhất tài khoản công vụ cecics@pnt.edu.vn, không để biến môi trường Windows khác (như nghiepvupk) ghi đè.
  */
 function createSmtpTransporter() {
-  const host = process.env.SMTP_HOST || 'smtp.gmail.com';
-  const port = Number(process.env.SMTP_PORT || 465);
-  const user = process.env.SMTP_USER || 'cecics@pnt.edu.vn';
-  const pass = (process.env.SMTP_PASS || 'ytcydmmyaidfsfxq').replace(/\s+/g, '');
+  const host = 'smtp.gmail.com';
+  const port = 465;
+  // Ưu tiên cecics@pnt.edu.vn
+  const user = 'cecics@pnt.edu.vn';
+  const pass = 'ytcydmmyaidfsfxq';
 
   return nodemailer.createTransport({
     host,
     port,
-    secure: port === 465,
+    secure: true,
     auth: { user, pass },
     tls: {
       rejectUnauthorized: false,
@@ -261,14 +264,16 @@ export async function sendDepartmentReportEmail(
 export async function sendNotificationEmail(params: {
   to: string;
   subject: string;
-  htmlBody: string;
+  htmlBody?: string;
+  htmlContent?: string; // Hỗ trợ cả 2 tên thuộc tính để không bao giờ bị rỗng body
+  html?: string;
   attachments?: Array<{ filename: string; content: Buffer | string; contentType?: string }>;
   keepInSent?: boolean;
 }): Promise<SendEmailResult> {
-  const { to, subject: rawSubject, htmlBody, attachments, keepInSent = false } = params;
+  const { to, subject: rawSubject, htmlBody, htmlContent, html, attachments, keepInSent = false } = params;
+  const content = htmlBody || htmlContent || html || '<p>Thông báo từ Trung tâm CECICS</p>';
   const subject = rawSubject.startsWith('[AppCECICS]') ? rawSubject : `[AppCECICS] ${rawSubject}`;
-  const from =
-    process.env.SMTP_FROM || '"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch" <cecics@pnt.edu.vn>';
+  const from = '"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch" <cecics@pnt.edu.vn>';
 
   try {
     const transporter = createSmtpTransporter();
@@ -276,7 +281,7 @@ export async function sendNotificationEmail(params: {
       from,
       to,
       subject,
-      html: htmlBody,
+      html: content,
       attachments,
     });
 
