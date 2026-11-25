@@ -7,7 +7,7 @@ import { suggestAvailableRooms } from '@/core/suggest';
 import { diffDaysYmd, formatVnDate, todayVnYmd } from '@/core/time';
 import { parseSettings, ROOM_TYPES, type RoomRecord } from '@/core/types';
 import { useApp } from '@/components/AppProvider';
-import { Badge, Card, PageHeader } from '@/components/ui';
+import { Badge, Card, Modal, PageHeader } from '@/components/ui';
 import { AiAdvisorModal } from '@/components/AiAdvisorModal';
 
 export default function RoomAssignmentPage() {
@@ -21,9 +21,31 @@ export default function RoomAssignmentPage() {
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiSessionTarget, setAiSessionTarget] = useState<any>(null);
 
+  // Nạp phòng mới Modal State cho Vị trí Hành chính
+  const [quickRoomModal, setQuickRoomModal] = useState(false);
+  const [quickRoomTargetSession, setQuickRoomTargetSession] = useState<string | null>(null);
+  const [roomFilterSearch, setRoomFilterSearch] = useState<Record<string, string>>({});
+  const [multiGroupFilter, setMultiGroupFilter] = useState<Record<string, string>>({});
+  const [newRoomForm, setNewRoomForm] = useState<{
+    room_id: string;
+    campus_id: string;
+    ten: string;
+    loai: string;
+    suc_chua: number;
+    kich_hoat: boolean;
+  }>({
+    room_id: '',
+    campus_id: 'HH',
+    ten: '',
+    loai: 'Mô phỏng',
+    suc_chua: 24,
+    kich_hoat: true,
+  });
+
   const settings = useMemo(() => parseSettings(db.Settings), [db.Settings]);
   const today = todayVnYmd();
   const canAssign = canPerform(user, 'assign_room');
+  const canManageRooms = canPerform(user, 'manage_rooms') || canPerform(user, 'manage_master_data');
   const userMap = useMemo(() => new Map(db.Users.map((u) => [u.user_id, u])), [db.Users]);
 
   const queue = useMemo(() => {
@@ -62,6 +84,39 @@ export default function RoomAssignmentPage() {
     setAiModalOpen(true);
   }
 
+  function openQuickRoomModal(targetCampus = 'HH', sessionId: string | null = null) {
+    setNewRoomForm({
+      room_id: '',
+      campus_id: targetCampus,
+      ten: '',
+      loai: 'Mô phỏng',
+      suc_chua: 24,
+      kich_hoat: true,
+    });
+    setQuickRoomTargetSession(sessionId);
+    setQuickRoomModal(true);
+  }
+
+  async function handleSaveNewRoom(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newRoomForm.ten.trim()) return;
+
+    const res = await execute(
+      'upsertRoom',
+      newRoomForm,
+      `Đã nạp bổ sung phòng "${newRoomForm.ten}" thành công và lưu vào danh mục tái sử dụng.`
+    );
+
+    if (res && res.data) {
+      const createdRoomId = res.data.room_id || newRoomForm.room_id;
+      if (quickRoomTargetSession && createdRoomId) {
+        // Tự động chọn phòng vừa nạp cho buổi học/thi đang chọn
+        setSelectedRooms((prev) => ({ ...prev, [quickRoomTargetSession]: createdRoomId }));
+      }
+    }
+    setQuickRoomModal(false);
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -76,6 +131,16 @@ export default function RoomAssignmentPage() {
               <span>🧭</span>
               <span>Sơ đồ Trực quan OSCE</span>
             </Link>
+            {canManageRooms && (
+              <button
+                type="button"
+                onClick={() => openQuickRoomModal('HH', null)}
+                className="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold flex items-center gap-1.5 shadow-2xs transition-colors"
+              >
+                <span>🚪</span>
+                <span>+ Nạp phòng mới</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -128,9 +193,18 @@ export default function RoomAssignmentPage() {
               simClasses: db.SimClasses,
             });
 
+            const searchKeyword = (roomFilterSearch[s.session_id] || '').trim().toLowerCase();
+            const filteredSuggestions = suggestions.filter((sg) => {
+              if (!searchKeyword) return true;
+              const text = `${sg.room.room_id} ${sg.room.ten} ${sg.room.loai} ${sg.reason}`.toLowerCase();
+              return text.includes(searchKeyword);
+            });
+
             const isMulti = multiRoomModes[s.session_id] || false;
             const currentSelectedMulti = multiSelected[s.session_id] || [];
-            const pickedSingle = selectedRooms[s.session_id] ?? suggestions[0]?.room.room_id ?? '';
+            const pickedSingle =
+              selectedRooms[s.session_id] ??
+              (filteredSuggestions.length > 0 ? filteredSuggestions[0].room.room_id : suggestions[0]?.room.room_id ?? '');
 
             // Phân nhóm phòng trống theo 5 nhóm phòng chuẩn CECICS
             const availableRooms = suggestions.map((sg) => sg.room);
@@ -197,50 +271,129 @@ export default function RoomAssignmentPage() {
 
                 {/* Chế độ Gán phòng */}
                 {suggestions.length === 0 ? (
-                  <div className="text-xs font-semibold text-red-700 bg-red-100 px-3 py-2 rounded-lg">
-                    ⚠️ Không còn phòng trống cùng cơ sở trong khung giờ này
-                  </div>
-                ) : !isMulti ? (
-                  /* 1. GÁN ĐƠN PHÒNG */
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2 border-t border-slate-100">
-                    <div className="text-xs font-medium text-slate-500 whitespace-nowrap">
-                      Chọn 1 phòng:
-                    </div>
-                    <select
-                      aria-label={`Chọn phòng cho ${s.session_id}`}
-                      disabled={!canAssign}
-                      value={pickedSingle}
-                      onChange={(e) =>
-                        setSelectedRooms({ ...selectedRooms, [s.session_id]: e.target.value })
-                      }
-                      className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white flex-1"
-                    >
-                      {suggestions.map((sg) => (
-                        <option key={sg.room.room_id} value={sg.room.room_id}>
-                          [{sg.room.loai}] {sg.room.ten} — {sg.reason}
-                        </option>
-                      ))}
-                    </select>
-                    {canAssign && (
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-semibold text-red-700 bg-red-100 p-3 rounded-lg">
+                    <div>⚠️ Không còn phòng trống cùng cơ sở trong khung giờ này</div>
+                    {canManageRooms && (
                       <button
                         type="button"
-                        onClick={() => handleAssignSingle(s.session_id, pickedSingle)}
-                        className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold whitespace-nowrap transition-colors"
+                        onClick={() => openQuickRoomModal(s.campus_id, s.session_id)}
+                        className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold whitespace-nowrap transition-colors"
                       >
-                        Gán phòng
+                        + Nạp phòng bổ sung ngay
                       </button>
+                    )}
+                  </div>
+                ) : !isMulti ? (
+                  /* 1. GÁN ĐƠN PHÒNG VỚI TÌM KIẾM NHANH */
+                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                      <div className="text-xs font-medium text-slate-500 whitespace-nowrap">
+                        Tìm & chọn phòng:
+                      </div>
+
+                      {/* Ô tìm kiếm nhanh phòng */}
+                      <div className="relative flex-1">
+                        <input
+                          type="text"
+                          placeholder="🔍 Gõ tìm nhanh theo mã, tên phòng, loại..."
+                          value={searchKeyword}
+                          onChange={(e) =>
+                            setRoomFilterSearch({ ...roomFilterSearch, [s.session_id]: e.target.value })
+                          }
+                          className="w-full text-xs sm:text-sm border border-slate-300 rounded-lg pl-3 pr-8 py-2 bg-slate-50 focus:bg-white focus:outline-teal-600"
+                        />
+                        {searchKeyword && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setRoomFilterSearch({ ...roomFilterSearch, [s.session_id]: '' })
+                            }
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Nút nạp phòng mới tái sử dụng */}
+                      {canManageRooms && (
+                        <button
+                          type="button"
+                          onClick={() => openQuickRoomModal(s.campus_id, s.session_id)}
+                          className="px-3 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-semibold whitespace-nowrap transition-colors"
+                          title="Nạp thêm phòng mới vào danh mục và tái sử dụng cho các đợt sau"
+                        >
+                          + Nạp phòng mới
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                      <select
+                        aria-label={`Chọn phòng cho ${s.session_id}`}
+                        disabled={!canAssign}
+                        value={pickedSingle}
+                        onChange={(e) =>
+                          setSelectedRooms({ ...selectedRooms, [s.session_id]: e.target.value })
+                        }
+                        className="text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white flex-1"
+                      >
+                        {filteredSuggestions.length === 0 ? (
+                          <option value="">-- Không có phòng nào khớp từ khóa &quot;{searchKeyword}&quot; --</option>
+                        ) : (
+                          filteredSuggestions.map((sg) => (
+                            <option key={sg.room.room_id} value={sg.room.room_id}>
+                              [{sg.room.loai}] {sg.room.ten} ({sg.room.suc_chua} chỗ) — {sg.reason}
+                            </option>
+                          ))
+                        )}
+                      </select>
+                      {canAssign && (
+                        <button
+                          type="button"
+                          disabled={!pickedSingle || filteredSuggestions.length === 0}
+                          onClick={() => handleAssignSingle(s.session_id, pickedSingle)}
+                          className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 disabled:opacity-40 text-white text-sm font-semibold whitespace-nowrap transition-colors"
+                        >
+                          Gán phòng
+                        </button>
+                      )}
+                    </div>
+
+                    {filteredSuggestions.length === 0 && searchKeyword && canManageRooms && (
+                      <div className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900">
+                        <span>Chưa có phòng khớp từ khóa <strong>&quot;{searchKeyword}&quot;</strong>. Bạn có muốn nạp bổ sung vào hệ thống?</span>
+                        <button
+                          type="button"
+                          onClick={() => openQuickRoomModal(s.campus_id, s.session_id)}
+                          className="px-2.5 py-1 rounded bg-amber-700 hover:bg-amber-800 text-white font-semibold transition-colors"
+                        >
+                          + Nạp ngay
+                        </button>
+                      </div>
                     )}
                   </div>
                 ) : (
                   /* 2. GÁN ĐA PHÒNG THEO 5 NHÓM PHÒNG CECICS */
                   <div className="space-y-3 pt-3 border-t border-slate-100 bg-slate-50/60 p-3.5 rounded-xl border border-slate-200">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                         Chọn các phòng theo nhóm nhu cầu mô phỏng:
                       </span>
-                      <span className="text-xs text-teal-800 font-semibold bg-teal-100 px-2.5 py-0.5 rounded-full">
-                        Đã chọn: {currentSelectedMulti.length} phòng
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-teal-800 font-semibold bg-teal-100 px-2.5 py-0.5 rounded-full">
+                          Đã chọn: {currentSelectedMulti.length} phòng
+                        </span>
+                        {canManageRooms && (
+                          <button
+                            type="button"
+                            onClick={() => openQuickRoomModal(s.campus_id, s.session_id)}
+                            className="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold whitespace-nowrap transition-colors"
+                          >
+                            + Nạp phòng mới
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -329,6 +482,127 @@ export default function RoomAssignmentPage() {
         initialMode={aiSessionTarget ? 'osce_cluster' : 'general'}
         sessionInfo={aiSessionTarget || {}}
       />
+
+      {/* Modal Nạp phòng mới cho Vị trí Hành chính & Tái sử dụng lâu dài */}
+      <Modal
+        open={quickRoomModal}
+        onClose={() => setQuickRoomModal(false)}
+        title="Nạp bổ sung phòng học / mô phỏng (Tái sử dụng lâu dài)"
+      >
+        <form onSubmit={handleSaveNewRoom} className="space-y-4">
+          <div className="p-3 rounded-lg bg-teal-50/70 border border-teal-200 text-xs text-teal-900 leading-relaxed">
+            💡 <strong>Dành riêng cho Đơn vị Hành chính:</strong> Phòng được nạp bổ sung sẽ lưu trực tiếp vào cơ sở dữ liệu hệ thống, tự động hiển thị trong danh mục phòng sẵn sàng và tái sử dụng cho tất cả các đợt phân phòng, lập lịch tiếp theo.
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Mã phòng (Tùy chọn, để trống sẽ tự sinh)
+              </label>
+              <input
+                type="text"
+                placeholder="VD: P-HH-103, P-TN-205..."
+                value={newRoomForm.room_id}
+                onChange={(e) => setNewRoomForm({ ...newRoomForm, room_id: e.target.value })}
+                className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Cơ sở phân bổ *
+              </label>
+              <select
+                value={newRoomForm.campus_id}
+                onChange={(e) => setNewRoomForm({ ...newRoomForm, campus_id: e.target.value })}
+                className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white"
+              >
+                {db.Campuses.map((c) => (
+                  <option key={c.campus_id} value={c.campus_id}>
+                    {c.ten} ({c.campus_id})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Tên phòng / Mục đích sử dụng *
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="VD: HH-103 (Phòng Mô phỏng Chấn thương), Phòng Cách ly Trước thi A..."
+              value={newRoomForm.ten}
+              onChange={(e) => setNewRoomForm({ ...newRoomForm, ten: e.target.value })}
+              className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Loại phòng chuẩn CECICS *
+              </label>
+              <select
+                value={newRoomForm.loai}
+                onChange={(e) => setNewRoomForm({ ...newRoomForm, loai: e.target.value })}
+                className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white"
+              >
+                {ROOM_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Sức chứa (chỗ ngồi / trạm) *
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={500}
+                required
+                value={newRoomForm.suc_chua}
+                onChange={(e) =>
+                  setNewRoomForm({ ...newRoomForm, suc_chua: Number(e.target.value) || 20 })
+                }
+                className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-1 text-xs">
+            <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700">
+              <input
+                type="checkbox"
+                checked={newRoomForm.kich_hoat}
+                onChange={(e) => setNewRoomForm({ ...newRoomForm, kich_hoat: e.target.checked })}
+                className="accent-teal-700 h-4 w-4"
+              />
+              <span>Sẵn sàng đưa vào khai thác ngay (Kích hoạt)</span>
+            </label>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              onClick={() => setQuickRoomModal(false)}
+              className="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold transition-colors"
+            >
+              Lưu & Tái sử dụng
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

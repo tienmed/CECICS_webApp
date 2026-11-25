@@ -1814,8 +1814,8 @@ export function executeAction(
     }
 
     case 'upsertRoom': {
-      if (!canPerform(actor, 'manage_master_data')) {
-        throw new DomainError('FORBIDDEN', 'Bạn không có quyền quản trị phòng học.');
+      if (!canPerform(actor, 'manage_rooms') && !canPerform(actor, 'manage_master_data')) {
+        throw new DomainError('FORBIDDEN', 'Bạn không có quyền quản trị hoặc nạp phòng học.');
       }
       const room_id = String(payload.room_id || '').trim();
       const existing = room_id ? db.Rooms.find((r) => r.room_id === room_id) : undefined;

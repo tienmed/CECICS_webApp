@@ -3,6 +3,7 @@ import {
   APP_MODULES,
   DEFAULT_RBAC_MATRIX,
   canAccessModule,
+  canPerform,
   parseRbacMatrix,
   resolveModuleAccess,
   type AccessLevel,
@@ -97,5 +98,42 @@ describe('RBAC Matrix & Multi-Role Privilege Resolution', () => {
     // Invalid JSON fallback
     const fallback = parseRbacMatrix('invalid_json');
     expect(fallback).toEqual(DEFAULT_RBAC_MATRIX);
+  });
+
+  it('manage_rooms permission allows ADMIN and HANH_CHINH roles to upsert rooms', () => {
+    const adminUser: UserRecord = {
+      user_id: 'U-ADMIN',
+      email: 'admin@pnt.edu.vn',
+      ho_ten: 'Admin',
+      vai_tro: [ROLES.ADMIN],
+      don_vi: 'HANH_CHINH',
+      co_so: 'HH',
+      la_nguoi_ngoai: false,
+      kich_hoat: true,
+    };
+    const hanhChinhUser: UserRecord = {
+      user_id: 'U-HC',
+      email: 'hc@pnt.edu.vn',
+      ho_ten: 'Chuyên viên Hành chính',
+      vai_tro: [ROLES.HANH_CHINH],
+      don_vi: 'HANH_CHINH',
+      co_so: 'HH',
+      la_nguoi_ngoai: false,
+      kich_hoat: true,
+    };
+    const lecturerUser: UserRecord = {
+      user_id: 'U-GV',
+      email: 'gv@pnt.edu.vn',
+      ho_ten: 'Giảng viên',
+      vai_tro: [ROLES.GIANG_VIEN],
+      don_vi: 'BO_MON',
+      co_so: 'HH',
+      la_nguoi_ngoai: false,
+      kich_hoat: true,
+    };
+
+    expect(canPerform(adminUser, 'manage_rooms')).toBe(true);
+    expect(canPerform(hanhChinhUser, 'manage_rooms')).toBe(true);
+    expect(canPerform(lecturerUser, 'manage_rooms')).toBe(false);
   });
 });

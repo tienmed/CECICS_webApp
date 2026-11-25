@@ -83,6 +83,7 @@ export type PermissionAction =
   | 'confirm_incident_impact'
   | 'resolve_escalation'
   | 'manage_master_data'
+  | 'manage_rooms'
   | 'view_hours_report';
 
 export function canPerform(user: UserRecord | null | undefined, action: PermissionAction): boolean {
@@ -127,6 +128,12 @@ export function canPerform(user: UserRecord | null | undefined, action: Permissi
       return hasRole(user, ROLES.LANH_DAO);
     case 'manage_master_data':
       return isAdmin(user);
+    case 'manage_rooms':
+      return (
+        isAdmin(user) ||
+        hasRole(user, ROLES.HANH_CHINH) ||
+        (hasRole(user, ROLES.TRUONG_DON_VI) && user.don_vi === UNITS.HANH_CHINH)
+      );
     case 'view_hours_report':
       return hasAnyRole(user, [ROLES.LANH_DAO, ROLES.TRUONG_DON_VI, ROLES.HANH_CHINH, ROLES.DAO_TAO, ROLES.GIANG_VIEN]);
     default:
