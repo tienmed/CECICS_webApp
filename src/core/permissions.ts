@@ -41,7 +41,14 @@ export function evaluateLoginAccess(
   if (!normalized || !normalized.includes('@')) {
     return { allowed: false, reason: 'Email không hợp lệ.' };
   }
-  const user = users.find((u) => u.email.trim().toLowerCase() === normalized);
+  let user = users.find((u) => u.email.trim().toLowerCase() === normalized);
+  // Hỗ trợ trường hợp email bí danh của TS.BS. Nguyễn Ngọc Phương Thư
+  if (!user && (normalized === 'nguyenngocphuongthu@pnt.edu.vn' || normalized === 'thunnp@pnt.edu.vn')) {
+    user = users.find((u) => {
+      const e = u.email.trim().toLowerCase();
+      return e === 'thunnp@pnt.edu.vn' || e === 'nguyenngocphuongthu@pnt.edu.vn';
+    });
+  }
   if (!user) {
     return {
       allowed: false,
