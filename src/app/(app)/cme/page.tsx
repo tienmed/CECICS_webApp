@@ -40,6 +40,14 @@ export default function CmeAdminPage() {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<any | null>(null);
 
+  // Gửi thông báo & đồng bộ Google Calendar
+  const [notifying, setNotifying] = useState(false);
+  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
+  const [selectedCourseForNotify, setSelectedCourseForNotify] = useState<any>(null);
+  const [selectedRegIdsForNotify, setSelectedRegIdsForNotify] = useState<string[]>([]);
+  const [customNotifyMessage, setCustomNotifyMessage] = useState('');
+  const [notifySuccessMsg, setNotifySuccessMsg] = useState('');
+
   const courses = db.CmeCourses || [];
   const registrations = db.CmeRegistrations || [];
   const students = db.CmeStudents || [];
@@ -240,6 +248,48 @@ export default function CmeAdminPage() {
     }
   };
 
+  // Mở modal gửi thông báo lịch học
+  const handleOpenNotifyModal = (course: any, regId?: string) => {
+    setSelectedCourseForNotify(course);
+    if (regId) {
+      setSelectedRegIdsForNotify([regId]);
+    } else {
+      // Gửi cho tất cả học viên đã duyệt/chuyển khoản của khóa
+      const regs = registrations
+        .filter((r) => r.course_id === course.course_id && (r.trang_thai === 'DA_DUYET' || r.trang_thai === 'DA_CHUYEN_KHOAN'))
+        .map((r) => r.reg_id);
+      setSelectedRegIdsForNotify(regs);
+    }
+    setCustomNotifyMessage('');
+    setNotifySuccessMsg('');
+    setNotifyModalOpen(true);
+  };
+
+  // Thực thi gửi thông báo lịch học & file .ics
+  const handleSendSchedule = async () => {
+    if (!selectedCourseForNotify) return;
+    setNotifying(true);
+    setNotifySuccessMsg('');
+    try {
+      const res = await fetch('/api/cme/notify-schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course_id: selectedCourseForNotify.course_id,
+          registration_ids: selectedRegIdsForNotify,
+          custom_message: customNotifyMessage,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gửi lịch học thất bại');
+      setNotifySuccessMsg(data.message || 'Đã gửi thông báo lịch học thành công.');
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message);
+    } finally {
+      setNotifying(false);
+    }
+  };
+
   // Duyệt hồ sơ đăng ký
   const handleReviewReg = async (regId: string, status: string) => {
     try {
@@ -374,16 +424,25 @@ export default function CmeAdminPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenCloneCourse(c)}
-                    className="px-2.5 py-1 text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg font-medium flex items-center gap-1"
-                    title="Nhân bản nội dung khóa này để mở tiếp lớp/khóa mới"
+                    className="px-2.5 py-1 text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg font-medium flex items-center gap-1 shadow-sm transition"
+                    title="1-Click Mở lại khóa từ khóa cũ: Kế thừa nội dung, giáo trình, ngân hàng test và phòng học"
                   >
                     <span>📑</span>
-                    <span>Mở Lớp Tiếp Theo</span>
+                    <span>Mở Lại Khóa Cũ</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenNotifyModal(c)}
+                    className="px-2.5 py-1 text-xs bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-300 rounded-lg font-medium flex items-center gap-1 shadow-sm transition"
+                    title="Gửi email thông báo thời khóa biểu & tệp iCalendar (.ics) đồng bộ Google Calendar cho học viên"
+                  >
+                    <span>📅</span>
+                    <span>Gửi Lịch Học</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => handleOpenEditCourse(c)}
-                    className="px-2.5 py-1 text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg font-medium"
+                    className="px-2 py-1 text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg font-medium"
                     title="Chỉnh sửa thông tin khóa học"
                   >
                     Sửa
@@ -860,6 +919,68 @@ export default function CmeAdminPage() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* Modal gửi thông báo lịch học & đồng bộ Google Calendar */}
+      <Modal
+        isOpen={notifyModalOpen}
+        onClose={() => setNotifyModalOpen(false)}
+        title={`Gửi Thông Báo Lịch Học & Đồng Bộ Google Calendar: ${selectedCourseForNotify?.ten_khoa || ''}`}
+      >
+        <div className="space-y-4">
+          <div className="bg-teal-50 border border-teal-200 p-3 rounded-xl text-xs text-teal-800">
+            <p className="font-semibold mb-1">
+              📅 Cơ chế đồng bộ Calendar công vụ:
+            </p>
+            <p>
+              Hệ thống sẽ gửi email từ <strong>cecics@pnt.edu.vn</strong> kèm tệp <code>.ics</code> định dạng REQUEST. Địa chỉ email của học viên sẽ được <strong>thêm trực tiếp vào danh sách khách mời (Attendee/Attention)</strong> của sự kiện lịch từ tài khoản CECICS. Lịch học sẽ tự động xuất hiện trên Google Calendar của học viên mà không cần thao tác thủ công.
+            </p>
+          </div>
+
+          <div className="text-xs text-slate-700 space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <p>• Khóa học: <strong>{selectedCourseForNotify?.ten_khoa}</strong> ({selectedCourseForNotify?.ma_khoa})</p>
+            <p>• Thời lượng: <strong>{selectedCourseForNotify?.so_tiet_cme} tiết CME</strong></p>
+            <p>• Khai giảng dự kiến: <strong>{selectedCourseForNotify?.ngay_khai_giang || 'Chưa định'}</strong></p>
+            <p>• Số lượng học viên nhận thông báo: <strong className="text-teal-700">{selectedRegIdsForNotify.length} học viên</strong></p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Ghi chú bổ sung gửi kèm cho học viên (nếu có)
+            </label>
+            <textarea
+              rows={3}
+              value={customNotifyMessage}
+              onChange={(e) => setCustomNotifyMessage(e.target.value)}
+              placeholder="VD: Đề nghị học viên mang theo áo blouse trắng và có mặt trước giờ học 15 phút tại phòng A3-401..."
+              className="w-full text-xs border border-slate-300 rounded-lg p-2 focus:ring-teal-500 focus:border-teal-500"
+            />
+          </div>
+
+          {notifySuccessMsg && (
+            <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs text-emerald-800 font-medium">
+              ✅ {notifySuccessMsg}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+            <button
+              type="button"
+              onClick={() => setNotifyModalOpen(false)}
+              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              disabled={notifying || selectedRegIdsForNotify.length === 0}
+              onClick={handleSendSchedule}
+              className="px-5 py-2 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-lg shadow-sm transition flex items-center gap-1.5 disabled:opacity-50"
+            >
+              <span>{notifying ? 'Đang gửi...' : '🚀 Xác Nhận Gửi Lịch Cho Học Viên'}</span>
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

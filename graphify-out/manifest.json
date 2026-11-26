@@ -547,10 +547,10 @@
     "ast_empty": true
   },
   "data/simulation_digest_history.json": {
-    "mtime": 1795696480.202512,
-    "seen": 1795696637.8386614,
-    "ast_hash": "b5245b3e0a608c0df9d96c10380bca48",
-    "semantic_hash": "b5245b3e0a608c0df9d96c10380bca48",
+    "mtime": 1795708655.3433905,
+    "seen": 1795708677.7462234,
+    "ast_hash": "333658a2f3c4b01a71c1a156e40f0852",
+    "semantic_hash": "333658a2f3c4b01a71c1a156e40f0852",
     "ast_empty": true
   },
   "scripts/generate_email_preview.ts": {
@@ -590,10 +590,10 @@
     "semantic_hash": "5e7b350eddba18809be78d3d1c8121d6"
   },
   "src/app/(app)/cme/page.tsx": {
-    "mtime": 1795590837.5520291,
-    "seen": 1795659547.6975267,
-    "ast_hash": "79823c59d0a71e4081feceb2755fb4ac",
-    "semantic_hash": "79823c59d0a71e4081feceb2755fb4ac"
+    "mtime": 1795708620.8006053,
+    "seen": 1795708677.7482605,
+    "ast_hash": "4cccfca0f8af2a5003085bc5fe51fb6e",
+    "semantic_hash": "4cccfca0f8af2a5003085bc5fe51fb6e"
   },
   "src/app/api/cme/import-legacy/route.ts": {
     "mtime": 1795582656.6488178,
@@ -626,10 +626,10 @@
     "semantic_hash": "6b57709552f79c8f5fd4570c701291ec"
   },
   "src/app/cme/dang-ky/page.tsx": {
-    "mtime": 1795589020.1080954,
-    "seen": 1795659547.7065148,
-    "ast_hash": "b4c8e526f39e55f78205b24ff0cc7b7b",
-    "semantic_hash": "b4c8e526f39e55f78205b24ff0cc7b7b"
+    "mtime": 1795708485.5063505,
+    "seen": 1795708677.7643661,
+    "ast_hash": "a5dd135a9e07fc68a6ad93fe911f1a0a",
+    "semantic_hash": "a5dd135a9e07fc68a6ad93fe911f1a0a"
   },
   "src/core/cme.ts": {
     "mtime": 1795582493.844421,
@@ -823,5 +823,23 @@
     "seen": 1795696637.8745134,
     "ast_hash": "5fa09259a930d24ddbf4879b78b38fb2",
     "semantic_hash": "5fa09259a930d24ddbf4879b78b38fb2"
+  },
+  "src/app/api/cme/notify-schedule/route.ts": {
+    "mtime": 1795708601.9356437,
+    "seen": 1795708677.7482605,
+    "ast_hash": "24add3190224671b391be94b9f176afd",
+    "semantic_hash": "24add3190224671b391be94b9f176afd"
+  },
+  "src/lib/cme-utils.ts": {
+    "mtime": 1795708575.5941186,
+    "seen": 1795708677.7643661,
+    "ast_hash": "728ca2079b74dd6d75a0b128a20c1e9e",
+    "semantic_hash": "728ca2079b74dd6d75a0b128a20c1e9e"
+  },
+  "tests/cme_utils.test.ts": {
+    "mtime": 1795708634.4201753,
+    "seen": 1795708677.780318,
+    "ast_hash": "512a30e55d6be3d17a6f490f63e5913b",
+    "semantic_hash": "512a30e55d6be3d17a6f490f63e5913b"
   }
 }

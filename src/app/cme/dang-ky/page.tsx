@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { OFFICIAL_CME_BANK, generateCmeTransferMemo, generateVietQrUrl } from '@/lib/cme-utils';
 
 interface Course {
   course_id: string;
@@ -15,6 +16,8 @@ interface Course {
   han_dang_ky: string;
   noi_dung_tom_tat: string;
   giang_vien_chu_nhiem: string;
+  campus_id?: string;
+  phong_hoc_mac_dinh?: string;
 }
 
 function CmeRegistrationContent() {
@@ -30,6 +33,7 @@ function CmeRegistrationContent() {
   const [searchDob, setSearchDob] = useState('');
   const [searching, setSearching] = useState(false);
   const [searchFound, setSearchFound] = useState<boolean | null>(null);
+  const [isLegacyStudent, setIsLegacyStudent] = useState<boolean>(false);
   const [historyRegs, setHistoryRegs] = useState<any[]>([]);
 
   // Student Form state
@@ -49,6 +53,7 @@ function CmeRegistrationContent() {
     minh_chung_ck_url: '',
   });
 
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [successResult, setSuccessResult] = useState<any | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
@@ -70,6 +75,8 @@ function CmeRegistrationContent() {
       .finally(() => setLoadingCourses(false));
   }, []);
 
+  const currentCourse = courses.find((c) => c.course_id === selectedCourseId);
+
   // Tra cứu tự động hồ sơ cũ bằng CCCD + Ngày sinh
   const handleLookup = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -88,6 +95,7 @@ function CmeRegistrationContent() {
 
       if (data.found && data.student) {
         setSearchFound(true);
+        setIsLegacyStudent(true);
         setFormData((prev) => ({
           ...prev,
           cccd: data.student.cccd || searchCccd,
@@ -105,28 +113,48 @@ function CmeRegistrationContent() {
         setHistoryRegs(data.historyRegistrations || []);
       } else {
         setSearchFound(false);
+        setIsLegacyStudent(false);
         setFormData((prev) => ({
           ...prev,
           cccd: searchCccd.trim(),
           ngay_sinh: searchDob.trim(),
         }));
-        setHistoryRegs([]);
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMessage('Lỗi tra cứu dữ liệu máy chủ');
+      setErrorMessage('Không thể kết nối đến máy chủ tra cứu. Vui lòng thử lại.');
     } finally {
       setSearching(false);
     }
   };
 
-  // Nộp đơn đăng ký
+  // Cú pháp nội dung chuyển khoản và URL VietQR động
+  const memoText = generateCmeTransferMemo(
+    currentCourse?.ma_khoa || selectedCourseId,
+    formData.sdt || formData.cccd || 'HOCVIEN'
+  );
+
+  const qrImageUrl = generateVietQrUrl({
+    amount: currentCourse?.hoc_phi || 0,
+    memo: memoText,
+  });
+
+  const copyToClipboard = (text: string, fieldName: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(fieldName);
+    setTimeout(() => setCopiedField(null), 2500);
+  };
+
+  // Xử lý nộp đơn đăng ký
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.ho_ten || !formData.cccd || !formData.sdt || !formData.email) {
+      setErrorMessage('Vui lòng điền đầy đủ các thông tin bắt buộc (*).');
+      return;
+    }
+
     setSubmitting(true);
     setErrorMessage('');
-
-    const currentCourse = courses.find((c) => c.course_id === selectedCourseId);
 
     try {
       const res = await fetch('/api/cme/register', {
@@ -168,8 +196,6 @@ function CmeRegistrationContent() {
     }
   };
 
-  const currentCourse = courses.find((c) => c.course_id === selectedCourseId);
-
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -183,7 +209,7 @@ function CmeRegistrationContent() {
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight">Đăng Ký Đào Tạo Y Khoa Liên Tục (CME)</h1>
           <p className="mt-2 text-teal-100 text-sm max-w-2xl">
-            Tự động tra cứu tái sử dụng hồ sơ học viên cũ qua CCCD & Ngày sinh. Hoàn tất đăng ký, xác nhận chuyển khoản và đồng bộ lịch học Google Calendar.
+            Tự động tra cứu tái sử dụng hồ sơ học viên cũ qua CCCD & Ngày sinh (miễn kê khai lại giấy tờ đã nộp). Đóng học phí siêu nhanh qua VietQR cấu hình sẵn và nhận thông báo lịch học linh động.
           </p>
         </div>
 
@@ -204,7 +230,7 @@ function CmeRegistrationContent() {
                   <p>• Email xác nhận đã gửi về: <strong>{successResult.student.email}</strong></p>
                 </div>
                 <p className="text-xs text-slate-500 mt-2">
-                  Ban Đào tạo CECICS sẽ đối soát giao dịch chuyển khoản và gửi thông báo nhập học, thời khóa biểu và thư mời Google Calendar trong vòng 24 giờ làm việc.
+                  Ban Đào tạo CECICS sẽ đối soát giao dịch chuyển khoản và gửi thông báo nhập học, thời khóa biểu và thư mời Google Calendar (kèm file .ics) trong vòng 24 giờ làm việc.
                 </p>
                 <button
                   onClick={() => setSuccessResult(null)}
@@ -248,104 +274,118 @@ function CmeRegistrationContent() {
                     <div className="bg-teal-50/60 rounded-xl p-4 border border-teal-100 text-xs space-y-2 text-slate-700">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-medium">
                         <div>⏱️ Thời lượng: <span className="font-bold text-teal-800">{currentCourse.so_tiet_cme} tiết CME</span></div>
-                        <div>📅 Khai giảng: <span className="font-bold text-teal-800">{currentCourse.ngay_khai_giang}</span></div>
-                        <div>💰 Học phí: <span className="font-bold text-teal-800">{currentCourse.hoc_phi.toLocaleString('vi-VN')} VNĐ</span></div>
+                        <div>💰 Học phí: <span className="font-bold text-teal-800">{currentCourse.hoc_phi.toLocaleString('vi-VN')} đ</span></div>
+                        <div>👥 Chỉ tiêu: <span className="font-bold text-teal-800">{currentCourse.chi_tieu} học viên</span></div>
                       </div>
-                      <p>👨‍🏫 Giảng viên chủ nhiệm: <strong>{currentCourse.giang_vien_chu_nhiem}</strong></p>
-                      <p>🎯 Tóm tắt nội dung: {currentCourse.noi_dung_tom_tat}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-600">
+                        <div>🗓️ Khai giảng: {currentCourse.ngay_khai_giang || 'Dự kiến'} (Hạn ĐK: {currentCourse.han_dang_ky || 'Đang mở'})</div>
+                        <div>👨‍🏫 GV Chủ nhiệm: {currentCourse.giang_vien_chu_nhiem || 'Bộ môn / CECICS'}</div>
+                      </div>
+                      {currentCourse.noi_dung_tom_tat && (
+                        <p className="text-slate-500 border-t border-teal-100/60 pt-2 italic">
+                          {currentCourse.noi_dung_tom_tat}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Bước 2: Tra cứu thông minh tái sử dụng hồ sơ cũ */}
+            {/* Bước 2: Tra Cứu Tự Động Hồ Sơ Cũ */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-lg font-bold text-slate-800 mb-2 flex items-center">
-                <span className="w-7 h-7 rounded-full bg-teal-100 text-teal-800 inline-flex items-center justify-center text-sm font-bold mr-2">2</span>
-                Tra Cứu & Tái Sử Dụng Hồ Sơ Học Viên Cũ (Auto-fill)
-              </h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-bold text-slate-800 flex items-center">
+                  <span className="w-7 h-7 rounded-full bg-teal-100 text-teal-800 inline-flex items-center justify-center text-sm font-bold mr-2">2</span>
+                  Tra Cứu Hồ Sơ & Tự Động Kế Thừa Giấy Tờ Học Viên Cũ
+                </h2>
+                <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-medium">
+                  ⚡ Tiết kiệm 90% thời gian nhập liệu
+                </span>
+              </div>
               <p className="text-xs text-slate-500 mb-4">
-                Nếu Quý Thầy/Cô và Anh/Chị đã từng học bất kỳ khóa CME nào tại CECICS, nhập CCCD và Ngày sinh để hệ thống tự động điền lại hồ sơ văn bằng cũ.
+                Nếu bạn đã từng tham gia bất kỳ khóa đào tạo nào tại CECICS hoặc ĐHYK Phạm Ngọc Thạch, chỉ cần nhập số CCCD và Ngày sinh để tự động điền lại hồ sơ và kế thừa toàn bộ chứng chỉ/văn bằng đã nộp.
               </p>
 
-              <form onSubmit={handleLookup} className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                <div className="sm:col-span-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-1">
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Số CCCD / CMND (*)</label>
                   <input
                     type="text"
                     value={searchCccd}
                     onChange={(e) => setSearchCccd(e.target.value)}
-                    placeholder="VD: 079090001234"
+                    placeholder="VD: 079088001122"
                     className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
-                    required
                   />
                 </div>
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-1">
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Ngày sinh (dd/mm/yyyy)</label>
                   <input
                     type="text"
                     value={searchDob}
                     onChange={(e) => setSearchDob(e.target.value)}
-                    placeholder="VD: 15/08/1990"
+                    placeholder="VD: 12/12/1988"
                     className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
                   />
                 </div>
                 <div className="sm:col-span-1 flex items-end">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleLookup}
                     disabled={searching}
-                    className="w-full bg-slate-800 hover:bg-slate-900 text-white rounded-lg p-2 text-sm font-semibold flex items-center justify-center space-x-1.5 transition disabled:opacity-50"
+                    className="w-full py-2 px-4 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-semibold shadow-sm transition flex items-center justify-center space-x-1 disabled:opacity-50"
                   >
-                    <span>🔍</span>
-                    <span>{searching ? 'Đang tra...' : 'Tra cứu'}</span>
+                    <span>{searching ? 'Đang tìm kiếm...' : '🔍 Tra Cứu Hồ Sơ'}</span>
                   </button>
                 </div>
-              </form>
+              </div>
 
               {searchFound === true && (
-                <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start space-x-3 text-xs text-emerald-900">
-                  <span className="text-base text-emerald-600 shrink-0 mt-0.5">👤</span>
-                  <div>
-                    <p className="font-bold">Đã tìm thấy hồ sơ cũ của học viên: {formData.ho_ten}!</p>
-                    <p className="text-emerald-700">Toàn bộ thông tin đơn vị công tác, email, bằng cấp và CCHN đã được tự động điền vào biểu mẫu bên dưới.</p>
-                    {historyRegs.length > 0 && (
-                      <div className="mt-2 text-slate-600 bg-white p-2 rounded border border-emerald-100">
-                        <span className="font-semibold text-slate-700">Lịch sử các khóa đã học: </span>
-                        {historyRegs.map((h, i) => (
-                          <span key={i} className="inline-block mr-2">• {h.course_name} (Số CCHN/CME: {h.so_chung_chi_cme || 'Đang cấp'})</span>
-                        ))}
-                      </div>
-                    )}
+                <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 space-y-1">
+                  <div className="font-bold flex items-center text-emerald-900">
+                    <span className="mr-1.5">🎉</span> Đã tìm thấy hồ sơ học viên cũ: {formData.ho_ten} ({formData.don_vi_cong_tac || 'N/A'})
                   </div>
+                  <p>Hệ thống đã tự động điền các thông tin cá nhân và <strong>kế thừa toàn bộ hồ sơ bằng cấp/CCHN</strong> của bạn. Bạn không cần phải nộp lại scan bằng cấp nếu không có thay đổi.</p>
+                  {historyRegs.length > 0 && (
+                    <div className="mt-2 text-slate-600">
+                      <strong>Lịch sử các khóa đã đăng ký:</strong>
+                      <ul className="list-disc list-inside mt-1 space-y-0.5">
+                        {historyRegs.map((hr, idx) => (
+                          <li key={idx}>
+                            {hr.course_name} — Trạng thái: <span className="font-medium text-slate-800">{hr.trang_thai}</span>
+                            {hr.so_chung_chi_cme ? ` (Số CC: ${hr.so_chung_chi_cme})` : ''}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
 
               {searchFound === false && (
-                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center space-x-2 text-xs text-amber-800">
-                  <span className="text-amber-600 shrink-0">⚠️</span>
-                  <span>Không tìm thấy hồ sơ cũ trên hệ thống. Quý học viên vui lòng nhập thông tin mới ở Bước 3 dưới đây.</span>
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                  ℹ️ Không tìm thấy hồ sơ cũ với CCCD này. Vui lòng nhập thông tin mới ở bước 3 bên dưới để lần đầu mở hồ sơ tại CECICS.
                 </div>
               )}
             </div>
 
-            {/* Bước 3: Thông tin học viên & Xác nhận chuyển khoản */}
+            {/* Bước 3: Thông tin Học viên & Đóng học phí qua VietQR */}
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
               <h2 className="text-lg font-bold text-slate-800 flex items-center">
                 <span className="w-7 h-7 rounded-full bg-teal-100 text-teal-800 inline-flex items-center justify-center text-sm font-bold mr-2">3</span>
-                Thông Tin Cá Nhân & Minh Chứng Chuyển Khoản
+                Kê Khai Thông Tin Học Viên & Đóng Học Phí
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Họ và tên (*)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Họ và Tên (*)</label>
                   <input
                     type="text"
                     required
                     value={formData.ho_ten}
                     onChange={(e) => setFormData({ ...formData, ho_ten: e.target.value })}
                     className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
-                    placeholder="VD: BS. Lê Hoàng Long"
+                    placeholder="VD: TS.BS. Lê Hoàng Long"
                   />
                 </div>
                 <div>
@@ -361,17 +401,18 @@ function CmeRegistrationContent() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Số CCCD / Hộ chiếu (*)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Số CCCD / Định danh cá nhân (*)</label>
                   <input
                     type="text"
                     required
                     value={formData.cccd}
                     onChange={(e) => setFormData({ ...formData, cccd: e.target.value })}
-                    className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
+                    className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500 font-mono"
+                    placeholder="079088001122"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Ngày tháng năm sinh (*)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Ngày sinh (dd/mm/yyyy) (*)</label>
                   <input
                     type="text"
                     required
@@ -422,13 +463,13 @@ function CmeRegistrationContent() {
                     required
                     value={formData.sdt}
                     onChange={(e) => setFormData({ ...formData, sdt: e.target.value })}
-                    className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
+                    className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500 font-mono"
                     placeholder="VD: 0903123456"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Số CCHN / Chứng chỉ hành nghề (nếu có)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Số CCHN / Giấy phép hành nghề (nếu có)</label>
                   <input
                     type="text"
                     value={formData.so_cchn}
@@ -438,50 +479,124 @@ function CmeRegistrationContent() {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Đường dẫn ảnh Bằng cấp / CCHN (nếu có)</label>
+                  <label className="block font-semibold text-slate-700 mb-1">
+                    Đường dẫn ảnh Bằng cấp / CCHN {isLegacyStudent ? '(Đã kế thừa từ khóa cũ)' : '(nếu có)'}
+                  </label>
                   <input
                     type="url"
                     value={formData.anh_bang_cap_url}
                     onChange={(e) => setFormData({ ...formData, anh_bang_cap_url: e.target.value })}
                     className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
-                    placeholder="https://drive.google.com/..."
+                    placeholder={isLegacyStudent ? 'Đã lưu trong hồ sơ CECICS (không bắt buộc nhập lại)' : 'https://drive.google.com/...'}
                   />
                 </div>
               </div>
 
-              {/* Thông tin chuyển khoản học phí */}
+              {/* KHỐI ĐÓNG HỌC PHÍ QUA VIETQR TỰ ĐỘNG CẤU HÌNH SẴN */}
               <div className="border-t border-slate-200 pt-6">
-                <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center text-teal-800">
-                  <span className="mr-1.5">🛡️</span>
-                  Hướng Dẫn Chuyển Khoản & Xác Nhận Học Phí
-                </h3>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 mb-4 space-y-1">
-                  <p>• Đơn vị thụ hưởng: <strong>TRƯỜNG ĐẠI HỌC Y KHOA PHẠM NGỌC THẠCH</strong></p>
-                  <p>• Số tài khoản: <strong>0600 1234 5678</strong> tại Sacombank Chi nhánh Q.10 TP.HCM</p>
-                  <p>• Số tiền cần nộp: <strong className="text-teal-700 font-bold">{currentCourse?.hoc_phi.toLocaleString('vi-VN')} VNĐ</strong></p>
-                  <p>• Nội dung chuyển khoản: <strong className="text-slate-800">CME {currentCourse?.ma_khoa} {formData.ho_ten || 'Hovaten'} {formData.sdt || 'SDT'}</strong></p>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-bold text-teal-900 flex items-center">
+                    <span className="mr-1.5 text-base">💳</span>
+                    Đóng Học Phí Tiện Lợi Qua VietQR Chuẩn Động
+                  </h3>
+                  <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
+                    ⚡ Quét mã tự điền STK & Số tiền
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Mã giao dịch / Mã tham chiếu ngân hàng</label>
-                    <input
-                      type="text"
-                      value={formData.ma_giao_dich}
-                      onChange={(e) => setFormData({ ...formData, ma_giao_dich: e.target.value })}
-                      className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="VD: FT2511258899..."
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                  {/* Cột hiển thị Mã VietQR */}
+                  <div className="md:col-span-4 flex flex-col items-center justify-center p-3 bg-white rounded-xl shadow-sm border border-slate-200 text-center">
+                    <img
+                      src={qrImageUrl}
+                      alt="VietQR Học Phí CME"
+                      className="w-48 h-auto object-contain rounded-lg border border-slate-100"
                     />
+                    <p className="text-[11px] text-slate-500 mt-2 font-medium">
+                      Mở app ngân hàng (VCB, Sacombank, BIDV, MoMo...) quét để nộp học phí tức thì
+                    </p>
                   </div>
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Đường dẫn ảnh Biên lai / Ủy nhiệm chi</label>
-                    <input
-                      type="url"
-                      value={formData.minh_chung_ck_url}
-                      onChange={(e) => setFormData({ ...formData, minh_chung_ck_url: e.target.value })}
-                      className="w-full text-sm rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="https://drive.google.com/... hoặc link ảnh bill"
-                    />
+
+                  {/* Cột chi tiết thông tin chuyển khoản kèm nút Copy nhanh */}
+                  <div className="md:col-span-8 flex flex-col justify-between space-y-3 text-xs">
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                        <div>
+                          <span className="text-slate-500 text-[11px] block">Đơn vị thụ hưởng:</span>
+                          <strong className="text-slate-800">{OFFICIAL_CME_BANK.accountName}</strong>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                        <div>
+                          <span className="text-slate-500 text-[11px] block">Số tài khoản & Ngân hàng:</span>
+                          <strong className="text-teal-800 text-sm font-mono">{OFFICIAL_CME_BANK.accountNo}</strong>
+                          <span className="text-slate-600 block text-[11px]">{OFFICIAL_CME_BANK.bankName}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(OFFICIAL_CME_BANK.accountNo, 'stk')}
+                          className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[11px] font-semibold transition"
+                        >
+                          {copiedField === 'stk' ? '✓ Đã chép' : 'Sao chép STK'}
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                        <div>
+                          <span className="text-slate-500 text-[11px] block">Số tiền học phí:</span>
+                          <strong className="text-teal-700 text-sm font-bold">
+                            {(currentCourse?.hoc_phi || 0).toLocaleString('vi-VN')} VNĐ
+                          </strong>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(String(currentCourse?.hoc_phi || 0), 'amount')}
+                          className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[11px] font-semibold transition"
+                        >
+                          {copiedField === 'amount' ? '✓ Đã chép' : 'Sao chép số tiền'}
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200">
+                        <div>
+                          <span className="text-slate-500 text-[11px] block">Nội dung chuyển khoản chuẩn hóa:</span>
+                          <strong className="text-slate-900 font-mono text-sm bg-yellow-50 px-2 py-0.5 rounded border border-yellow-200">
+                            {memoText}
+                          </strong>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(memoText, 'memo')}
+                          className="px-2.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-[11px] font-semibold transition shadow-sm"
+                        >
+                          {copiedField === 'memo' ? '✓ Đã chép' : 'Sao chép cú pháp'}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Mã giao dịch ngân hàng (nếu đã chuyển khoản)</label>
+                        <input
+                          type="text"
+                          value={formData.ma_giao_dich}
+                          onChange={(e) => setFormData({ ...formData, ma_giao_dich: e.target.value })}
+                          className="w-full text-xs rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="VD: FT26118899..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Link ảnh Biên lai / Bill chuyển khoản</label>
+                        <input
+                          type="url"
+                          value={formData.minh_chung_ck_url}
+                          onChange={(e) => setFormData({ ...formData, minh_chung_ck_url: e.target.value })}
+                          className="w-full text-xs rounded-lg border-slate-300 shadow-sm border p-2 focus:ring-teal-500 focus:border-teal-500"
+                          placeholder="https://drive.google.com/... hoặc ảnh bill"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -515,7 +630,7 @@ export default function CmeRegistrationPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-sm text-slate-500 font-medium">
-          Đang tải cổng đăng ký CME...
+          Đang tải cổng tuyển sinh CME...
         </div>
       }
     >
