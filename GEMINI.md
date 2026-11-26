@@ -102,6 +102,15 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
       1. *Cùng lớp & cùng học phần* (khuyên dùng ưu tiên hàng đầu).
       2. *Cùng lớp & khác học phần* (nếu đổi ngày chéo các bài trong cùng lớp).
     - Tuyệt đối không hiển thị các buổi giảng của các lớp khác nhằm ngăn ngừa xung đột chương trình đào tạo của từng nhóm sinh viên.
+- **Quy Chuẩn Xử Lý Tài Liệu Cuộc Họp & Biên Bản Thống Nhất ([P0-CECICS-MEETING-MINUTES-TASK-INVARIANT])**:
+  - **Đa định dạng đầu vào**: Hỗ trợ bóc tách tự động các tệp Audio (.mp3, .m4a, .wav), Hình ảnh chụp bảng/slide (.jpg, .png), Word (.docx), Excel (.xlsx) và Ghi chú nhanh (.txt, .md). Bảng tính Excel bắt buộc được chuyển thành Markdown Table có cấu trúc.
+  - **Thể thức biên bản chuẩn 4 phần bắt buộc**:
+    1. *Phần I: Thông tin chung*: Thời gian, địa điểm, chủ trì, thư ký, thành phần tham dự.
+    2. *Phần II: Nội dung thảo luận & báo cáo*: Số liệu, ý kiến trao đổi và đề xuất.
+    3. *Phần III: Kết luận & chỉ đạo của Chủ trì*: Các quyết sách cốt lõi được thống nhất.
+    4. *Phần IV: Bảng phân công đầu việc & tiến độ (Action Matrix)*: Bảng gồm các cột: STT, Đầu việc, Người phụ trách, Hạn chót (Deadline), Mức độ ưu tiên, Trạng thái.
+  - **Liên kết nhân sự thực hiện**: Tự động nhận diện tên người được giao việc và ưu tiên map chính xác vào danh sách 18 cán bộ nhân sự chính thức của CECICS; cho phép thư ký linh hoạt chỉnh sửa hoặc gán cho khách mời/giảng viên ngoài.
+  - **Quản lý đầu việc sau cuộc họp (Task Board)**: Mọi biên bản sau khi lưu bắt buộc đồng bộ tự động sang Bảng theo dõi đầu việc (`MeetingTasks`), có khả năng lọc theo Deadline, mức độ ưu tiên và chuyển đổi trạng thái hoàn thành (`Chưa bắt đầu` -> `Đang làm` -> `Hoàn thành`).
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.

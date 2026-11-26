@@ -896,5 +896,11 @@
     "seen": 1795710537.2494073,
     "ast_hash": "0091918ecd70fedbcf258cff493ef5b0",
     "semantic_hash": "0091918ecd70fedbcf258cff493ef5b0"
+  },
+  "scripts/doc_converter.py": {
+    "mtime": 1795710637.002931,
+    "seen": 1795710874.526333,
+    "ast_hash": "4cf4e7206295fc970ce2994a8e84d089",
+    "semantic_hash": "4cf4e7206295fc970ce2994a8e84d089"
   }
 }
