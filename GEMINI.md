@@ -31,6 +31,7 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 - **Chỉ Sử Dụng Duy Nhất Email `cecics@pnt.edu.vn` để Gửi Thư ([P0-CECICS-EMAIL-SENDER-INVARIANT])**:
   - Toàn bộ các luồng gửi email tự động (Lịch tuần, Lịch mời Google Calendar `.ics / VEVENT`, Báo cáo đối soát giờ giảng bộ môn, Cảnh báo lớp mô phỏng, Thông báo hệ thống) **BẮT BUỘC CHỈ SỬ DỤNG DUY NHẤT** email công vụ của Trung tâm: **`cecics@pnt.edu.vn`** (Tên hiển thị: `"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch"`).
   - Tuyệt đối **KHÔNG ĐƯỢC** sử dụng bất kỳ email nào khác (kể cả email nghiệp vụ phòng khám `nghiepvupk@pnt.edu.vn` hay email cá nhân) làm địa chỉ gửi (Sender / From) của hệ thống CECICS.
+  - **CẤM TUYỆT ĐỐI `MailApp` / `GmailApp` TRONG GOOGLE APPS SCRIPT**: Tuyệt đối không gọi `MailApp.sendEmail()` hoặc `GmailApp.sendEmail()` trong Google Apps Script vì GAS sẽ tự động lấy email cá nhân của tài khoản deploy script làm người gửi. Mọi email bắt buộc phải gửi từ Backend CECICS WebApp qua SMTP `cecics@pnt.edu.vn` cổng 465 SSL.
 - **Quy Chuẩn Danh Sách Nhân Viên Trung Tâm CECICS ([P0-CECICS-OFFICIAL-STAFF-INVARIANT])**:
   - **ĐỊNH NGHĨA BẮT BUỘC:** Danh sách nhân viên Trung tâm CECICS **CHỈ BAO GỒM DUY NHẤT 18 NHÂN SỰ CHÍNH THỨC** (theo họ tên & email công vụ trong `data/cecics_official_staff.json`):
     1. *Nguyễn Ngọc Phương Thư* (`nguyenngocphuongthu@pnt.edu.vn`)
