@@ -51,7 +51,12 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
     16. *Nguyễn Thị Lan Anh* (`anhntl@pnt.edu.vn`)
     17. *Mai Trần Thái Pháp* (`phapmtt@pnt.edu.vn`)
     18. *Trần Thái Thiên Thư* (`thuttt@pnt.edu.vn`)
-  - **TẤT CẢ CÁC TÀI KHOẢN KHÁC** (Giảng viên Bộ môn, Lãnh đạo Khoa, Giảng viên thỉnh giảng, tài khoản demo seed) đều được phân loại là **"NGOÀI CECICS"**.
+  - **TẤT CẢ CÁC TÀI KHOẢN KHÁC** (Giảng viên Bộ môn, Lãnh đạo Khoa như TS. Đặng Trần Ngọc Thanh `thanhdtn@pnt.edu.vn`, Giảng viên thỉnh giảng, tài khoản demo seed) đều được phân loại là **"NGOÀI CECICS"** (`la_nguoi_ngoai: true`).
+  - **Quy tắc bảo mật thông tin nội bộ đối với email ngoài CECICS (`thanhdtn@pnt.edu.vn`, ...):**
+    - **TUYỆT ĐỐI KHÔNG** tự động gửi thông tin nội bộ (như Lịch giao ban tuần CECICS, Điểm tin nội bộ CECICS Simulation Digest, phân công trực/KTV) cho các email ngoài nhân sự CECICS.
+    - **CHỈ ĐƯỢC PHÉP GỬI** khi thuộc 1 trong 2 trường hợp cụ thể:
+      1. Có **chỉ định đích danh** gửi riêng cho từng email cụ thể đó.
+      2. Gửi theo **dạng danh sách ngoài** (External Recipients / Stakeholders) đã được chọn hoặc phê duyệt chủ động.
   - Khi có yêu cầu *"gửi tới nhân viên CECICS"*, hệ thống bắt buộc sử dụng danh sách 18 nhân sự chuẩn hóa này, tuyệt đối không gửi nhầm sang danh sách ngoài CECICS.
 - **Đồng bộ Google Calendar cá nhân**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) để gửi lời mời `.ics / VEVENT`, tự động gán vào ứng dụng Google Calendar trên điện thoại/máy tính của giảng viên.
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).

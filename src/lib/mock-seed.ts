@@ -220,7 +220,7 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
         don_vi: "BAN_LANH_DAO",
         co_so: "HH",
         bo_mon_id: "",
-        la_nguoi_ngoai: false,
+        la_nguoi_ngoai: true, // Email ngoài nhân sự CECICS - không gửi thông tin nội bộ trừ khi chỉ định đích danh
         kich_hoat: true,
       },
       {
