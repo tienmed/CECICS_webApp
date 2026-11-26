@@ -78,6 +78,11 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
   - Mọi bản tin, bài viết học thuật, liên kết bài báo khoa học gốc (DOI, PubMed) và cổng hội nghị quốc tế trước khi xuất ra HTML hoặc gửi email **BẮT BUỘC PHẢI CHẠY KIỂM CHỨNG TRỰC TIẾP (LIVE PING)** qua mạng thực tế (`verifySingleLink` / HTTP 200/Redirect).
   - Bất kỳ liên kết nào không thể truy cập (lỗi DNS, Timeout, 404) phải bị **LOẠI BỎ NGAY LẬP TỨC** khỏi danh sách bài của tuần.
   - Trường hợp đường dẫn DOI bị nhà xuất bản chặn bot (HTTP 403), bắt buộc tự động chuyển hướng sang liên kết chuẩn đã xác minh trên **NCBI PubMed (`https://pubmed.ncbi.nlm.nih.gov/<PMID>/`)** để đảm bảo người đọc click vào luôn mở được bài gốc 100%.
+- **Quy Chuẩn Hiển Thị Lịch Giảng Dạy & Coi Thi Thư Ký / Hành Chính ([P0-CECICS-SCHEDULE-UI-INVARIANT])**:
+  - **Chuẩn hóa Ngày Giờ**: Luôn tự động chuyển đổi số serial hoặc chuỗi số serial từ Google Sheets (`46349` / `"46349"` $\rightarrow$ `YYYY-MM-DD`, `0.5625` / `"0.5625"` $\rightarrow$ `13:30`) tại tầng `parseCell` để triệt tiêu lỗi hiển thị số thô.
+  - **Phân nhóm theo tuần (Weekly Grouping)**: Bảng danh sách buổi học bắt buộc phân nhóm theo từng tuần lễ (Thứ 2 đến Chủ Nhật) với tiêu đề phân cách rõ ràng, hiển thị tổng số buổi trong tuần.
+  - **Hiển thị Thứ & Buổi trực quan**: Bắt buộc thể hiện Thứ viết tắt (`T2`..`CN`) và huy hiệu Buổi (`☀️ Sáng`, `🌤️ Chiều`, `🌙 Tối`) trước khung giờ `hh:mm – hh:mm`.
+  - **Tối ưu Drag & Drop FullCalendar**: Cấu hình bước snap chuẩn 15 phút (`snapDuration="00:15:00"`), slot 30 phút (`slotDuration="00:30:00"`), bật `nowIndicator={true}` và hiệu ứng visual nổi 3D (`cursor: grab`, `transform: scale(1.02)`) khi kéo thả sự kiện.
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
