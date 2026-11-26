@@ -29,7 +29,7 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 
 ## 5. Quy Chuẩn Vận Hành Nghiệp Vụ Lâm Sàng Nâng Cao
 - **Chỉ Sử Dụng Duy Nhất Email `cecics@pnt.edu.vn` để Gửi Thư ([P0-CECICS-EMAIL-SENDER-INVARIANT])**:
-  - Toàn bộ các luồng gửi email tự động (Lịch tuần, Lịch mời Google Calendar `.ics / VEVENT`, Báo cáo đối soát giờ giảng bộ môn, Cảnh báo lớp mô phỏng, Thông báo hệ thống) **BẮT BUỘC CHỈ SỬ DỤNG DUY NHẤT** email công vụ của Trung tâm: **`cecics@pnt.edu.vn`** (Tên hiển thị: `"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch"`).
+  - Toàn bộ các luồng gửi email tự động (Lịch tuần, Báo cáo đối soát giờ giảng bộ môn, Cảnh báo lớp mô phỏng, Thông báo hệ thống) **BẮT BUỘC CHỈ SỬ DỤNG DUY NHẤT** email công vụ của Trung tâm: **`cecics@pnt.edu.vn`** (Tên hiển thị: `"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch"`).
   - Tuyệt đối **KHÔNG ĐƯỢC** sử dụng bất kỳ email nào khác (kể cả email nghiệp vụ phòng khám `nghiepvupk@pnt.edu.vn` hay email cá nhân) làm địa chỉ gửi (Sender / From) của hệ thống CECICS.
   - **CẤM TUYỆT ĐỐI `MailApp` / `GmailApp` TRONG GOOGLE APPS SCRIPT**: Tuyệt đối không gọi `MailApp.sendEmail()` hoặc `GmailApp.sendEmail()` trong Google Apps Script vì GAS sẽ tự động lấy email cá nhân của tài khoản deploy script làm người gửi. Mọi email bắt buộc phải gửi từ Backend CECICS WebApp qua SMTP `cecics@pnt.edu.vn` cổng 465 SSL.
 - **Quy Chuẩn Danh Sách Nhân Viên Trung Tâm CECICS ([P0-CECICS-OFFICIAL-STAFF-INVARIANT])**:
@@ -67,7 +67,7 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
     3. *Lịch Họp định kỳ CECICS (`loai: 'Họp'` hoặc `U-CECICS-ALL`):* Add toàn bộ nhân sự thuộc Trung tâm CECICS và Ban Giám đốc/Lãnh đạo phụ trách.
   - Tuyệt đối không gửi email mời `.ics` qua SMTP làm đầy hòm thư giảng viên khi chỉ cần đồng bộ lịch tự động.
   - Trong Google Apps Script, các hàm phục vụ người dùng bấm chạy trực tiếp trên thanh công cụ Editor bắt buộc không có dấu gạch dưới `_` ở cuối tên hàm để tránh bị ẩn khỏi danh sách chọn (Run dropdown).
-- **Đồng bộ Google Calendar cá nhân**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) để gửi lời mời `.ics / VEVENT`, tự động gán vào ứng dụng Google Calendar trên điện thoại/máy tính của giảng viên.
+- **Đồng bộ Google Calendar cá nhân (Add Attendee Trực Tiếp)**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) hoặc email cá nhân để thêm trực tiếp làm **Attendee** trong sự kiện Google Calendar của `cecics@pnt.edu.vn` với cờ `sendInvites: false`. Tuyệt đối không gửi email mời `.ics / VEVENT`.
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).
 - **Chuẩn hóa Văn bản Ký số E-Office**: Biểu mẫu đề xuất mở lớp mô phỏng và dự trù dụng cụ - vật tư phải hỗ trợ xuất PDF theo đúng thể thức văn bản hành chính (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm CECICS) để liên thông ký số trên hệ thống E-Office của Trường.
 - **Định dạng Ngày Giờ & Chuẩn Tuần Lễ**: Luôn sử dụng định dạng ngày `dd/mm/yyyy`, giờ `hh:mm` (24h). Thứ 2 (`T2`) là ngày đầu tuần, Thứ 7 (`T7`) và Chủ Nhật (`CN`) là ngày cuối tuần trên toàn bộ giao diện, biểu mẫu, lịch biểu và báo cáo xuất bản.
