@@ -7,7 +7,7 @@ import type { DatabaseSnapshot, SimClassRecord } from '../src/core/types';
 import type { DataStore } from '../src/core/mutations';
 
 function createInMemoryStore(seed?: DatabaseSnapshot): DataStore {
-  const db: DatabaseSnapshot = seed ? JSON.parse(JSON.stringify(seed)) : buildMockSeed();
+  const db: DatabaseSnapshot = seed ? JSON.parse(JSON.stringify(seed)) : buildMockSeed(new Date('2026-11-20T08:00:00.000Z'));
   return {
     getAll: () => db,
     append: (table, record) => {

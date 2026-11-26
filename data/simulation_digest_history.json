@@ -1,6 +1,6 @@
 {
-  "totalDigestsSent": 17,
-  "lastSentAt": "2026-11-26T15:57:35.353Z",
+  "totalDigestsSent": 18,
+  "lastSentAt": "2026-11-26T17:31:41.184Z",
   "publishedArticleIds": [
     "doi-milmed-2026",
     "10.1093/milmed/usag470",
@@ -32,6 +32,9 @@
     "aspih-conference-official",
     "imsh-official-portal",
     "sesam-official-portal",
-    "aspe-official-portal"
+    "aspe-official-portal",
+    "vame-national-conference",
+    "pnt-scientific-conference",
+    "viet-sim-summit"
   ]
 }
