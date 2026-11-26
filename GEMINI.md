@@ -83,6 +83,12 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
   - **Phân nhóm theo tuần (Weekly Grouping)**: Bảng danh sách buổi học bắt buộc phân nhóm theo từng tuần lễ (Thứ 2 đến Chủ Nhật) với tiêu đề phân cách rõ ràng, hiển thị tổng số buổi trong tuần.
   - **Hiển thị Thứ & Buổi trực quan**: Bắt buộc thể hiện Thứ viết tắt (`T2`..`CN`) và huy hiệu Buổi (`☀️ Sáng`, `🌤️ Chiều`, `🌙 Tối`) trước khung giờ `hh:mm – hh:mm`.
   - **Tối ưu Drag & Drop FullCalendar**: Cấu hình bước snap chuẩn 15 phút (`snapDuration="00:15:00"`), slot 30 phút (`slotDuration="00:30:00"`), bật `nowIndicator={true}` và hiệu ứng visual nổi 3D (`cursor: grab`, `transform: scale(1.02)`) khi kéo thả sự kiện.
+- **Quy Chuẩn Hoán Đổi Lịch Giảng Cùng Lớp ([P0-CECICS-SWAP-SAME-CLASS-INVARIANT])**:
+  - Tại giao diện **Đề nghị hoán đổi lịch giảng** (`/doi-lich`), khi người dùng chọn một buổi giảng ở **Bước 1 (Chọn buổi giảng của bạn muốn đổi ngày)**, danh sách buổi giảng đối ứng của đồng nghiệp ở **Bước 2 (Chọn đồng nghiệp muốn đổi lịch)** **BẮT BUỘC CHỈ ĐƯỢC PHÉP HIỂN THỊ** các buổi giảng của đồng nghiệp **thuộc cùng lớp học** (`session.lop === selectedSession.lop`).
+  - Phân nhóm trực quan gồm:
+    1. *Cùng lớp & cùng học phần* (khuyên dùng ưu tiên hàng đầu).
+    2. *Cùng lớp & khác học phần* (nếu đổi ngày chéo các bài trong cùng lớp).
+  - Tuyệt đối không hiển thị các buổi giảng của các lớp khác nhằm ngăn ngừa xung đột chương trình đào tạo của từng nhóm sinh viên.
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
