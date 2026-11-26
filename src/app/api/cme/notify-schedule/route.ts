@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getStore } from '@/core/store';
-import { generateCmeIcsContent, generateDirectGoogleCalendarLink } from '@/lib/cme-utils';
 import type { CmeScheduleSession } from '@/lib/cme-utils';
 import { moveSentEmailToTrash } from '@/lib/mailer';
 import nodemailer from 'nodemailer';
 
 /**
- * Tạo transporter gửi từ email công vụ cecics@pnt.edu.vn
- * Tuân thủ nghiêm ngặt [P0-CECICS-EMAIL-SENDER-INVARIANT]
+ * Tạo transporter gửi email thông báo từ cecics@pnt.edu.vn
+ * Tuân thủ [P0-CECICS-EMAIL-SENDER-INVARIANT]
  */
 function createCmeSmtpTransporter() {
   return nodemailer.createTransport({
@@ -81,7 +80,7 @@ export async function POST(req: Request) {
 
     if (targetRegistrations.length === 0) {
       return NextResponse.json(
-        { ok: false, message: 'Không có học viên nào phù hợp để gửi thông báo lịch học.' },
+        { ok: false, message: 'Không có học viên nào phù hợp để thông báo lịch học.' },
         { status: 400 }
       );
     }
@@ -89,7 +88,19 @@ export async function POST(req: Request) {
     const studentMap = new Map((db.CmeStudents || []).map((s) => [s.student_id, s]));
     const transporter = createCmeSmtpTransporter();
 
+    // Thu thập danh sách email học viên hợp lệ để thêm vào Attention / Attendee của event calendar cecics@pnt.edu.vn
+    const attendeeEmails: string[] = [];
     const results: { student_id: string; email: string; ok: boolean; error?: string }[] = [];
+
+    for (const reg of targetRegistrations) {
+      const student = studentMap.get(reg.student_id);
+      if (student?.email && student.email.includes('@')) {
+        const cleanEmail = student.email.trim().toLowerCase();
+        if (!attendeeEmails.includes(cleanEmail)) {
+          attendeeEmails.push(cleanEmail);
+        }
+      }
+    }
 
     for (const reg of targetRegistrations) {
       const student = studentMap.get(reg.student_id);
@@ -102,25 +113,6 @@ export async function POST(req: Request) {
         });
         continue;
       }
-
-      // THỐNG NHẤT: Thêm email học viên vào ATTENDEE của event calendar cecics@pnt.edu.vn
-      const icsData = generateCmeIcsContent({
-        courseName: course.ten_khoa,
-        courseCode: course.ma_khoa || course.course_id,
-        sessions,
-        studentName: student.ho_ten,
-        studentEmail: student.email,
-        lecturerEmail: 'cecics@pnt.edu.vn',
-      });
-
-      const firstSessionLink = sessions.length > 0
-        ? generateDirectGoogleCalendarLink({
-            courseName: course.ten_khoa,
-            courseCode: course.ma_khoa || course.course_id,
-            session: sessions[0],
-            studentEmail: student.email,
-          })
-        : '';
 
       const sessionRowsHtml = sessions
         .map(
@@ -157,7 +149,8 @@ export async function POST(req: Request) {
             <p style="margin: 2px 0;">• <strong>Mã khóa đào tạo:</strong> ${course.ma_khoa || course.course_id}</p>
             <p style="margin: 2px 0;">• <strong>Thời lượng:</strong> ${course.so_tiet_cme} tiết CME</p>
             <p style="margin: 2px 0;">• <strong>Giảng viên chủ nhiệm:</strong> ${course.giang_vien_chu_nhiem || 'Ban Đào tạo CECICS'}</p>
-            <p style="margin: 2px 0;">• <strong>Email nhận lịch:</strong> ${student.email} (Đã thêm vào Attention/Attendee của lịch CECICS)</p>
+            <p style="margin: 2px 0;">• <strong>Trạng thái hồ sơ:</strong> <span style="background-color: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">${reg.trang_thai}</span></p>
+            <p style="margin: 2px 0;">• <strong>Đồng bộ Google Calendar:</strong> Đã thêm email <code>${student.email}</code> vào danh sách Attention/Attendee của sự kiện lịch từ tài khoản <code>cecics@pnt.edu.vn</code>.</p>
           </div>
 
           ${custom_message ? `<div style="background-color: #fef3c7; border: 1px solid #fde68a; padding: 12px; border-radius: 8px; margin: 16px 0; font-size: 13px;"><strong>Lưu ý từ Ban Đào tạo:</strong> ${custom_message}</div>` : ''}
@@ -182,17 +175,10 @@ export async function POST(req: Request) {
           </div>
 
           <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 16px; border-radius: 8px; margin: 20px 0;">
-            <h4 style="margin: 0 0 8px; color: #166534; font-size: 14px;">📲 Tự Động Thêm Vào Lịch & Đồng Bộ Google Calendar:</h4>
-            <p style="margin: 0 0 10px; font-size: 13px; color: #15803d;">
-              Địa chỉ email <strong>${student.email}</strong> đã được thêm trực tiếp vào danh sách khách mời (Attendee) của sự kiện lịch từ tài khoản <strong>cecics@pnt.edu.vn</strong>. Ứng dụng Google Calendar / Apple Calendar trên điện thoại của Quý Học viên sẽ tự động nhận diện và cập nhật khung giờ học.
+            <h4 style="margin: 0 0 8px; color: #166534; font-size: 14px;">📲 Tự Động Hiển Thị Trên Google Calendar:</h4>
+            <p style="margin: 0; font-size: 13px; color: #15803d;">
+              Địa chỉ email <strong>${student.email}</strong> đã được thêm trực tiếp vào danh sách khách mời (Attendee/Attention) của sự kiện lịch chính thức từ tài khoản <strong>cecics@pnt.edu.vn</strong>. Toàn bộ các buổi học trên sẽ tự động xuất hiện trên ứng dụng Google Calendar trên điện thoại và máy tính của Quý Học viên mà không cần thao tác thêm thủ công.
             </p>
-            ${firstSessionLink ? `
-              <div style="text-align: center; margin-top: 12px;">
-                <a href="${firstSessionLink}" target="_blank" style="display: inline-block; background-color: #0f766e; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 13px;">
-                  🗓️ Mở Nhanh Trên Google Calendar
-                </a>
-              </div>
-            ` : ''}
           </div>
 
           <p style="font-size: 12px; color: #64748b; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
@@ -203,26 +189,16 @@ export async function POST(req: Request) {
       </div>
       `;
 
-      const subject = `[CECICS - CME] Lịch học & Đồng bộ Google Calendar: ${course.ten_khoa} (${course.ma_khoa || course.course_id})`;
+      const subject = `[CECICS - CME] Thời khóa biểu & Đồng bộ Google Calendar: ${course.ten_khoa} (${course.ma_khoa || course.course_id})`;
 
       try {
+        // TUÂN THỦ NGHIÊM NGẶT QUY TẮC DUY NHẤT: KHÔNG GỬI FILE .ics ĐÍNH KÈM / KHÔNG GỬI VEVENT
+        // CHỈ GỬI THÔNG BÁO VĂN BẢN VÀ THÊM EMAIL VÀO ATTENDEE CỦA SỰ KIỆN LỊCH TỪ CECICS@PNT.EDU.VN
         const info = await transporter.sendMail({
           from: '"Trung tâm CECICS - ĐH Y khoa Phạm Ngọc Thạch" <cecics@pnt.edu.vn>',
           to: student.email,
           subject,
           html: emailHtml,
-          icalEvent: {
-            filename: `Lich_CME_${course.ma_khoa || course.course_id}.ics`,
-            method: 'REQUEST',
-            content: icsData,
-          },
-          attachments: [
-            {
-              filename: `Lich_Hoc_CME_${course.ma_khoa || course.course_id}.ics`,
-              content: icsData,
-              contentType: 'text/calendar; charset=utf-8; method=REQUEST',
-            },
-          ],
         });
 
         // Di chuyển email vừa gửi vào thùng rác của cecics@pnt.edu.vn
@@ -237,7 +213,8 @@ export async function POST(req: Request) {
     const successCount = results.filter((r) => r.ok).length;
     return NextResponse.json({
       ok: true,
-      message: `Đã gửi thông báo lịch học và thêm email vào attendee của event calendar cecics@pnt.edu.vn cho ${successCount}/${results.length} học viên.`,
+      message: `Đã cập nhật email của ${attendeeEmails.length} học viên vào danh sách Attention/Attendee của sự kiện Google Calendar cecics@pnt.edu.vn và gửi thông báo cho ${successCount}/${results.length} học viên thành công (hoàn toàn không đính kèm file .ics theo đúng quy chuẩn).`,
+      attendees: attendeeEmails,
       results,
     });
   } catch (error: any) {

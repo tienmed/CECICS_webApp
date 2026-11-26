@@ -925,15 +925,15 @@ export default function CmeAdminPage() {
       <Modal
         isOpen={notifyModalOpen}
         onClose={() => setNotifyModalOpen(false)}
-        title={`Gửi Thông Báo Lịch Học & Đồng Bộ Google Calendar: ${selectedCourseForNotify?.ten_khoa || ''}`}
+        title={`Đồng Bộ Google Calendar & Thông Báo Lịch Học: ${selectedCourseForNotify?.ten_khoa || ''}`}
       >
         <div className="space-y-4">
           <div className="bg-teal-50 border border-teal-200 p-3 rounded-xl text-xs text-teal-800">
             <p className="font-semibold mb-1">
-              📅 Cơ chế đồng bộ Calendar công vụ:
+              📅 Quy tắc đồng bộ Google Calendar duy nhất:
             </p>
             <p>
-              Hệ thống sẽ gửi email từ <strong>cecics@pnt.edu.vn</strong> kèm tệp <code>.ics</code> định dạng REQUEST. Địa chỉ email của học viên sẽ được <strong>thêm trực tiếp vào danh sách khách mời (Attendee/Attention)</strong> của sự kiện lịch từ tài khoản CECICS. Lịch học sẽ tự động xuất hiện trên Google Calendar của học viên mà không cần thao tác thủ công.
+              Hệ thống tự động <strong>thêm địa chỉ email của học viên vào danh sách Attention / Khách mời (Attendee)</strong> của sự kiện lịch thuộc tài khoản công vụ <strong>cecics@pnt.edu.vn</strong> với cờ <code>sendInvites: false</code>. Lịch học sẽ tự động xuất hiện trên Google Calendar trên điện thoại/máy tính của học viên mà <strong>hoàn toàn không gửi tệp đính kèm .ics hay email rác VEVENT</strong>.
             </p>
           </div>
 
@@ -941,7 +941,7 @@ export default function CmeAdminPage() {
             <p>• Khóa học: <strong>{selectedCourseForNotify?.ten_khoa}</strong> ({selectedCourseForNotify?.ma_khoa})</p>
             <p>• Thời lượng: <strong>{selectedCourseForNotify?.so_tiet_cme} tiết CME</strong></p>
             <p>• Khai giảng dự kiến: <strong>{selectedCourseForNotify?.ngay_khai_giang || 'Chưa định'}</strong></p>
-            <p>• Số lượng học viên nhận thông báo: <strong className="text-teal-700">{selectedRegIdsForNotify.length} học viên</strong></p>
+            <p>• Số lượng học viên được thêm vào Calendar: <strong className="text-teal-700">{selectedRegIdsForNotify.length} học viên</strong></p>
           </div>
 
           <div>
@@ -977,7 +977,7 @@ export default function CmeAdminPage() {
               onClick={handleSendSchedule}
               className="px-5 py-2 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-lg shadow-sm transition flex items-center gap-1.5 disabled:opacity-50"
             >
-              <span>{notifying ? 'Đang gửi...' : '🚀 Xác Nhận Gửi Lịch Cho Học Viên'}</span>
+              <span>{notifying ? 'Đang đồng bộ...' : '🚀 Thêm Học Viên Vào Calendar CECICS & Gửi Thông Báo'}</span>
             </button>
           </div>
         </div>
