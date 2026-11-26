@@ -47,7 +47,7 @@ export default function EscalationsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Leo thang & Chỉ đạo Ban Lãnh đạo"
+        title="Cảnh báo và chỉ đạo từ Ban Lãnh đạo"
         subtitle="Tự động tổng hợp thiết bị hỏng kéo dài, buổi sát giờ chưa có phòng, lớp trễ hạn tồn đọng · Trưởng & Phó TT cùng theo dõi và chỉ đạo"
         actions={
           <button

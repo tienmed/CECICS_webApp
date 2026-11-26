@@ -25,4 +25,4 @@
 
 ## 5. Ban Lãnh đạo (Trưởng & Phó Trung tâm)
 1. Theo dõi công suất phòng, tiến độ mục tiêu, cảnh báo lệch tải giảng viên tại **Tổng quan**.
-2. Vào **Leo thang & Chỉ đạo** để xử lý các cảnh báo tự động bằng hình thức **Chỉ đạo / Phê duyệt / Trả lại**. Ý kiến được gửi thẳng đến Trưởng đơn vị phụ trách.
+2. Vào **Cảnh báo và chỉ đạo từ Ban Lãnh đạo** để xử lý các cảnh báo tự động bằng hình thức **Chỉ đạo / Phê duyệt / Trả lại**. Ý kiến được gửi thẳng đến Trưởng đơn vị phụ trách.

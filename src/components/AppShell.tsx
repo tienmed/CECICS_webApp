@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     },
     {
       href: '/leo-thang',
-      label: 'Leo thang & Chỉ đạo',
+      label: 'Cảnh báo và chỉ đạo từ Ban Lãnh đạo',
       icon: '🚨',
       badge: openEscalations,
       visible: true,
