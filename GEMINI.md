@@ -24,6 +24,7 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 ## 4. Skills Dự Án Tích Hợp
 - [`.agent/skills/graphify-rag/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/graphify-rag/SKILL.md): Token budget, AST extraction, Qwen/Gemma routing.
 - [`.agent/skills/microsoft-token-economizer/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/microsoft-token-economizer/SKILL.md): Microsoft Research TokenEconomizer (Micro-skills, Tool Pruning, Loop Guard).
+- [`.agent/skills/cecics-doc-converter/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/cecics-doc-converter/SKILL.md): Chuẩn hóa tài liệu Word/Excel/PDF sang Markdown phục vụ RAG bằng Microsoft MarkItDown.
 - [`.agent/skills/nextjs-react-guidance/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/nextjs-react-guidance/SKILL.md): React 19 & Next.js 15 App Router best practices, loại bỏ hydration mismatch.
 - [`.agent/skills/cecics-auth-cookies/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/cecics-auth-cookies/SKILL.md): Auth.js v5 cookie debugging, Google OAuth & Demo Login.
 
