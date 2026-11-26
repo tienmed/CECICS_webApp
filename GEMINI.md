@@ -57,6 +57,13 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).
 - **Chuẩn hóa Văn bản Ký số E-Office**: Biểu mẫu đề xuất mở lớp mô phỏng và dự trù dụng cụ - vật tư phải hỗ trợ xuất PDF theo đúng thể thức văn bản hành chính (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm CECICS) để liên thông ký số trên hệ thống E-Office của Trường.
 - **Định dạng Ngày Giờ & Chuẩn Tuần Lễ**: Luôn sử dụng định dạng ngày `dd/mm/yyyy`, giờ `hh:mm` (24h). Thứ 2 (`T2`) là ngày đầu tuần, Thứ 7 (`T7`) và Chủ Nhật (`CN`) là ngày cuối tuần trên toàn bộ giao diện, biểu mẫu, lịch biểu và báo cáo xuất bản.
+- **Quy Chuẩn Dữ Liệu Thực Tế 100% & Triệt Tiêu Dữ Liệu Giả Lập ([P0-CECICS-ZERO-MOCK-INVARIANT])**:
+  - Toàn bộ các báo cáo định kỳ, lịch tuần, phân bổ thiết bị, và bản tin chuyên trang mô phỏng hàng tuần (**Weekly Simulation Digest**) **BẮT BUỘC 100% LẤY TỪ NGUỒN DỮ LIỆU THẬT**: Google Sheets công vụ CECICS (`DATA_MODE=sheets` với các tab `SimClasses`, `Sessions`, `Users`, `CmeCourses`) và danh mục tài sản thiết bị AMS thực tế.
+  - Tuyệt đối **KHÔNG ĐƯỢC** sử dụng dữ liệu giả định (`mock-seed`), khóa học giả lập, lớp học demo, con người giả định hay mốc thời gian tĩnh khi xuất bản ra môi trường sử dụng của CBNV CECICS.
+- **Cổng Kiểm Chứng Liên Kết Tham Khảo Trực Tuyến 100% Thật ([P0-CECICS-LIVE-LINK-VERIFICATION-INVARIANT])**:
+  - Mọi bản tin, bài viết học thuật, liên kết bài báo khoa học gốc (DOI, PubMed) và cổng hội nghị quốc tế trước khi xuất ra HTML hoặc gửi email **BẮT BUỘC PHẢI CHẠY KIỂM CHỨNG TRỰC TIẾP (LIVE PING)** qua mạng thực tế (`verifySingleLink` / HTTP 200/Redirect).
+  - Bất kỳ liên kết nào không thể truy cập (lỗi DNS, Timeout, 404) phải bị **LOẠI BỎ NGAY LẬP TỨC** khỏi danh sách bài của tuần.
+  - Trường hợp đường dẫn DOI bị nhà xuất bản chặn bot (HTTP 403), bắt buộc tự động chuyển hướng sang liên kết chuẩn đã xác minh trên **NCBI PubMed (`https://pubmed.ncbi.nlm.nih.gov/<PMID>/`)** để đảm bảo người đọc click vào luôn mở được bài gốc 100%.
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
