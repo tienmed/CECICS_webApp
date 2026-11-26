@@ -49,15 +49,26 @@ export default function SwapPage() {
     ).sort((a, b) => `${a.ngay}${a.gio_bd}`.localeCompare(`${b.ngay}${b.gio_bd}`));
   }, [db.Sessions, today, user.user_id]);
 
-  const sameCourseColleagueSessions = useMemo(() => {
+  // Chỉ hiện danh sách các buổi còn lại của lớp đó để hoán đổi
+  const targetColleagueSessions = useMemo(() => {
     if (!selectedSession) return [];
+    const selectedClass = (selectedSession.lop || '').trim();
+    if (selectedClass) {
+      return allColleagueSessions.filter((s) => (s.lop || '').trim() === selectedClass);
+    }
+    // Nếu buổi hiện tại chưa có thông tin lớp cụ thể, lọc theo cùng học phần
     return allColleagueSessions.filter((s) => s.hoc_phan === selectedSession.hoc_phan);
   }, [allColleagueSessions, selectedSession]);
 
+  const sameCourseColleagueSessions = useMemo(() => {
+    if (!selectedSession) return [];
+    return targetColleagueSessions.filter((s) => s.hoc_phan === selectedSession.hoc_phan);
+  }, [targetColleagueSessions, selectedSession]);
+
   const otherCourseColleagueSessions = useMemo(() => {
-    if (!selectedSession) return allColleagueSessions;
-    return allColleagueSessions.filter((s) => s.hoc_phan !== selectedSession.hoc_phan);
-  }, [allColleagueSessions, selectedSession]);
+    if (!selectedSession) return [];
+    return targetColleagueSessions.filter((s) => s.hoc_phan !== selectedSession.hoc_phan);
+  }, [targetColleagueSessions, selectedSession]);
 
   const incoming = db.SwapRequests.filter((sw) => sw.den_gv === user.user_id && sw.trang_thai === 'Chờ');
   const outgoing = db.SwapRequests.filter((sw) => sw.tu_gv === user.user_id && sw.trang_thai === 'Chờ');
@@ -357,10 +368,15 @@ export default function SwapPage() {
             >
               {myUpcoming.map((s) => (
                 <option key={s.session_id} value={s.session_id}>
-                  {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}) · {s.hoc_phan} — {s.bai_giang}
+                  {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}){s.lop ? ` [${s.lop}]` : ''} · {s.hoc_phan} — {s.bai_giang}
                 </option>
               ))}
             </select>
+            {selectedSession?.lop && (
+              <p className="text-xs text-teal-700 mt-1 font-medium">
+                🎓 Lớp: <strong>{selectedSession.lop}</strong> — Chỉ hiện danh sách các buổi đối ứng cùng lớp này.
+              </p>
+            )}
           </div>
 
           <div>
@@ -385,7 +401,9 @@ export default function SwapPage() {
               <option value="">-- Chọn buổi giảng đối ứng của đồng nghiệp (hoặc chọn dạy thay) --</option>
 
               {sameCourseColleagueSessions.length > 0 && (
-                <optgroup label={`🎯 Cùng học phần: ${selectedSession?.hoc_phan || ''} (Khuyên dùng)`}>
+                <optgroup
+                  label={`🎯 Cùng lớp & học phần: ${selectedSession?.lop ? `[${selectedSession.lop}] ` : ''}${selectedSession?.hoc_phan || ''} (Khuyên dùng)`}
+                >
                   {sameCourseColleagueSessions.map((s) => {
                     const gvName = userMap.get(s.giang_vien_id)?.ho_ten || s.giang_vien_id;
                     const busyMe = selectedSession
@@ -406,7 +424,7 @@ export default function SwapPage() {
 
                     return (
                       <option key={s.session_id} value={s.session_id} disabled={busyMe || hasPendingSwap}>
-                        {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}) · {s.hoc_phan} — {s.bai_giang} · GV: {gvName}
+                        {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}){s.lop ? ` [${s.lop}]` : ''} · {s.hoc_phan} — {s.bai_giang} · GV: {gvName}
                         {hasPendingSwap ? ' — [Đang chờ đổi]' : busyMe ? ' — [Bạn bị trùng lịch]' : ''}
                       </option>
                     );
@@ -415,7 +433,9 @@ export default function SwapPage() {
               )}
 
               {otherCourseColleagueSessions.length > 0 && (
-                <optgroup label="📚 Buổi giảng các học phần khác">
+                <optgroup
+                  label={`📚 Cùng lớp: ${selectedSession?.lop ? `[${selectedSession.lop}] ` : ''}(Các học phần khác)`}
+                >
                   {otherCourseColleagueSessions.map((s) => {
                     const gvName = userMap.get(s.giang_vien_id)?.ho_ten || s.giang_vien_id;
                     const busyMe = selectedSession
@@ -436,12 +456,18 @@ export default function SwapPage() {
 
                     return (
                       <option key={s.session_id} value={s.session_id} disabled={busyMe || hasPendingSwap}>
-                        {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}) · {s.hoc_phan} — {s.bai_giang} · GV: {gvName}
+                        {formatVnDate(s.ngay)} ({s.gio_bd}–{s.gio_kt}){s.lop ? ` [${s.lop}]` : ''} · {s.hoc_phan} — {s.bai_giang} · GV: {gvName}
                         {hasPendingSwap ? ' — [Đang chờ đổi]' : busyMe ? ' — [Bạn bị trùng lịch]' : ''}
                       </option>
                     );
                   })}
                 </optgroup>
+              )}
+
+              {targetColleagueSessions.length === 0 && (
+                <option value="" disabled>
+                  (Không tìm thấy buổi giảng nào khác của đồng nghiệp trong cùng lớp này)
+                </option>
               )}
 
               <optgroup label="👤 Dạy thay 1 chiều (không đổi ngày đối ứng)">
