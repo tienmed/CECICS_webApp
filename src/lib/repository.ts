@@ -3,7 +3,6 @@ import type { DatabaseSnapshot, SwapRequestRecord, UserRecord } from '@/core/typ
 import { readLocalDb, withLocalLock } from './local-store';
 import { invalidateSheetsCache, readAllFromSheets } from './sheets';
 import { invokeGasAction } from './gas-client';
-import { sendCalendarEventInvite } from './calendar-sync';
 import { buildSwapRequestEmailHtml, buildSwapResponseEmailHtml, sendNotificationEmail } from './mailer';
 import { formatVnDate } from '@/core/time';
 
@@ -45,21 +44,19 @@ export async function runAction<T = unknown>(
   try {
     const db = readLocalDb();
 
-    // 1. Đồng bộ sang Google Calendar
+    // 1. Đồng bộ sang Google Calendar chính thức của CECICS (cecics@pnt.edu.vn)
+    // Tự động add attendees trực tiếp và không gửi email mời (sendInvites: false) theo quy định P0-CECICS-GOOGLE-CALENDAR-SYNC-INVARIANT
     if (result.effects?.calendarSync && result.effects.calendarSync.length > 0) {
-      const userMap = new Map(db.Users.map((u) => [u.user_id, u]));
-      for (const item of result.effects.calendarSync) {
-        const gv = userMap.get(item.session.giang_vien_id);
-        const lecturerName = gv?.ho_ten || item.session.giang_vien_id;
-        const personalEmail = (gv as (UserRecord & { email_ca_nhan?: string }))?.email_ca_nhan;
-        sendCalendarEventInvite({
-          session: item.session,
-          lecturerName,
-          lecturerEmail: item.lecturerEmail || gv?.email,
-          personalEmail,
-          roomName: item.roomName,
-          isCancel: item.op === 'delete',
-        }).catch((err) => console.error('[CalendarSync effect error]:', err));
+      if (process.env.GAS_WEBAPP_URL && process.env.GAS_HMAC_SECRET) {
+        const earliestDate = result.effects.calendarSync.reduce(
+          (min, item) => (item.session.ngay < min ? item.session.ngay : min),
+          result.effects.calendarSync[0].session.ngay
+        );
+        invokeGasAction(
+          'retrofitCalendar' as any,
+          { fromDate: earliestDate },
+          'cecics@pnt.edu.vn'
+        ).catch((err) => console.error('[CalendarSync direct GAS error]:', err));
       }
     }
 

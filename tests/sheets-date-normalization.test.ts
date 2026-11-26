@@ -7,6 +7,8 @@ describe('parseCell Date & Time normalization from Google Sheets', () => {
     // 46353 -> 2026-11-27
     expect(parseCell('string', 46352, 'ngay')).toBe('2026-11-26');
     expect(parseCell('string', 46353, 'ngay')).toBe('2026-11-27');
+    // Hỗ trợ trường hợp số serial bị lưu dưới dạng chuỗi ("46349")
+    expect(parseCell('string', '46349', 'ngay')).toBe('2026-11-23');
   });
 
   it('converts Excel fraction to HH:mm for time fields', () => {
@@ -14,6 +16,9 @@ describe('parseCell Date & Time normalization from Google Sheets', () => {
     // 0.7083333333333334 = 17 hours = 17:00
     expect(parseCell('string', 0.5625, 'gio_bd')).toBe('13:30');
     expect(parseCell('string', 0.7083333333333334, 'gio_kt')).toBe('17:00');
+    // Hỗ trợ trường hợp fraction bị lưu dưới dạng chuỗi ("0.5625")
+    expect(parseCell('string', '0.5625', 'gio_bd')).toBe('13:30');
+    expect(parseCell('string', '0.7083333333333334', 'gio_kt')).toBe('17:00');
   });
 
   it('normalizes ISO UTC date strings to Vietnam time (UTC+7)', () => {

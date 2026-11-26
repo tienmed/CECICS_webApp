@@ -527,7 +527,7 @@ export default function SchedulePage() {
       const data = await res.json();
       if (data.ok) {
         setSyncSuccessMsg(
-          `Đã phát ${data.syncedCount}/${data.total} lời mời lịch Google Calendar đến email ${syncPersonalEmail} và cecics@pnt.edu.vn thành công!`
+          `Đã đồng bộ trực tiếp ${data.syncedCount}/${data.total} sự kiện trên Google Calendar (cecics@pnt.edu.vn) và thêm ${syncPersonalEmail} vào danh sách tham dự (Attendee) thành công!`
         );
       } else {
         setSyncErrorMsg(data.error || 'Có lỗi xảy ra khi đồng bộ.');
@@ -1133,7 +1133,7 @@ export default function SchedulePage() {
       >
         <div className="space-y-4">
           <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-900 leading-relaxed">
-            💡 <strong>Cơ chế đồng bộ tự động:</strong> Hệ thống CECICS sẽ gửi lời mời lịch điện tử chuẩn quốc tế (<code>.ics / VEVENT</code>) từ <strong>cecics@pnt.edu.vn</strong> trực tiếp vào hộp thư Gmail cá nhân của Thầy/Cô. Google Calendar trên điện thoại và máy tính sẽ tự động nhận diện và gán lịch vào ứng dụng Google Calendar.
+            💡 <strong>Cơ chế đồng bộ trực tiếp (Không gửi email mời):</strong> Toàn bộ sự kiện lịch giảng được tạo và quản lý tập trung trên Google Calendar chính thức của Trung tâm (<strong>cecics@pnt.edu.vn</strong>). Hệ thống tự động thêm Thầy/Cô làm người tham dự (<strong>Attendee</strong>) vào từng sự kiện tương ứng. Lịch sẽ tự động hiển thị ngay trên ứng dụng Google Calendar điện thoại/máy tính mà không gửi email mời làm phiền hộp thư.
           </div>
 
           <div>
@@ -1161,7 +1161,7 @@ export default function SchedulePage() {
 
           <div>
             <label className={labelCls}>
-              Email nhận lịch Google Calendar *
+              Email tài khoản Google Calendar nhận lịch (Attendee) *
             </label>
             <input
               type="email"
@@ -1172,7 +1172,7 @@ export default function SchedulePage() {
               className={inputCls}
             />
             <p className="text-[11px] text-slate-500 mt-1">
-              Đã tự động lấy chính email của giảng viên ({syncPersonalEmail || 'trên hệ thống'}). Thầy/Cô có thể giữ nguyên email trường (@pnt.edu.vn) hoặc đổi sang Gmail khác nếu muốn.
+              Mặc định lấy email công vụ (@pnt.edu.vn). Thầy/Cô có thể giữ nguyên email trường hoặc đổi sang Gmail cá nhân để được add trực tiếp vào sự kiện.
             </p>
           </div>
 
@@ -1230,7 +1230,7 @@ export default function SchedulePage() {
               onClick={handleSyncCalendar}
               className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5"
             >
-              {syncing ? '⏳ Đang phát lời mời...' : '🚀 Gửi lịch vào Google Calendar ngay'}
+              {syncing ? '⏳ Đang đồng bộ...' : '🚀 Đồng bộ Attendee vào Google Calendar ngay'}
             </button>
           </div>
         </div>

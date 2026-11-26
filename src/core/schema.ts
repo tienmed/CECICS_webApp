@@ -527,14 +527,15 @@ export function parseCell(type: FieldType, v: unknown, fieldName?: string): unkn
       const isDateField = fn.startsWith('ngay') || fn.includes('date');
       const isTimeField = fn.startsWith('gio_') || fn.includes('time');
 
-      // 1. Google Sheets UNFORMATTED_VALUE trả về số Serial cho ngày (ví dụ 46352)
-      if (typeof v === 'number' && isDateField && v >= 35000 && v <= 65000) {
-        return excelSerialToYmd(v);
+      // 1. Google Sheets UNFORMATTED_VALUE trả về số Serial cho ngày (ví dụ 46352 hoặc chuỗi "46352")
+      const numV = typeof v === 'number' ? v : typeof v === 'string' && /^\d+(\.\d+)?$/.test(v.trim()) ? Number(v.trim()) : NaN;
+      if (!Number.isNaN(numV) && isDateField && numV >= 35000 && numV <= 65000) {
+        return excelSerialToYmd(numV);
       }
 
       // 2. Google Sheets UNFORMATTED_VALUE trả về phần thập phân 0 <= v < 1 cho giờ (ví dụ 0.5625 -> 13:30)
-      if (typeof v === 'number' && isTimeField && v >= 0 && v < 1) {
-        return excelFractionToTime(v);
+      if (!Number.isNaN(numV) && isTimeField && numV >= 0 && numV < 1) {
+        return excelFractionToTime(numV);
       }
 
       // 3. Đối tượng Date từ Apps Script hoặc API

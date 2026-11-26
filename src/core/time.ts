@@ -164,3 +164,41 @@ export function formatVnDateTime(ymd: string, hhmm?: string): string {
   if (!hhmm) return dateFormatted;
   return `${hhmm} ${dateFormatted}`;
 }
+
+/** Xác định buổi trong ngày dựa vào giờ bắt đầu (Sáng, Chiều, Tối). */
+export type SessionPeriod = 'Sáng' | 'Chiều' | 'Tối';
+
+export function getSessionPeriod(gioBd: string): {
+  period: SessionPeriod;
+  icon: string;
+  tone: 'amber' | 'blue' | 'indigo';
+  label: string;
+} {
+  const mins = parseTimeToMinutes(gioBd);
+  if (Number.isNaN(mins) || mins < 12 * 60) {
+    return { period: 'Sáng', icon: '☀️', tone: 'amber', label: 'Buổi Sáng' };
+  }
+  if (mins < 18 * 60) {
+    return { period: 'Chiều', icon: '🌤️', tone: 'blue', label: 'Buổi Chiều' };
+  }
+  return { period: 'Tối', icon: '🌙', tone: 'indigo', label: 'Buổi Tối' };
+}
+
+/** Tìm ngày Thứ 2 đầu tuần (YYYY-MM-DD) của một ngày bất kỳ (Thứ 2 là ngày bắt đầu tuần). */
+export function getMondayOfWeek(ymd: string): string {
+  const dow = dayOfWeekYmd(ymd); // 0=CN, 1=T2, ..., 6=T7
+  // Nếu là CN (0), Thứ 2 đầu tuần cách đó -6 ngày. Nếu là T2 (1), cách 0 ngày. Nếu là T3 (2), cách -1 ngày.
+  const daysToMonday = dow === 0 ? -6 : 1 - dow;
+  return addDaysYmd(ymd, daysToMonday);
+}
+
+/** Lấy khoảng ngày của tuần [Thứ 2, Chủ Nhật] */
+export function getWeekRange(ymd: string): { startYmd: string; endYmd: string; label: string } {
+  const monday = getMondayOfWeek(ymd);
+  const sunday = addDaysYmd(monday, 6);
+  return {
+    startYmd: monday,
+    endYmd: sunday,
+    label: `Tuần ${formatVnDate(monday)} – ${formatVnDate(sunday)}`,
+  };
+}

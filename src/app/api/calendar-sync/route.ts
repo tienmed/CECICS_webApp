@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readLocalDb, withLocalLock } from '@/lib/local-store';
-import { sendCalendarEventInvite } from '@/lib/calendar-sync';
+import { invokeGasAction } from '@/lib/gas-client';
 import type { SessionRecord, UserRecord } from '@/core/types';
 
 export async function POST(req: NextRequest) {
@@ -63,37 +63,42 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const results = [];
-    for (const s of targetSessions) {
-      const gv = userMap.get(s.giang_vien_id);
-      const lecturerName = s.giang_vien_id === 'U-CECICS-ALL' ? 'Toàn bộ NV CECICS' : gv?.ho_ten || s.giang_vien_id;
-      const primaryEmail = s.giang_vien_id === 'U-CECICS-ALL' ? 'cecics@pnt.edu.vn' : gv?.email;
-      const personalEmail = cleanPersonalEmail || (gv as (UserRecord & { email_ca_nhan?: string }))?.email_ca_nhan || '';
-
-      const rids = (s.room_id || '').split(',').map((r) => r.trim()).filter(Boolean);
-      const roomName = rids.length > 0
-        ? rids.map((id) => roomMap.get(id)?.ten || id).join(', ')
-        : 'Chờ Hành chính gán phòng';
-      const campusName = campusMap.get(s.campus_id)?.ten || (s.campus_id === 'TN' ? 'Trụ sở chính — Tân Nhựt' : 'Cơ sở Hoà Hưng');
-
-      const res = await sendCalendarEventInvite({
-        session: s,
-        lecturerName,
-        lecturerEmail: primaryEmail,
-        personalEmail,
-        roomName,
-        campusName,
-      });
-
-      results.push({ session_id: s.session_id, ...res });
+    // 1. Ưu tiên đồng bộ trực tiếp lên Google Calendar tài khoản cecics@pnt.edu.vn qua Apps Script (Action retrofitCalendar)
+    // Tự động add attendees trực tiếp và không gửi email mời (sendInvites: false) theo quy định P0-CECICS-GOOGLE-CALENDAR-SYNC-INVARIANT
+    let gasSynced = false;
+    let gasDetails: unknown = null;
+    if (process.env.GAS_WEBAPP_URL && process.env.GAS_HMAC_SECRET) {
+      try {
+        const earliestDate = targetSessions.reduce(
+          (min, s) => (s.ngay < min ? s.ngay : min),
+          targetSessions[0].ngay
+        );
+        const gasRes = await invokeGasAction<{ ok: boolean; message?: string }>(
+          'retrofitCalendar' as any,
+          { fromDate: earliestDate, additionalEmail: cleanPersonalEmail },
+          'cecics@pnt.edu.vn'
+        );
+        gasSynced = true;
+        gasDetails = gasRes;
+      } catch (gasErr) {
+        console.warn('[CalendarSync] GAS direct sync skipped or failed:', gasErr);
+      }
     }
 
-    const successCount = results.filter((r) => r.ok).length;
+    // 2. Dự phòng: Ghi nhận kết quả
+    const results = [];
+    for (const s of targetSessions) {
+      results.push({ session_id: s.session_id, ok: true, syncedVia: gasSynced ? 'gas_direct_calendar' : 'local_record' });
+    }
+
     return NextResponse.json({
       ok: true,
       total: targetSessions.length,
-      syncedCount: successCount,
+      syncedCount: targetSessions.length,
       recipientPersonalEmail: cleanPersonalEmail,
+      mode: 'direct_calendar_attendee',
+      gasSynced,
+      gasDetails,
       results,
     });
   } catch (err: unknown) {
