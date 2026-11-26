@@ -159,13 +159,13 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
       },
       {
         user_id: "U-ADMIN-TIENMED",
-        email: "tienmed@gmail.com",
+        email: "bstien@pnt.edu.vn",
         ho_ten: "BS.CKII. Trịnh Trung Tiến (Admin)",
         vai_tro: ["ADMIN", "LANH_DAO", "DIEU_PHOI", "GIANG_VIEN"],
         don_vi: "CECICS",
         co_so: "HH",
         bo_mon_id: "BM-NGOAI",
-        la_nguoi_ngoai: true,
+        la_nguoi_ngoai: false,
         kich_hoat: true,
       },
       {

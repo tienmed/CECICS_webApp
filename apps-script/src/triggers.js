@@ -18,7 +18,9 @@ function triggerDailyChecks() {
   try {
     var ss = getTargetSpreadsheet_();
     var store = createSheetsStore_(ss);
-    var systemActor = PropertiesService.getScriptProperties().getProperty('SYSTEM_ADMIN_EMAIL') || Session.getEffectiveUser().getEmail();
+    // TUYỆT ĐỐI TUÂN THỦ [P0-CECICS-EMAIL-SENDER-INVARIANT]:
+    // Luôn sử dụng email công vụ cecics@pnt.edu.vn làm systemActor, không lấy email cá nhân deployer.
+    var systemActor = PropertiesService.getScriptProperties().getProperty('SYSTEM_ADMIN_EMAIL') || 'cecics@pnt.edu.vn';
     CECICS_CORE.executeAction(store, 'runDailyChecks', {}, systemActor, new Date());
     flushOutbox_(ss);
   } finally {
