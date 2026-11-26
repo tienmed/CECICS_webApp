@@ -79,6 +79,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       visible: true,
     },
     {
+      href: '/nghien-cuu',
+      label: 'Nghiên cứu & Hội nghị',
+      icon: '🔬',
+      visible: true,
+    },
+    {
       href: '/leo-thang',
       label: 'Cảnh báo và chỉ đạo từ Ban Lãnh đạo',
       icon: '🚨',

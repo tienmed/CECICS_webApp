@@ -1,0 +1,53 @@
+[
+  {
+    "id": "TEST-PROJ-01",
+    "ten_de_tai": "Đề tài nghiên cứu kiểm thử tự động",
+    "chu_nhiem": "Trịnh Trung Tiến",
+    "email_chu_nhiem": "bstien@pnt.edu.vn",
+    "bo_mon_phoi_hop": "Trung tâm CECICS",
+    "trang_thai": "Ý tưởng",
+    "thoi_gian_bat_dau": "2026-01-01",
+    "thoi_gian_du_kien_hoan_thanh": "2026-12-31",
+    "tom_tat_muc_tieu": "Mục tiêu kiểm thử",
+    "linh_vuc": "Y khoa Mô phỏng"
+  },
+  {
+    "id": "DT-CECICS-2026-01",
+    "ten_de_tai": "Đánh giá hiệu quả của mô hình mô phỏng tại chỗ (In-situ Simulation) trong xử trí cấp cứu sốc phản vệ và ngừng tuần hoàn tại cơ sở y tế",
+    "chu_nhiem": "Trịnh Trung Tiến",
+    "email_chu_nhiem": "bstien@pnt.edu.vn",
+    "bo_mon_phoi_hop": "Bộ môn Hồi sức Cấp cứu & Chống độc",
+    "trang_thai": "Đang thực hiện",
+    "thoi_gian_bat_dau": "2026-01-15",
+    "thoi_gian_du_kien_hoan_thanh": "2026-10-30",
+    "tom_tat_muc_tieu": "Nghiên cứu can thiệp trước - sau trên các kíp cấp cứu lâm sàng. Đánh giá thời gian nhận diện và tiêm Adrenaline, chất lượng hồi sức tim phổi (CPR metrics) trước và sau can thiệp huấn luyện mô phỏng tại chỗ tại CECICS.",
+    "file_bao_cao_url": "",
+    "linh_vuc": "Hồi sức Cấp cứu & Huấn luyện Kỹ năng Lâm sàng"
+  },
+  {
+    "id": "DT-CECICS-2026-02",
+    "ten_de_tai": "Ứng dụng mô hình Người bệnh Chuẩn (Standardized Patient) tích hợp bảng kiểm điện tử trong kỳ thi chạy trạm OSCE đánh giá kỹ năng giao tiếp y khoa cho sinh viên Y năm thứ 4",
+    "chu_nhiem": "Nguyễn Ngọc Phương Thư",
+    "email_chu_nhiem": "nguyenngocphuongthu@pnt.edu.vn",
+    "bo_mon_phoi_hop": "Trung tâm CECICS & Khoa Y",
+    "trang_thai": "Đang thực hiện",
+    "thoi_gian_bat_dau": "2026-02-01",
+    "thoi_gian_du_kien_hoan_thanh": "2026-11-15",
+    "tom_tat_muc_tieu": "Chuẩn hóa quy trình đào tạo Người bệnh Chuẩn theo tiêu chuẩn ASPE quốc tế. Đánh giá độ tin cậy giữa các giám khảo (Inter-rater reliability) khi chấm thi OSCE bằng bảng kiểm điện tử trên hệ thống CECICS WebApp.",
+    "file_bao_cao_url": "",
+    "linh_vuc": "Lượng giá Năng lực Y khoa (OSCE)"
+  },
+  {
+    "id": "DT-CECICS-2025-01",
+    "ten_de_tai": "Khảo sát sự hài lòng và mức độ tự tin của nhân viên y tế sau các khóa đào tạo giảng viên lâm sàng kỹ năng mô phỏng (Train the Healthcare Simulation Trainer)",
+    "chu_nhiem": "Bùi Phan Quỳnh Phương",
+    "email_chu_nhiem": "bsquynhphuong@pnt.edu.vn",
+    "bo_mon_phoi_hop": "Phòng Quản lý Đào tạo Sau Đại học",
+    "trang_thai": "Đã nghiệm thu",
+    "thoi_gian_bat_dau": "2025-03-10",
+    "thoi_gian_du_kien_hoan_thanh": "2025-12-20",
+    "tom_tat_muc_tieu": "Nghiên cứu cắt ngang đánh giá khung năng lực sư phạm mô phỏng theo chuẩn SESAM của học viên tham gia khóa học mô phỏng y khoa tại CECICS. Kết quả đã báo cáo tại Hội nghị Khoa học Kỹ thuật Trường.",
+    "file_bao_cao_url": "",
+    "linh_vuc": "Phát triển Giảng viên Mô phỏng (Train-the-Trainer)"
+  }
+]
