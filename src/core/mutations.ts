@@ -630,34 +630,55 @@ export function executeAction(
       const den_gv = String(payload.den_gv || '');
       const target_session_id = String(payload.target_session_id || '').trim();
       const loi_nhan = String(payload.loi_nhan || '').trim();
+
+      if (!target_session_id) {
+        throw new DomainError('VALIDATION', 'Hệ thống chỉ hỗ trợ hoán đổi 2 chiều đối ứng cùng lớp, không hỗ trợ dạy thay 1 chiều.');
+      }
+
       const session = db.Sessions.find((s) => s.session_id === session_id && s.trang_thai !== 'Đã hủy');
       if (!session) throw new DomainError('NOT_FOUND', 'Không tìm thấy buổi giảng.');
       if (session.giang_vien_id !== actor.user_id && !actor.vai_tro.includes(ROLES.ADMIN)) {
         throw new DomainError('FORBIDDEN', 'Bạn chỉ có thể đề nghị đổi lịch cho buổi do mình phụ trách.');
       }
-      if (den_gv === session.giang_vien_id) {
-        throw new DomainError('VALIDATION', 'Không thể hoán đổi cho chính mình.');
+
+      const todayStr = todayVnYmd(now);
+      if (session.ngay <= todayStr) {
+        throw new DomainError('EXPIRED', 'Buổi giảng phải sau ngày hiện tại mới có hiệu lực đề nghị hoán đổi.');
       }
-      const targetUser = db.Users.find((u) => u.user_id === den_gv && u.kich_hoat);
-      if (!targetUser) throw new DomainError('NOT_FOUND', 'Giảng viên nhận đổi không tồn tại.');
 
       const sessionStartMs = toVnDateTimeMs(session.ngay, session.gio_bd);
       if (sessionStartMs <= now.getTime()) {
         throw new DomainError('EXPIRED', 'Buổi giảng đã bắt đầu hoặc kết thúc, không thể hoán đổi.');
       }
 
-      let targetSession: SessionRecord | undefined;
-      if (target_session_id) {
-        targetSession = db.Sessions.find((s) => s.session_id === target_session_id && s.trang_thai !== 'Đã hủy');
-        if (!targetSession) {
-          throw new DomainError('NOT_FOUND', 'Không tìm thấy buổi giảng đối tác cần hoán đổi.');
-        }
-        if (targetSession.giang_vien_id !== den_gv) {
-          throw new DomainError('VALIDATION', 'Buổi giảng mục tiêu không thuộc về giảng viên được chọn.');
-        }
-        if (toVnDateTimeMs(targetSession.ngay, targetSession.gio_bd) <= now.getTime()) {
-          throw new DomainError('EXPIRED', 'Buổi giảng đối tác đã bắt đầu hoặc đã qua, không thể hoán đổi.');
-        }
+      const targetSession = db.Sessions.find((s) => s.session_id === target_session_id && s.trang_thai !== 'Đã hủy');
+      if (!targetSession) {
+        throw new DomainError('NOT_FOUND', 'Không tìm thấy buổi giảng đối tác cần hoán đổi.');
+      }
+      const actualDenGv = den_gv || targetSession.giang_vien_id;
+      if (actualDenGv === session.giang_vien_id) {
+        throw new DomainError('VALIDATION', 'Không thể hoán đổi cho chính mình.');
+      }
+      const targetUser = db.Users.find((u) => u.user_id === actualDenGv && u.kich_hoat);
+      if (!targetUser) throw new DomainError('NOT_FOUND', 'Giảng viên nhận đổi không tồn tại.');
+
+      if (targetSession.giang_vien_id !== actualDenGv) {
+        throw new DomainError('VALIDATION', 'Buổi giảng mục tiêu không thuộc về giảng viên được chọn.');
+      }
+
+      // Ràng buộc cùng 1 lớp
+      const sessionClass = (session.lop || '').trim();
+      const targetClass = (targetSession.lop || '').trim();
+      if (!sessionClass || !targetClass || sessionClass !== targetClass) {
+        throw new DomainError('VALIDATION', 'Chỉ được phép hoán đổi 2 chiều giữa 2 buổi giảng thuộc cùng 1 lớp.');
+      }
+
+      if (targetSession.ngay <= todayStr) {
+        throw new DomainError('EXPIRED', 'Buổi giảng đối tác phải sau ngày hiện tại mới có hiệu lực hoán đổi.');
+      }
+      if (toVnDateTimeMs(targetSession.ngay, targetSession.gio_bd) <= now.getTime()) {
+        throw new DomainError('EXPIRED', 'Buổi giảng đối tác đã bắt đầu hoặc đã qua, không thể hoán đổi.');
+      }
 
         // Quy tắc cốt lõi y khoa: đổi ngày giữa 2 GV, không đổi nội dung
         // Kiểm tra xung đột 2 chiều:
@@ -676,7 +697,7 @@ export function executeAction(
 
         // 2. Giảng viên B dạy vào khung giờ của session:
         const conflictsB = findLecturerConflicts(
-          { id: target_session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: den_gv },
+          { id: target_session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: actualDenGv },
           db.Sessions.filter((s) => s.session_id !== session_id && s.session_id !== target_session_id)
         );
         if (conflictsB.length > 0) {
@@ -693,20 +714,6 @@ export function executeAction(
         if (duplicateTarget) {
           throw new DomainError('DUPLICATE', 'Buổi giảng của giảng viên đối tác đang có một yêu cầu hoán đổi khác chờ duyệt.');
         }
-      } else {
-        // Fallback 1 chiều: kiểm tra xem GV nhận có rảnh vào giờ buổi session không
-        const conflicts = findLecturerConflicts(
-          { id: session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: den_gv },
-          db.Sessions
-        );
-        if (conflicts.length > 0) {
-          throw new DomainError(
-            'LECTURER_CONFLICT',
-            `${targetUser.ho_ten} bị trùng lịch với "${conflicts[0].hoc_phan}" (${conflicts[0].gio_bd}–${conflicts[0].gio_kt}).`,
-            { conflicts }
-          );
-        }
-      }
 
       const duplicate = db.SwapRequests.find(
         (sw) => (sw.session_id === session_id || sw.target_session_id === session_id) && sw.trang_thai === 'Chờ'
@@ -719,9 +726,9 @@ export function executeAction(
       const rec: SwapRequestRecord = {
         swap_id,
         session_id,
-        target_session_id: target_session_id || '',
+        target_session_id,
         tu_gv: session.giang_vien_id,
-        den_gv,
+        den_gv: actualDenGv,
         loi_nhan,
         ly_do_tu_choi: '',
         trang_thai: 'Chờ',
@@ -731,9 +738,7 @@ export function executeAction(
       store.append('SwapRequests', rec);
       recordAudit(store, actor, 'CREATE_SWAP', 'SwapRequests', swap_id, null, rec, now);
 
-      const actionDesc = targetSession
-        ? `đổi ngày giảng giữa bài "${session.bai_giang}" (${session.ngay}) và bài "${targetSession.bai_giang}" (${targetSession.ngay})`
-        : `dạy thay bài "${session.hoc_phan} - ${session.bai_giang}" ngày ${session.ngay} (${session.gio_bd}–${session.gio_kt})`;
+      const actionDesc = `đổi ngày giảng giữa bài "${session.bai_giang}" (${session.ngay}) và bài "${targetSession.bai_giang}" (${targetSession.ngay})`;
 
       notifyUser(
         store,
@@ -812,131 +817,85 @@ export function executeAction(
       const receiver = db.Users.find((u) => u.user_id === swap.den_gv);
 
       // QUY TẮC CỐT LÕI Y KHOA: "đổi lịch giảng là đổi ngày giữa các giảng viên, không đổi nội dung giảng, phòng đi theo buổi giờ"
-      if (swap.target_session_id) {
-        const targetSession = db.Sessions.find((s) => s.session_id === swap.target_session_id && s.trang_thai !== 'Đã hủy');
-        if (!targetSession) {
-          throw new DomainError('NOT_FOUND', 'Buổi giảng mục tiêu hoán đổi không còn tồn tại.');
-        }
-        if (toVnDateTimeMs(targetSession.ngay, targetSession.gio_bd) <= now.getTime()) {
-          store.update('SwapRequests', swap_id, { trang_thai: 'Hết hạn', phan_hoi_luc: nowIso });
-          throw new DomainError('EXPIRED', 'Buổi giảng mục tiêu đã bắt đầu, yêu cầu tự động hết hạn.');
-        }
-
-        // Kiểm tra lại xung đột 2 chiều bên trong khóa
-        const conflictsA = findLecturerConflicts(
-          { id: session.session_id, ngay: targetSession.ngay, gio_bd: targetSession.gio_bd, gio_kt: targetSession.gio_kt, giang_vien_id: swap.tu_gv },
-          db.Sessions.filter((s) => s.session_id !== session.session_id && s.session_id !== targetSession.session_id)
-        );
-        if (conflictsA.length > 0) {
-          throw new DomainError(
-            'LECTURER_CONFLICT',
-            `Người đề nghị (${swap.tu_gv}) bị trùng lịch với "${conflictsA[0].hoc_phan}" vào ngày đổi (${targetSession.ngay}).`
-          );
-        }
-
-        const conflictsB = findLecturerConflicts(
-          { id: targetSession.session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: swap.den_gv },
-          db.Sessions.filter((s) => s.session_id !== session.session_id && s.session_id !== targetSession.session_id)
-        );
-        if (conflictsB.length > 0) {
-          throw new DomainError(
-            'LECTURER_CONFLICT',
-            `Bạn bị trùng lịch mới với "${conflictsB[0].hoc_phan}" vào ngày đổi (${session.ngay}).`
-          );
-        }
-
-        const updatedSwap = store.update('SwapRequests', swap_id, { trang_thai: 'Đồng ý', phan_hoi_luc: nowIso });
-
-        // Session A: giữ nguyên GV A, nhận thời gian, phòng, campus của B
-        const updatedSessionA = store.update('Sessions', session.session_id, {
-          ngay: targetSession.ngay,
-          gio_bd: targetSession.gio_bd,
-          gio_kt: targetSession.gio_kt,
-          room_id: targetSession.room_id,
-          campus_id: targetSession.campus_id,
-          rsvp: 'Đã đồng ý',
-          cap_nhat_luc: nowIso,
-        });
-
-        // Session B: giữ nguyên GV B, nhận thời gian, phòng, campus của A
-        const updatedSessionB = store.update('Sessions', targetSession.session_id, {
-          ngay: session.ngay,
-          gio_bd: session.gio_bd,
-          gio_kt: session.gio_kt,
-          room_id: session.room_id,
-          campus_id: session.campus_id,
-          rsvp: 'Đã đồng ý',
-          cap_nhat_luc: nowIso,
-        });
-
-        recordAudit(store, actor, 'ACCEPT_SWAP', 'Sessions', session.session_id, session, updatedSessionA, now);
-        recordAudit(store, actor, 'ACCEPT_SWAP', 'Sessions', targetSession.session_id, targetSession, updatedSessionB, now);
-
-        const roomAObj = db.Rooms.find((r) => r.room_id === updatedSessionA.room_id);
-        const roomBObj = db.Rooms.find((r) => r.room_id === updatedSessionB.room_id);
-
-        if (requester) {
-          notifyUser(
-            store,
-            requester.user_id,
-            `Hoán đổi ngày giảng thành công`,
-            `${receiver?.ho_ten || swap.den_gv} đã đồng ý hoán đổi. Buổi giảng bài "${session.bai_giang}" của bạn chuyển sang ngày ${updatedSessionA.ngay} (${updatedSessionA.gio_bd}–${updatedSessionA.gio_kt}) tại ${roomAObj?.ten || updatedSessionA.room_id}.`,
-            '/lich-giang',
-            now,
-            requester.email
-          );
-        }
-        if (receiver) {
-          notifyUser(
-            store,
-            receiver.user_id,
-            `Xác nhận hoán đổi ngày giảng`,
-            `Bạn đã đổi buổi thành công. Buổi giảng bài "${targetSession.bai_giang}" của bạn chuyển sang ngày ${updatedSessionB.ngay} (${updatedSessionB.gio_bd}–${updatedSessionB.gio_kt}) tại ${roomBObj?.ten || updatedSessionB.room_id}.`,
-            '/lich-giang',
-            now,
-            receiver.email
-          );
-        }
-
-        return {
-          data: { swap: updatedSwap, sessionA: updatedSessionA, sessionB: updatedSessionB },
-          effects: {
-            calendarSync: [
-              { op: 'upsert', session: updatedSessionA, lecturerEmail: requester?.email, roomName: roomAObj?.ten },
-              { op: 'upsert', session: updatedSessionB, lecturerEmail: receiver?.email, roomName: roomBObj?.ten },
-            ],
-          },
-        };
+      if (!swap.target_session_id) {
+        throw new DomainError('VALIDATION', 'Hệ thống chỉ hỗ trợ hoán đổi 2 chiều đối ứng cùng lớp.');
       }
 
-      // Fallback 1 chiều: kiểm tra lại trùng lịch ngay bên trong khóa!
-      const conflicts = findLecturerConflicts(
-        { id: session.session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: swap.den_gv },
-        db.Sessions
+      const targetSession = db.Sessions.find((s) => s.session_id === swap.target_session_id && s.trang_thai !== 'Đã hủy');
+      if (!targetSession) {
+        throw new DomainError('NOT_FOUND', 'Buổi giảng mục tiêu hoán đổi không còn tồn tại.');
+      }
+      if (toVnDateTimeMs(targetSession.ngay, targetSession.gio_bd) <= now.getTime()) {
+        store.update('SwapRequests', swap_id, { trang_thai: 'Hết hạn', phan_hoi_luc: nowIso });
+        throw new DomainError('EXPIRED', 'Buổi giảng mục tiêu đã bắt đầu, yêu cầu tự động hết hạn.');
+      }
+
+      // Ràng buộc cùng lớp
+      const sClass = (session.lop || '').trim();
+      const tClass = (targetSession.lop || '').trim();
+      if (!sClass || !tClass || sClass !== tClass) {
+        throw new DomainError('VALIDATION', 'Chỉ được phép hoán đổi 2 chiều giữa 2 buổi giảng thuộc cùng 1 lớp.');
+      }
+
+      // Kiểm tra lại xung đột 2 chiều bên trong khóa
+      const conflictsA = findLecturerConflicts(
+        { id: session.session_id, ngay: targetSession.ngay, gio_bd: targetSession.gio_bd, gio_kt: targetSession.gio_kt, giang_vien_id: swap.tu_gv },
+        db.Sessions.filter((s) => s.session_id !== session.session_id && s.session_id !== targetSession.session_id)
       );
-      if (conflicts.length > 0) {
+      if (conflictsA.length > 0) {
         throw new DomainError(
           'LECTURER_CONFLICT',
-          `Bạn đã có lịch trùng mới (${conflicts[0].hoc_phan} ${conflicts[0].gio_bd}–${conflicts[0].gio_kt}), không thể nhận đổi.`
+          `Người đề nghị (${swap.tu_gv}) bị trùng lịch với "${conflictsA[0].hoc_phan}" vào ngày đổi (${targetSession.ngay}).`
+        );
+      }
+
+      const conflictsB = findLecturerConflicts(
+        { id: targetSession.session_id, ngay: session.ngay, gio_bd: session.gio_bd, gio_kt: session.gio_kt, giang_vien_id: swap.den_gv },
+        db.Sessions.filter((s) => s.session_id !== session.session_id && s.session_id !== targetSession.session_id)
+      );
+      if (conflictsB.length > 0) {
+        throw new DomainError(
+          'LECTURER_CONFLICT',
+          `Bạn bị trùng lịch mới với "${conflictsB[0].hoc_phan}" vào ngày đổi (${session.ngay}).`
         );
       }
 
       const updatedSwap = store.update('SwapRequests', swap_id, { trang_thai: 'Đồng ý', phan_hoi_luc: nowIso });
-      const updatedSession = store.update('Sessions', session.session_id, {
-        giang_vien_id: swap.den_gv,
+
+      // Session A: giữ nguyên GV A, nhận thời gian, phòng, campus của B
+      const updatedSessionA = store.update('Sessions', session.session_id, {
+        ngay: targetSession.ngay,
+        gio_bd: targetSession.gio_bd,
+        gio_kt: targetSession.gio_kt,
+        room_id: targetSession.room_id,
+        campus_id: targetSession.campus_id,
         rsvp: 'Đã đồng ý',
         cap_nhat_luc: nowIso,
       });
-      recordAudit(store, actor, 'ACCEPT_SWAP', 'Sessions', session.session_id, session, updatedSession, now);
 
-      const roomObj = db.Rooms.find((r) => r.room_id === updatedSession.room_id);
+      // Session B: giữ nguyên GV B, nhận thời gian, phòng, campus của A
+      const updatedSessionB = store.update('Sessions', targetSession.session_id, {
+        ngay: session.ngay,
+        gio_bd: session.gio_bd,
+        gio_kt: session.gio_kt,
+        room_id: session.room_id,
+        campus_id: session.campus_id,
+        rsvp: 'Đã đồng ý',
+        cap_nhat_luc: nowIso,
+      });
+
+      recordAudit(store, actor, 'ACCEPT_SWAP', 'Sessions', session.session_id, session, updatedSessionA, now);
+      recordAudit(store, actor, 'ACCEPT_SWAP', 'Sessions', targetSession.session_id, targetSession, updatedSessionB, now);
+
+      const roomAObj = db.Rooms.find((r) => r.room_id === updatedSessionA.room_id);
+      const roomBObj = db.Rooms.find((r) => r.room_id === updatedSessionB.room_id);
 
       if (requester) {
         notifyUser(
           store,
           requester.user_id,
-          `Hoán đổi lịch thành công (${session.ngay})`,
-          `${receiver?.ho_ten || swap.den_gv} đã đồng ý nhận buổi "${session.hoc_phan} - ${session.bai_giang}". Lịch Google Calendar đã tự động cập nhật.`,
+          `Hoán đổi ngày giảng thành công`,
+          `${receiver?.ho_ten || swap.den_gv} đã đồng ý hoán đổi. Buổi giảng bài "${session.bai_giang}" của bạn chuyển sang ngày ${updatedSessionA.ngay} (${updatedSessionA.gio_bd}–${updatedSessionA.gio_kt}) tại ${roomAObj?.ten || updatedSessionA.room_id}.`,
           '/lich-giang',
           now,
           requester.email
@@ -946,8 +905,8 @@ export function executeAction(
         notifyUser(
           store,
           receiver.user_id,
-          `Xác nhận nhận buổi giảng (${session.ngay})`,
-          `Bạn đã nhận buổi "${session.hoc_phan} - ${session.bai_giang}" (${session.gio_bd}–${session.gio_kt}).`,
+          `Xác nhận hoán đổi ngày giảng`,
+          `Bạn đã đổi buổi thành công. Buổi giảng bài "${targetSession.bai_giang}" của bạn chuyển sang ngày ${updatedSessionB.ngay} (${updatedSessionB.gio_bd}–${updatedSessionB.gio_kt}) tại ${roomBObj?.ten || updatedSessionB.room_id}.`,
           '/lich-giang',
           now,
           receiver.email
@@ -955,10 +914,11 @@ export function executeAction(
       }
 
       return {
-        data: { swap: updatedSwap, session: updatedSession },
+        data: { swap: updatedSwap, sessionA: updatedSessionA, sessionB: updatedSessionB },
         effects: {
           calendarSync: [
-            { op: 'upsert', session: updatedSession, lecturerEmail: receiver?.email, roomName: roomObj?.ten },
+            { op: 'upsert', session: updatedSessionA, lecturerEmail: requester?.email, roomName: roomAObj?.ten },
+            { op: 'upsert', session: updatedSessionB, lecturerEmail: receiver?.email, roomName: roomBObj?.ten },
           ],
         },
       };

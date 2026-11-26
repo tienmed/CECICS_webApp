@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { findLecturerConflicts } from '@/core/conflict';
 import { formatVnDate, todayVnYmd } from '@/core/time';
-import { ROLES } from '@/core/types';
 import { useApp } from '@/components/AppProvider';
 import { Badge, Card, Modal, PageHeader } from '@/components/ui';
 
@@ -30,34 +29,27 @@ export default function SwapPage() {
 
   const myUpcoming = useMemo(
     () =>
-      db.Sessions.filter((s) => s.trang_thai !== 'Đã hủy' && s.ngay >= today && s.giang_vien_id === user.user_id).sort(
-        (a, b) => `${a.ngay}${a.gio_bd}`.localeCompare(`${b.ngay}${b.gio_bd}`)
-      ),
+      db.Sessions.filter(
+        (s) => s.trang_thai !== 'Đã hủy' && s.ngay > today && Boolean((s.lop || '').trim()) && s.giang_vien_id === user.user_id
+      ).sort((a, b) => `${a.ngay}${a.gio_bd}`.localeCompare(`${b.ngay}${b.gio_bd}`)),
     [db.Sessions, today, user.user_id]
   );
 
-  const colleagues = useMemo(
-    () => db.Users.filter((u) => u.kich_hoat && u.user_id !== user.user_id && u.vai_tro.includes(ROLES.GIANG_VIEN)),
-    [db.Users, user.user_id]
-  );
 
   const selectedSession = sessionMap.get(form.session_id);
 
   const allColleagueSessions = useMemo(() => {
     return db.Sessions.filter(
-      (s) => s.trang_thai !== 'Đã hủy' && s.ngay >= today && s.giang_vien_id !== user.user_id
+      (s) => s.trang_thai !== 'Đã hủy' && s.ngay > today && s.giang_vien_id !== user.user_id
     ).sort((a, b) => `${a.ngay}${a.gio_bd}`.localeCompare(`${b.ngay}${b.gio_bd}`));
   }, [db.Sessions, today, user.user_id]);
 
-  // Chỉ hiện danh sách các buổi còn lại của lớp đó để hoán đổi
+  // Chỉ hiện danh sách các buổi còn lại của lớp đó để hoán đổi 2 chiều
   const targetColleagueSessions = useMemo(() => {
     if (!selectedSession) return [];
     const selectedClass = (selectedSession.lop || '').trim();
-    if (selectedClass) {
-      return allColleagueSessions.filter((s) => (s.lop || '').trim() === selectedClass);
-    }
-    // Nếu buổi hiện tại chưa có thông tin lớp cụ thể, lọc theo cùng học phần
-    return allColleagueSessions.filter((s) => s.hoc_phan === selectedSession.hoc_phan);
+    if (!selectedClass) return [];
+    return allColleagueSessions.filter((s) => (s.lop || '').trim() === selectedClass);
   }, [allColleagueSessions, selectedSession]);
 
   const sameCourseColleagueSessions = useMemo(() => {
@@ -89,12 +81,11 @@ export default function SwapPage() {
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.target_session_id) return;
     const res = await execute(
       'createSwapRequest',
       form,
-      form.target_session_id
-        ? 'Đã gửi đề nghị hoán đổi ngày giảng 2 chiều và gửi email thông báo.'
-        : 'Đã gửi yêu cầu dạy thay và email thông báo cho đồng nghiệp.'
+      'Đã gửi đề nghị hoán đổi ngày giảng 2 chiều cùng lớp và gửi email thông báo.'
     );
     if (res.ok) setOpen(false);
   }
@@ -380,16 +371,13 @@ export default function SwapPage() {
           </div>
 
           <div>
-            <label className={labelCls}>2. Chọn đồng nghiệp muốn đổi lịch *</label>
+            <label className={labelCls}>2. Chọn buổi giảng đối ứng của đồng nghiệp (cùng lớp) *</label>
             <select
               required
-              value={form.target_session_id || (form.den_gv ? `user:${form.den_gv}` : '')}
+              value={form.target_session_id}
               onChange={(e) => {
                 const val = e.target.value;
-                if (val.startsWith('user:')) {
-                  const gvId = val.replace('user:', '');
-                  setForm({ ...form, den_gv: gvId, target_session_id: '' });
-                } else if (val) {
+                if (val) {
                   const targetSession = sessionMap.get(val);
                   setForm({ ...form, target_session_id: val, den_gv: targetSession?.giang_vien_id || '' });
                 } else {
@@ -398,7 +386,7 @@ export default function SwapPage() {
               }}
               className={inputCls}
             >
-              <option value="">-- Chọn buổi giảng đối ứng của đồng nghiệp (hoặc chọn dạy thay) --</option>
+              <option value="">-- Chọn buổi giảng đối ứng của đồng nghiệp cùng lớp (sau ngày hiện tại) --</option>
 
               {sameCourseColleagueSessions.length > 0 && (
                 <optgroup
@@ -466,17 +454,9 @@ export default function SwapPage() {
 
               {targetColleagueSessions.length === 0 && (
                 <option value="" disabled>
-                  (Không tìm thấy buổi giảng nào khác của đồng nghiệp trong cùng lớp này)
+                  (Không tìm thấy buổi giảng nào khác của đồng nghiệp trong cùng lớp này sau ngày hiện tại)
                 </option>
               )}
-
-              <optgroup label="👤 Dạy thay 1 chiều (không đổi ngày đối ứng)">
-                {colleagues.map((l) => (
-                  <option key={l.user_id} value={`user:${l.user_id}`}>
-                    [Dạy thay 1 chiều] — GV: {l.ho_ten} ({l.don_vi || 'Bộ môn'})
-                  </option>
-                ))}
-              </optgroup>
             </select>
           </div>
 
@@ -484,7 +464,7 @@ export default function SwapPage() {
           {selectedSession && selectedTargetSession && selectedColleague && (
             <div className="p-3.5 rounded-lg bg-teal-50 border border-teal-200 text-xs text-slate-800 space-y-1.5">
               <div className="font-bold text-teal-900 flex items-center gap-1.5">
-                <span>🔄</span> Xem trước kết quả hoán đổi (Bài ai nấy dạy):
+                <span>🔄</span> Xem trước kết quả hoán đổi 2 chiều cùng lớp (Bài ai nấy dạy):
               </div>
               <ul className="list-disc pl-4 space-y-1 text-slate-700">
                 <li>
@@ -496,21 +476,12 @@ export default function SwapPage() {
                   <strong className="text-amber-800">{formatVnDate(selectedSession.ngay)} ({selectedSession.gio_bd}–{selectedSession.gio_kt})</strong> tại {roomMap.get(selectedSession.room_id)?.ten || (selectedSession.room_id || 'Phòng theo lịch')}.
                 </li>
                 <li>
+                  <strong>Lớp học:</strong> Cả 2 buổi thuộc cùng lớp <strong>{selectedSession.lop}</strong>, bảo đảm tiến độ học của sinh viên.
+                </li>
+                <li>
                   <strong>Phòng học:</strong> Phòng học đi theo buổi giờ đã xếp ban đầu.
                 </li>
               </ul>
-            </div>
-          )}
-
-          {selectedSession && form.den_gv && !form.target_session_id && selectedColleague && (
-            <div className="p-3.5 rounded-lg bg-sky-50 border border-sky-200 text-xs text-slate-800 space-y-1.5">
-              <div className="font-bold text-sky-900 flex items-center gap-1.5">
-                <span>👤</span> Xem trước kết quả dạy thay 1 chiều:
-              </div>
-              <p className="text-slate-700">
-                Đồng nghiệp <strong>{selectedColleague.ho_ten}</strong> sẽ dạy thay bài <em>"{selectedSession.bai_giang}"</em> vào ngày{' '}
-                <strong>{formatVnDate(selectedSession.ngay)} ({selectedSession.gio_bd}–{selectedSession.gio_kt})</strong>.
-              </p>
             </div>
           )}
 

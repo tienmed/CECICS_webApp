@@ -98,4 +98,30 @@ describe('Hoán đổi lịch giảng - Lọc buổi đối ứng theo đúng l�
     expect(targetColleagueSessions.map((s) => s.session_id)).toEqual(['S-02', 'S-03']);
     expect(targetColleagueSessions.some((s) => s.lop === 'Y2023B')).toBe(false);
   });
+
+  it('phải chỉ có hiệu lực với các buổi sau ngày hiện tại (s.ngay > today) và loại bỏ ngày hiện tại hoặc quá khứ', () => {
+    const today = '2026-12-05';
+    // My upcoming sessions lọc s.ngay > today
+    const validMySessions = [
+      mySession, // 2026-12-01 (quá khứ so với today 2026-12-05) -> không hợp lệ
+      { ...mySession, session_id: 'S-MY-01', ngay: '2026-12-05' }, // ngày hiện tại -> không hợp lệ
+      { ...mySession, session_id: 'S-MY-02', ngay: '2026-12-06' }, // sau ngày hiện tại -> hợp lệ
+    ].filter((s) => s.trang_thai !== 'Đã hủy' && s.ngay > today && Boolean((s.lop || '').trim()));
+
+    expect(validMySessions.map((s) => s.session_id)).toEqual(['S-MY-02']);
+
+    // Colleague sessions lọc s.ngay > today và cùng lớp
+    const selectedClass = 'Y2023A';
+    const colleagueWithDates: SessionRecord[] = [
+      { ...colleagueSessions[0], session_id: 'S-PAST', ngay: '2026-12-04' }, // quá khứ
+      { ...colleagueSessions[0], session_id: 'S-TODAY', ngay: '2026-12-05' }, // ngày hiện tại
+      { ...colleagueSessions[0], session_id: 'S-FUTURE-1', ngay: '2026-12-06' }, // sau ngày hiện tại
+      { ...colleagueSessions[1], session_id: 'S-FUTURE-2', ngay: '2026-12-08' }, // sau ngày hiện tại
+    ];
+
+    const validColleagueSessions = colleagueWithDates
+      .filter((s) => s.trang_thai !== 'Đã hủy' && s.ngay > today && (s.lop || '').trim() === selectedClass);
+
+    expect(validColleagueSessions.map((s) => s.session_id)).toEqual(['S-FUTURE-1', 'S-FUTURE-2']);
+  });
 });
