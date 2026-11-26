@@ -10,7 +10,17 @@ import type { EventDropArg } from '@fullcalendar/core';
 import viLocale from '@fullcalendar/core/locales/vi';
 import { canPerform } from '@/core/permissions';
 import { suggestAvailableRooms, type TimeSlotSuggestion } from '@/core/suggest';
-import { formatVnDate, parseTimeToMinutes, minutesToTime, todayVnYmd } from '@/core/time';
+import {
+  formatVnDate,
+  formatVnDateWithDay,
+  dayOfWeekShortVn,
+  getSessionPeriod,
+  getMondayOfWeek,
+  getWeekRange,
+  parseTimeToMinutes,
+  minutesToTime,
+  todayVnYmd,
+} from '@/core/time';
 import { parseRoomIds } from '@/core/conflict';
 import { parseSimSessions, resolveSessionRoom, simSessionLabel } from '@/core/sim-sessions';
 import { ROLES, SESSION_PROGRAMS, SESSION_TYPES, type SessionRecord, type UserRecord } from '@/core/types';
@@ -297,6 +307,22 @@ export default function SchedulePage() {
   }, [visibleSessions, todayStr]);
 
   const displayedSessions = sessionTab === 'UPCOMING' ? upcomingSessions : pastSessions;
+
+  // Gom nhóm danh sách buổi học theo từng tuần phục vụ góc nhìn Thư ký / Hành chính
+  const weeklySessionGroups = useMemo(() => {
+    const groupsMap = new Map<string, { weekInfo: { startYmd: string; endYmd: string; label: string }; sessions: SessionRecord[] }>();
+    for (const s of displayedSessions) {
+      const mon = getMondayOfWeek(s.ngay);
+      if (!groupsMap.has(mon)) {
+        groupsMap.set(mon, {
+          weekInfo: getWeekRange(s.ngay),
+          sessions: [],
+        });
+      }
+      groupsMap.get(mon)!.sessions.push(s);
+    }
+    return Array.from(groupsMap.values());
+  }, [displayedSessions]);
 
   const availableRooms = useMemo(() => {
     if (!form.ngay || !form.gio_bd || !form.gio_kt) return [];
@@ -672,11 +698,26 @@ export default function SchedulePage() {
             firstDay={1}
             slotMinTime="07:00:00"
             slotMaxTime="18:30:00"
+            slotDuration="00:30:00"
+            snapDuration="00:15:00"
+            nowIndicator={true}
             allDaySlot={false}
             height="auto"
             editable={canEdit}
             eventStartEditable={canEdit}
             eventDurationEditable={canEdit}
+            eventResizableFromStart={true}
+            dragRevertDuration={300}
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
+            eventTimeFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
             headerToolbar={{ left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' }}
             events={calendarEvents}
             dateClick={(info) => {
@@ -783,67 +824,118 @@ export default function SchedulePage() {
                   </td>
                 </tr>
               ) : (
-                displayedSessions.map((s) => {
-                  const gv = userMap.get(s.giang_vien_id);
-                  const gvName = s.giang_vien_id === 'U-CECICS-ALL' ? 'Toàn bộ NV CECICS' : gv?.ho_ten || s.giang_vien_id;
-                  const isMeeting = s.loai === 'Họp';
-                  const isExam = s.loai === 'Coi thi';
+                weeklySessionGroups.map((group) => {
                   return (
-                    <tr key={s.session_id} className="hover:bg-slate-50/70">
-                      <td className="py-2.5 pr-3 whitespace-nowrap">
-                        <div className="font-mono text-xs text-slate-500">{s.session_id}</div>
-                        <Badge tone={isExam ? 'purple' : isMeeting ? 'blue' : 'teal'}>
-                          {s.loai} · {s.he}
-                        </Badge>
-                      </td>
-                      <td className="py-2.5 pr-3 whitespace-nowrap">
-                        <div className="font-medium text-slate-900">{formatVnDate(s.ngay)}</div>
-                        <div className="text-xs text-slate-500">
-                          {s.gio_bd} – {s.gio_kt}
-                        </div>
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        <span className="inline-block px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-xs font-semibold">
-                          🎓 {s.lop || 'Chưa phân lớp'}
-                        </span>
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        <div className="font-semibold text-slate-900">{s.bai_giang}</div>
-                        {s.ghi_chu && <div className="text-[11px] text-slate-400 italic line-clamp-1">{s.ghi_chu}</div>}
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        <div className="text-xs font-medium text-slate-700">{s.hoc_phan}</div>
-                      </td>
-                      <td className="py-2.5 pr-3 text-slate-700 whitespace-nowrap">
-                        <div className="font-medium">{gvName}</div>
-                        {gv?.email && <div className="text-[11px] text-slate-400">{gv.email}</div>}
-                      </td>
-                      <td className="py-2.5 pr-3 whitespace-nowrap">
-                        <div className="text-xs font-medium text-slate-500">{s.campus_id}</div>
-                        {s.room_id ? (
-                          <span className="text-xs font-semibold text-teal-800">{roomMap.get(s.room_id)?.ten || s.room_id}</span>
-                        ) : (
-                          <Badge tone="amber">Chưa gán phòng</Badge>
-                        )}
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        <Badge tone={s.rsvp === 'Đã đồng ý' ? 'emerald' : s.rsvp === 'Từ chối' ? 'red' : 'slate'}>
-                          {s.rsvp || 'Chờ phản hồi'}
-                        </Badge>
-                      </td>
-                      {canCreate && (
-                        <td className="py-2.5 text-right whitespace-nowrap space-x-3">
-                          {canEdit && (
-                            <button onClick={() => openExisting(s, false)} className="text-xs font-medium text-teal-700 hover:underline">
-                              Sửa
-                            </button>
-                          )}
-                          <button onClick={() => openExisting(s, true)} className="text-xs font-medium text-slate-600 hover:underline">
-                            Nhân bản
-                          </button>
+                    <React.Fragment key={group.weekInfo.startYmd}>
+                      {/* Tiêu đề phân cách tuần lễ dưới góc nhìn Thư ký / Hành chính */}
+                      <tr className="bg-slate-100/80 border-y border-slate-200">
+                        <td colSpan={canCreate ? 9 : 8} className="py-2 px-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-teal-900">
+                                🗓️ {group.weekInfo.label}
+                              </span>
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                                {group.sessions.length} buổi
+                              </span>
+                            </div>
+                            <span className="text-xs text-slate-500 italic hidden sm:inline">
+                              Từ {formatVnDate(group.weekInfo.startYmd)} đến {formatVnDate(group.weekInfo.endYmd)}
+                            </span>
+                          </div>
                         </td>
-                      )}
-                    </tr>
+                      </tr>
+
+                      {group.sessions.map((s) => {
+                        const gv = userMap.get(s.giang_vien_id);
+                        const gvName = s.giang_vien_id === 'U-CECICS-ALL' ? 'Toàn bộ NV CECICS' : gv?.ho_ten || s.giang_vien_id;
+                        const isMeeting = s.loai === 'Họp';
+                        const isExam = s.loai === 'Coi thi';
+                        const dayShort = dayOfWeekShortVn(s.ngay);
+                        const periodInfo = getSessionPeriod(s.gio_bd);
+
+                        return (
+                          <tr key={s.session_id} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-2.5 pr-3 whitespace-nowrap">
+                              <div className="font-mono text-xs text-slate-500">{s.session_id}</div>
+                              <Badge tone={isExam ? 'purple' : isMeeting ? 'blue' : 'teal'}>
+                                {s.loai} · {s.he}
+                              </Badge>
+                            </td>
+
+                            {/* Cột Ngày & Giờ & Buổi rõ ràng cho Thư ký */}
+                            <td className="py-2.5 pr-3 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5 font-medium text-slate-900">
+                                <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-slate-200 text-slate-800 text-[11px] font-bold">
+                                  {dayShort}
+                                </span>
+                                <span>{formatVnDate(s.ngay)}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-600">
+                                <span
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10.5px] font-semibold border ${
+                                    periodInfo.period === 'Sáng'
+                                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                      : periodInfo.period === 'Chiều'
+                                      ? 'bg-sky-50 text-sky-800 border-sky-200'
+                                      : 'bg-indigo-50 text-indigo-800 border-indigo-200'
+                                  }`}
+                                  title={periodInfo.label}
+                                >
+                                  <span>{periodInfo.icon}</span>
+                                  <span>{periodInfo.period}</span>
+                                </span>
+                                <span className="font-mono font-medium text-slate-700">
+                                  {s.gio_bd} – {s.gio_kt}
+                                </span>
+                              </div>
+                            </td>
+
+                            <td className="py-2.5 pr-3">
+                              <span className="inline-block px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 text-xs font-semibold">
+                                🎓 {s.lop || 'Chưa phân lớp'}
+                              </span>
+                            </td>
+                            <td className="py-2.5 pr-3">
+                              <div className="font-semibold text-slate-900">{s.bai_giang}</div>
+                              {s.ghi_chu && <div className="text-[11px] text-slate-400 italic line-clamp-1">{s.ghi_chu}</div>}
+                            </td>
+                            <td className="py-2.5 pr-3">
+                              <div className="text-xs font-medium text-slate-700">{s.hoc_phan}</div>
+                            </td>
+                            <td className="py-2.5 pr-3 text-slate-700 whitespace-nowrap">
+                              <div className="font-medium">{gvName}</div>
+                              {gv?.email && <div className="text-[11px] text-slate-400">{gv.email}</div>}
+                            </td>
+                            <td className="py-2.5 pr-3 whitespace-nowrap">
+                              <div className="text-xs font-medium text-slate-500">{s.campus_id}</div>
+                              {s.room_id ? (
+                                <span className="text-xs font-semibold text-teal-800">{roomMap.get(s.room_id)?.ten || s.room_id}</span>
+                              ) : (
+                                <Badge tone="amber">Chưa gán phòng</Badge>
+                              )}
+                            </td>
+                            <td className="py-2.5 pr-3">
+                              <Badge tone={s.rsvp === 'Đã đồng ý' ? 'emerald' : s.rsvp === 'Từ chối' ? 'red' : 'slate'}>
+                                {s.rsvp || 'Chờ phản hồi'}
+                              </Badge>
+                            </td>
+                            {canCreate && (
+                              <td className="py-2.5 text-right whitespace-nowrap space-x-3">
+                                {canEdit && (
+                                  <button onClick={() => openExisting(s, false)} className="text-xs font-medium text-teal-700 hover:underline">
+                                    Sửa
+                                  </button>
+                                )}
+                                <button onClick={() => openExisting(s, true)} className="text-xs font-medium text-slate-600 hover:underline">
+                                  Nhân bản
+                                </button>
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      })}
+                    </React.Fragment>
                   );
                 })
               )}
