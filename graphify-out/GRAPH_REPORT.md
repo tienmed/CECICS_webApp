@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 834 nodes · 2156 edges · 48 communities (36 shown, 12 thin omitted)
+- 834 nodes · 2154 edges · 48 communities (36 shown, 12 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 17 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d0c0fa49`
+- Built from commit: `4044e560`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -76,12 +76,12 @@
   scripts/send_official_weekly_schedule.ts → src/lib/mailer.ts
 - `run()` --calls--> `sendNotificationEmail()`  [EXTRACTED]
   scripts/simulation_digest_cron.ts → src/lib/mailer.ts
+- `createMemoryStore()` --calls--> `idFieldOf()`  [EXTRACTED]
+  tests/workflows.test.ts → src/core/schema.ts
 - `createInMemoryStore()` --calls--> `buildMockSeed()`  [EXTRACTED]
   tests/recurring-meetings.test.ts → src/lib/mock-seed.ts
 - `createInMemoryStore()` --calls--> `buildMockSeed()`  [EXTRACTED]
   tests/sim-class-workflow.test.ts → src/lib/mock-seed.ts
-- `createMemoryStore()` --calls--> `idFieldOf()`  [EXTRACTED]
-  tests/workflows.test.ts → src/core/schema.ts
 
 ## Import Cycles
 - 2-file cycle: `src/core/cme.ts -> src/core/mutations.ts -> src/core/cme.ts`
@@ -250,10 +250,10 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `{ GET, POST }`, `1. Đơn vị Đào tạo (Lịch giảng)`, `2. Đơn vị Hành chính (Gán phòng & Coi thi)` to the rest of the system?**
   _38 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `lop-mo-phong/page.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.06593642611683849 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06572164948453608 - nodes in this community are weakly interconnected._
 - **Why does `vitest` connect `simulation_digest_cron.ts` to `llm_client.py`, `Clinical Conflict Detection & State`, `SMTP & IMAP Mailbox Integration`, `DatabaseSnapshot`, `NPM Lifecycle Scripts`, `Apps Script Webhook & HMAC`, `React 19 & Next.js Guidance`, `Google Sheets Data Store`, `Quy trình Vận hành Chuẩn (SOP) — CECICS Web App MVP`?**
   _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Should `llm_client.py` be split into smaller, more focused modules?**
   _Cohesion score 0.0770735524256651 - nodes in this community are weakly interconnected._
 - **Why does `formatVnDate()` connect `lop-mo-phong/page.tsx` to `llm_client.py`, `Deployment & Sheets Setup Guide`, `Core Package Manifest`, `FullCalendar & Next.js Core Deps`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
