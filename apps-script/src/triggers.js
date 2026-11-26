@@ -25,3 +25,14 @@ function triggerDailyChecks() {
     lock.releaseLock();
   }
 }
+
+/**
+ * Hàm công khai (Public Function) để chạy thủ công trên thanh công cụ Apps Script:
+ * Quét và cập nhật lại toàn bộ sự kiện từ đầu tuần này (23/11/2026) lên Google Calendar
+ * kèm danh sách khách mời (attendees) và TUYỆT ĐỐI KHÔNG GỬI EMAIL MỜI (sendInvites: false).
+ */
+function retrofitCalendarEvents() {
+  var res = retrofitCalendarEventsFromDate_('2026-11-23');
+  Logger.log(JSON.stringify(res));
+  return res;
+}
