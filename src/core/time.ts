@@ -127,10 +127,68 @@ export function countWorkingDays(startYmd: string, endYmd: string, workingDaysCs
 }
 
 export function formatVnDate(ymd: string): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
-  if (!m) return ymd;
+  if (!ymd) return '';
+  const str = String(ymd).trim();
+  // Nếu là chuỗi ISO UTC (ví dụ: 2026-12-02T17:00:00.000Z)
+  if (str.includes('T') && str.endsWith('Z')) {
+    const d = new Date(str);
+    if (!Number.isNaN(d.getTime())) {
+      const vn = new Date(d.getTime() + 7 * 3600 * 1000);
+      const day = String(vn.getUTCDate()).padStart(2, '0');
+      const month = String(vn.getUTCMonth() + 1).padStart(2, '0');
+      const year = vn.getUTCFullYear();
+      return `${day}/${month}/${year}`;
+    }
+  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(str);
+  if (!m) return str;
   return `${m[3]}/${m[2]}/${m[1]}`;
 }
+
+/** Chuẩn hóa giờ sang định dạng hh:mm (24h). Hỗ trợ cả chuỗi ISO 1899 từ Google Sheets. */
+export function formatVnTime(timeStr: string): string {
+  if (!timeStr) return '';
+  const str = String(timeStr).trim();
+  // Nếu là chuỗi ISO 1899 epoch từ Google Sheets (ví dụ: 1899-12-30T06:23:30.000Z)
+  if (str.includes('1899-12-30') || (str.includes('T') && str.endsWith('Z') && str.startsWith('1899'))) {
+    const d = new Date(str);
+    if (!Number.isNaN(d.getTime())) {
+      // Bù 7h06m30s LMT của Sài Gòn năm 1899
+      const vn = new Date(d.getTime() + (7 * 3600 + 6 * 60 + 30) * 1000);
+      const h = String(vn.getUTCHours()).padStart(2, '0');
+      const min = String(vn.getUTCMinutes()).padStart(2, '0');
+      return `${h}:${min}`;
+    }
+  }
+  const mins = parseTimeToMinutes(str);
+  if (!Number.isNaN(mins)) {
+    return minutesToTime(mins);
+  }
+  return str;
+}
+
+/** Tự động làm sạch và chuyển đổi bất kỳ chuỗi ISO ngày/giờ cũ trong văn bản thành chuẩn dd/mm/yyyy và hh:mm */
+export function sanitizeLegacyIsoText(text: string): string {
+  if (!text || typeof text !== 'string') return text;
+  // 1. Chuẩn hóa ngày ISO dạng YYYY-MM-DDTHH:mm:ss.sssZ -> dd/mm/yyyy
+  let cleaned = text.replace(/(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g, (_m, y) => {
+    if (Number(y) <= 1900) return _m; // epoch giờ của 1899
+    return formatVnDate(_m);
+  });
+
+  // 2. Chuẩn hóa giờ 1899-12-30T...Z -> hh:mm
+  cleaned = cleaned.replace(/1899-12-30T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g, (_m) => {
+    return formatVnTime(_m);
+  });
+
+  // 3. Chuẩn hóa các cụm "ngày YYYY-MM-DD" hoặc "(từ YYYY-MM-DD)" thành dd/mm/yyyy
+  cleaned = cleaned.replace(/(ngày|từ)\s+(\d{4})-(\d{2})-(\d{2})/g, (_m, prefix, y, mo, d) => {
+    return `${prefix} ${d}/${mo}/${y}`;
+  });
+
+  return cleaned;
+}
+
 
 /** Tên viết tắt thứ trong tuần (T2 đến T7, CN). Thứ 2 là ngày đầu tuần. */
 export function dayOfWeekShortVn(ymd: string): string {

@@ -10,9 +10,12 @@ import {
   countWorkingDays,
   diffDaysYmd,
   durationHours,
+  formatVnDate,
+  formatVnTime,
   getPeriodRange,
   type PeriodKind,
   todayVnYmd,
+  toVnDateTimeMs,
 } from './time';
 
 export interface RoomUtilizationRow {
@@ -508,24 +511,34 @@ export function detectPendingEscalations(
         loai: 'THIET_BI_HONG',
         doi_tuong_id: eq.equipment_id,
         don_vi: UNITS.KY_THUAT,
-        ly_do: `Thiết bị "${eq.ten}" (${eq.equipment_id}) hỏng đã ${days} ngày (từ ${eq.tu_ngay}) chưa khắc phục.`,
+        ly_do: `Thiết bị "${eq.ten}" (${eq.equipment_id}) hỏng đã ${days} ngày (từ ${formatVnDate(eq.tu_ngay)}) chưa khắc phục.`,
       });
     }
   }
 
+  const nowMs = now.getTime();
+
   for (const s of db.Sessions) {
     if (s.trang_thai === 'Đã hủy' || s.room_id) continue;
+    // Bỏ qua các buổi trong quá khứ (đã bắt đầu hoặc kết thúc)
+    const sessionStartMs = toVnDateTimeMs(s.ngay, s.gio_bd);
+    if (!Number.isNaN(sessionStartMs) && sessionStartMs <= nowMs) {
+      continue;
+    }
     const daysLeft = diffDaysYmd(today, s.ngay);
     if (
       daysLeft >= 0 &&
       daysLeft <= settings.CANH_BAO_CHUA_GAN_PHONG_NGAY &&
       !existingOpenKeys.has(`CHUA_GAN_PHONG:${s.session_id}`)
     ) {
+      const dateFormatted = formatVnDate(s.ngay);
+      const startTime = formatVnTime(s.gio_bd);
+      const endTime = formatVnTime(s.gio_kt);
       toCreate.push({
         loai: 'CHUA_GAN_PHONG',
         doi_tuong_id: s.session_id,
         don_vi: UNITS.HANH_CHINH,
-        ly_do: `Buổi "${s.hoc_phan} - ${s.bai_giang}" ngày ${s.ngay} (${s.gio_bd}–${s.gio_kt}) còn ${daysLeft} ngày nhưng chưa gán phòng.`,
+        ly_do: `Buổi "${s.hoc_phan} - ${s.bai_giang}" ngày ${dateFormatted} (${startTime}–${endTime}) còn ${daysLeft} ngày nhưng chưa gán phòng.`,
       });
     }
   }
@@ -542,7 +555,7 @@ export function detectPendingEscalations(
         loai: 'LOP_TRE_TON_DONG',
         doi_tuong_id: sc.sim_id,
         don_vi: UNITS.KY_THUAT,
-        ly_do: `Lớp mô phỏng đăng ký trễ "${sc.noi_dung}" (${sc.sim_id}, ngày ${sc.ngay}) chờ xét đặc biệt đã ${waitingDays} ngày.`,
+        ly_do: `Lớp mô phỏng đăng ký trễ "${sc.noi_dung}" (${sc.sim_id}, ngày ${formatVnDate(sc.ngay)}) chờ xét đặc biệt đã ${waitingDays} ngày.`,
       });
     }
   }

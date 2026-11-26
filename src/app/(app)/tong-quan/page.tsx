@@ -14,7 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 import { computeDashboardMetrics } from '@/core/analytics';
-import { type PeriodKind, todayVnYmd } from '@/core/time';
+import { type PeriodKind, sanitizeLegacyIsoText, todayVnYmd } from '@/core/time';
 import { ROLES, UNITS } from '@/core/types';
 import { useApp } from '@/components/AppProvider';
 import { Badge, Card, KpiCard, PageHeader } from '@/components/ui';
@@ -223,7 +223,7 @@ export default function DashboardPage() {
                     <Badge tone="red">{esc.loai}</Badge>
                     <span className="text-xs text-slate-500">{esc.esc_id}</span>
                   </div>
-                  <p className="text-sm text-slate-800 mt-1.5">{esc.ly_do}</p>
+                  <p className="text-sm text-slate-800 mt-1.5">{sanitizeLegacyIsoText(esc.ly_do)}</p>
                 </div>
               ))}
             </div>

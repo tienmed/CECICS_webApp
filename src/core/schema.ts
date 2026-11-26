@@ -4,6 +4,8 @@
  * chỉ thêm cột mới vào cuối.
  */
 
+import { sanitizeLegacyIsoText } from './time';
+
 export type FieldType = 'string' | 'number' | 'boolean' | 'list' | 'json';
 
 export const TABLES = {
@@ -574,6 +576,11 @@ export function parseCell(type: FieldType, v: unknown, fieldName?: string): unkn
             return `${h}:${m}`;
           }
         }
+      }
+
+      // 5. Chuẩn hóa làm sạch bất kỳ chuỗi văn bản nào chứa các mốc ISO lịch sử (ví dụ ly_do trong Escalations)
+      if (s.includes('1899-12-30T') || (s.includes('T') && s.includes(':00.000Z'))) {
+        return sanitizeLegacyIsoText(s);
       }
 
       return s;

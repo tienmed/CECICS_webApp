@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { canPerform } from '@/core/permissions';
 import { ESCALATION_ACTIONS, UNIT_LABELS, type EscalationRecord, type Unit } from '@/core/types';
+import { sanitizeLegacyIsoText } from '@/core/time';
 import { useApp } from '@/components/AppProvider';
 import { Badge, Card, Modal, PageHeader } from '@/components/ui';
 
@@ -83,7 +84,7 @@ export default function EscalationsPage() {
                       <Badge tone="slate">{esc.loai}</Badge>
                       <Badge tone="teal">{UNIT_LABELS[esc.don_vi as Unit] || esc.don_vi}</Badge>
                     </div>
-                    <p className="text-sm font-medium text-slate-900">{esc.ly_do}</p>
+                    <p className="text-sm font-medium text-slate-900">{sanitizeLegacyIsoText(esc.ly_do)}</p>
                     {esc.y_kien && (
                       <div className="p-2.5 rounded-lg bg-slate-100 text-xs text-slate-800">
                         <strong>
@@ -115,7 +116,9 @@ export default function EscalationsPage() {
 
       <Modal open={Boolean(selected)} onClose={() => setSelected(null)} title={`Ý kiến Ban Lãnh đạo — ${selected?.esc_id || ''}`}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200">{selected?.ly_do}</div>
+          <div className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200">
+            {sanitizeLegacyIsoText(selected?.ly_do || '')}
+          </div>
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Hình thức xử lý</label>
             <select

@@ -1928,7 +1928,7 @@ export function executeAction(
     }
 
     case 'runDailyChecks': {
-      // Hết hạn yêu cầu đổi lịch quá giờ
+      // 1. Hết hạn yêu cầu đổi lịch quá giờ
       let expiredSwaps = 0;
       for (const sw of db.SwapRequests) {
         if (sw.trang_thai !== 'Chờ') continue;
@@ -1939,7 +1939,34 @@ export function executeAction(
         }
       }
 
-      // Tạo các mục leo thang mới
+      // 2. Tự động đóng các mục leo thang CHUA_GAN_PHONG của buổi học đã kết thúc trong quá khứ
+      let autoClosedEscalations = 0;
+      for (const esc of db.Escalations) {
+        if (esc.trang_thai === 'Đang mở' && esc.loai === 'CHUA_GAN_PHONG') {
+          const s = db.Sessions.find((x) => x.session_id === esc.doi_tuong_id);
+          // Nếu buổi không tồn tại, đã hủy, đã có phòng, hoặc thời gian bắt đầu đã diễn ra trong quá khứ
+          const isPastOrResolved =
+            !s ||
+            s.trang_thai === 'Đã hủy' ||
+            Boolean(s.room_id) ||
+            toVnDateTimeMs(s.ngay, s.gio_bd) <= now.getTime();
+
+          if (isPastOrResolved) {
+            store.update('Escalations', esc.esc_id, {
+              trang_thai: 'Đã đóng',
+              hanh_dong_ld: 'Tự động đóng',
+              y_kien: s?.room_id
+                ? 'Đã gán phòng thành công.'
+                : 'Tự động đóng: Buổi học đã diễn ra hoặc trong quá khứ.',
+              boi: actor.user_id,
+              luc: nowIso,
+            });
+            autoClosedEscalations++;
+          }
+        }
+      }
+
+      // 3. Tạo các mục leo thang mới
       const candidates = detectPendingEscalations(store.getAll(), now);
       const currentEscIds = db.Escalations.map((e) => e.esc_id);
       const createdEscalations: EscalationRecord[] = [];

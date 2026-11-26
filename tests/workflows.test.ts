@@ -213,6 +213,18 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
     const pendingEsc = detectPendingEscalations(db, fixedNow);
     expect(pendingEsc.some((e) => e.loai === 'LOP_TRE_TON_DONG')).toBe(true);
 
+    // Kiểm tra định dạng ngày dd/mm/yyyy và hh:mm trong ly_do của các mục leo thang mới
+    for (const esc of pendingEsc) {
+      expect(esc.ly_do).not.toContain('.000Z');
+      expect(esc.ly_do).not.toContain('1899-12-30');
+    }
+
+    // Buổi trong quá khứ không được tạo cảnh báo CHUA_GAN_PHONG
+    const pastSession = db.Sessions.find((s) => s.ngay < '2026-11-20');
+    if (pastSession) {
+      expect(pendingEsc.some((e) => e.doi_tuong_id === pastSession.session_id)).toBe(false);
+    }
+
     executeAction(store, 'runDailyChecks', {}, 'admin@pnt.edu.vn', fixedNow);
     const openEsc = db.Escalations.find((e) => e.trang_thai === 'Đang mở')!;
 

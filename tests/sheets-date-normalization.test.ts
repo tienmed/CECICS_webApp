@@ -36,6 +36,16 @@ describe('parseCell Date & Time normalization from Google Sheets', () => {
     expect(parseCell('string', 'P-HH-101', 'room_id')).toBe('P-HH-101');
   });
 
+  it('correctly cleans legacy ISO text strings in parseCell or sanitizeLegacyIsoText', () => {
+    const rawText =
+      'Buổi "Bệnh học nội khoa - bệnh học ngoại khoa - THI KẾT THÚC HỌC PHẦN (Trắc nghiệm)" ngày 2026-12-02T17:00:00.000Z (1899-12-30T06:23:30.000Z–1899-12-30T08:23:30.000Z) còn 0 ngày nhưng chưa gán phòng.';
+    const cleaned = parseCell('string', rawText, 'ly_do');
+    expect(cleaned).toContain('ngày 03/12/2026');
+    expect(cleaned).toContain('(13:30–15:30)');
+    expect(cleaned).not.toContain('1899-12-30');
+    expect(cleaned).not.toContain('.000Z');
+  });
+
   it('correctly maps raw sheet row in fromRow', () => {
     const rawRow = [
       'B-TEST-01', // session_id
