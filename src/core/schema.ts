@@ -438,6 +438,39 @@ export const TABLES = {
       ghi_chu: 'string',
     },
   },
+  MeetingMinutes: {
+    id: 'meeting_id',
+    fields: {
+      meeting_id: 'string',
+      tieu_de: 'string',
+      ngay_hop: 'string',
+      gio_bd: 'string',
+      gio_kt: 'string',
+      dia_diem: 'string',
+      chu_tri: 'string',
+      thu_ky: 'string',
+      thanh_phan: 'list',
+      noi_dung_md: 'string',
+      file_dinh_kem: 'json',
+      nguoi_tao: 'string',
+      tao_luc: 'string',
+    },
+  },
+  MeetingTasks: {
+    id: 'task_id',
+    fields: {
+      task_id: 'string',
+      meeting_id: 'string',
+      tieu_de: 'string',
+      nguoi_phu_trach: 'string',
+      assignee_user_id: 'string',
+      deadline: 'string',
+      muc_do_uu_tien: 'string',
+      trang_thai: 'string',
+      ghi_chu: 'string',
+      tao_luc: 'string',
+    },
+  },
 } as const satisfies Record<string, { id: string; fields: Record<string, FieldType> }>;
 
 export type TableName = keyof typeof TABLES;

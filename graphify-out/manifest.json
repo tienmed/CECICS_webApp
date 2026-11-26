@@ -282,10 +282,10 @@
     "semantic_hash": "b9c29673fa9032f5d62fac892d8cb09f"
   },
   "src/components/AppShell.tsx": {
-    "mtime": 1795690275.9584208,
-    "seen": 1795696637.8596468,
-    "ast_hash": "3ce7ce0b4aadbd905300ff67cf6a3f52",
-    "semantic_hash": "3ce7ce0b4aadbd905300ff67cf6a3f52"
+    "mtime": 1795710418.5375853,
+    "seen": 1795710537.2285726,
+    "ast_hash": "3b26de954a3401c251847a94222e17f0",
+    "semantic_hash": "3b26de954a3401c251847a94222e17f0"
   },
   "src/components/ui.tsx": {
     "mtime": 1795185949.25051,
@@ -324,10 +324,10 @@
     "semantic_hash": "2bd0913a92a54262beeb080d382eff59"
   },
   "src/core/schema.ts": {
-    "mtime": 1795689608.0136645,
-    "seen": 1795689719.0356545,
-    "ast_hash": "a7f110f0f70f2ee0594d4207333b0cb9",
-    "semantic_hash": "a7f110f0f70f2ee0594d4207333b0cb9"
+    "mtime": 1795710311.166774,
+    "seen": 1795710537.2303133,
+    "ast_hash": "c4661fbc1641611194897126cee63455",
+    "semantic_hash": "c4661fbc1641611194897126cee63455"
   },
   "src/core/suggest.ts": {
     "mtime": 1795594039.9599326,
@@ -342,10 +342,10 @@
     "semantic_hash": "0d3ea1c5d655339aa3079714e1c9f176"
   },
   "src/core/types.ts": {
-    "mtime": 1795619897.771926,
-    "seen": 1795659547.7166622,
-    "ast_hash": "288628d4020bf1aec0f147711e8a1db1",
-    "semantic_hash": "288628d4020bf1aec0f147711e8a1db1"
+    "mtime": 1795710319.5163026,
+    "seen": 1795710537.2303133,
+    "ast_hash": "2ffc0c58e2d725b241aa6053bfe55dcf",
+    "semantic_hash": "2ffc0c58e2d725b241aa6053bfe55dcf"
   },
   "src/lib/auth.ts": {
     "mtime": 1795401119.0120065,
@@ -384,10 +384,10 @@
     "semantic_hash": "3cdc6345d4c4f3f0cd3f8308284a6cdf"
   },
   "src/lib/mock-seed.ts": {
-    "mtime": 1795658075.1872404,
-    "seen": 1795659547.7166622,
-    "ast_hash": "50f440eee3352b90edba8dd31bcdd013",
-    "semantic_hash": "50f440eee3352b90edba8dd31bcdd013"
+    "mtime": 1795710452.741329,
+    "seen": 1795710537.2303133,
+    "ast_hash": "6d1c5375f8207f2f8d90edeb3ee21749",
+    "semantic_hash": "6d1c5375f8207f2f8d90edeb3ee21749"
   },
   "src/lib/repository.ts": {
     "mtime": 1795661907.2919295,
@@ -663,10 +663,10 @@
     "semantic_hash": "dad2173dc93db7acc718d0f3c9d0ffca"
   },
   "src/lib/simulation-crawler.ts": {
-    "mtime": 1795619574.728046,
-    "seen": 1795659547.721978,
-    "ast_hash": "e2d49a73d4d7e810cd3014d69b7e255c",
-    "semantic_hash": "e2d49a73d4d7e810cd3014d69b7e255c"
+    "mtime": 1795709947.324384,
+    "seen": 1795710537.2303133,
+    "ast_hash": "bddc59fd2ab95e47fddcd1f879d83938",
+    "semantic_hash": "bddc59fd2ab95e47fddcd1f879d83938"
   },
   "src/lib/simulation-digest-email.ts": {
     "mtime": 1795613468.0827012,
@@ -841,5 +841,60 @@
     "seen": 1795709333.9037993,
     "ast_hash": "1158df810960134418b3bd3023e66896",
     "semantic_hash": "1158df810960134418b3bd3023e66896"
+  },
+  "data/research_projects.json": {
+    "mtime": 1795709958.8029878,
+    "seen": 1795710537.2040484,
+    "ast_hash": "f23dafa4858df34f8175b5b45b4aec6c",
+    "semantic_hash": "f23dafa4858df34f8175b5b45b4aec6c",
+    "ast_empty": true
+  },
+  "src/app/(app)/nghien-cuu/page.tsx": {
+    "mtime": 1795709918.8716848,
+    "seen": 1795710537.2165616,
+    "ast_hash": "663c61efcdff0610a7b058e0faf7b0b1",
+    "semantic_hash": "663c61efcdff0610a7b058e0faf7b0b1"
+  },
+  "src/app/(app)/thu-ky/page.tsx": {
+    "mtime": 1795710500.1436322,
+    "seen": 1795710537.2185633,
+    "ast_hash": "c39e552e8d62dbc2ecc6549dec5b5e52",
+    "semantic_hash": "c39e552e8d62dbc2ecc6549dec5b5e52"
+  },
+  "src/app/api/meeting-minutes/route.ts": {
+    "mtime": 1795710362.382555,
+    "seen": 1795710537.2245688,
+    "ast_hash": "afa05e67a53ba788b39bf0dd80f7b959",
+    "semantic_hash": "afa05e67a53ba788b39bf0dd80f7b959"
+  },
+  "src/app/api/research/route.ts": {
+    "mtime": 1795709876.5359807,
+    "seen": 1795710537.2245688,
+    "ast_hash": "ccb6b9447b49ba436afbf6f5d9a42063",
+    "semantic_hash": "ccb6b9447b49ba436afbf6f5d9a42063"
+  },
+  "src/lib/meeting-parser.ts": {
+    "mtime": 1795710335.0093362,
+    "seen": 1795710537.2303133,
+    "ast_hash": "e72a33f91ea554acc773b92cb857f2dd",
+    "semantic_hash": "e72a33f91ea554acc773b92cb857f2dd"
+  },
+  "src/lib/research-projects.ts": {
+    "mtime": 1795709869.5000782,
+    "seen": 1795710537.2303133,
+    "ast_hash": "c09fd42b361ae5ed5c5887ae0a87dcef",
+    "semantic_hash": "c09fd42b361ae5ed5c5887ae0a87dcef"
+  },
+  "tests/meeting-parser.test.ts": {
+    "mtime": 1795710519.357075,
+    "seen": 1795710537.2477431,
+    "ast_hash": "e8ff0b53862b78bd13f12d2e9f939842",
+    "semantic_hash": "e8ff0b53862b78bd13f12d2e9f939842"
+  },
+  "tests/research-projects.test.ts": {
+    "mtime": 1795709929.601313,
+    "seen": 1795710537.2494073,
+    "ast_hash": "0091918ecd70fedbcf258cff493ef5b0",
+    "semantic_hash": "0091918ecd70fedbcf258cff493ef5b0"
   }
 }

@@ -106,6 +106,8 @@ export type CmeAttendanceRecord = Rec<'CmeAttendance'>;
 export type CmeAssessmentRecord = Rec<'CmeAssessments'>;
 export type CmeSurveyRecord = Rec<'CmeSurveys'>;
 export type CmeSettlementRecord = Rec<'CmeSettlements'>;
+export type MeetingMinutesRecord = Rec<'MeetingMinutes'>;
+export type MeetingTaskRecord = Rec<'MeetingTasks'>;
 
 export interface DefaultSettings {
   GAN_PHONG_TRUOC_NGAY: number;

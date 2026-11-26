@@ -99,6 +99,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       visible: true,
     },
     {
+      href: '/thu-ky',
+      label: 'Thư ký & Biên bản họp',
+      icon: '📝',
+      visible: true,
+    },
+    {
       href: '/thong-ke-gio',
       label: 'Thống kê giờ giảng',
       icon: '⏱️',

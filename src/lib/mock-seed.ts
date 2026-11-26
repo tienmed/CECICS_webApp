@@ -2568,5 +2568,7 @@ export function buildMockSeed(now: Date = new Date()): DatabaseSnapshot {
         ghi_chu: 'Đã hoàn tất thanh toán thù lao và quyết toán kinh phí theo quy chế chi tiêu nội bộ.',
       },
     ],
+    MeetingMinutes: [],
+    MeetingTasks: [],
   };
 }
