@@ -58,6 +58,14 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
       1. Có **chỉ định đích danh** gửi riêng cho từng email cụ thể đó.
       2. Gửi theo **dạng danh sách ngoài** (External Recipients / Stakeholders) đã được chọn hoặc phê duyệt chủ động.
   - Khi có yêu cầu *"gửi tới nhân viên CECICS"*, hệ thống bắt buộc sử dụng danh sách 18 nhân sự chuẩn hóa này, tuyệt đối không gửi nhầm sang danh sách ngoài CECICS.
+- **Đồng bộ Google Calendar cecics@pnt.edu.vn & Không Gửi Email Mời ([P0-CECICS-GOOGLE-CALENDAR-SYNC-INVARIANT])**:
+  - Mọi sự kiện lịch giảng, coi thi và họp định kỳ trên Google Calendar của Trung tâm (`cecics@pnt.edu.vn`) phải được tạo/cập nhật trực tiếp qua Google Calendar API / Apps Script với cờ **`sendInvites: false`** (hoặc `sendUpdates: 'none'`).
+  - **Quy tắc gán khách mời (Attendees):** Tùy theo loại sự kiện mà add đúng người liên quan:
+    1. *Lịch Giảng dạy / Thực hành:* Add Giảng viên đứng lớp (`email` công vụ `@pnt.edu.vn` và `email_ca_nhan`).
+    2. *Lịch Coi thi:* Add Cán bộ coi thi / Giảng viên chấm thi.
+    3. *Lịch Họp định kỳ CECICS (`loai: 'Họp'` hoặc `U-CECICS-ALL`):* Add toàn bộ nhân sự thuộc Trung tâm CECICS và Ban Giám đốc/Lãnh đạo phụ trách.
+  - Tuyệt đối không gửi email mời `.ics` qua SMTP làm đầy hòm thư giảng viên khi chỉ cần đồng bộ lịch tự động.
+  - Trong Google Apps Script, các hàm phục vụ người dùng bấm chạy trực tiếp trên thanh công cụ Editor bắt buộc không có dấu gạch dưới `_` ở cuối tên hàm để tránh bị ẩn khỏi danh sách chọn (Run dropdown).
 - **Đồng bộ Google Calendar cá nhân**: Luôn ưu tiên mặc định lấy chính địa chỉ email công vụ của giảng viên (`@pnt.edu.vn` thuộc Google Workspace) để gửi lời mời `.ics / VEVENT`, tự động gán vào ứng dụng Google Calendar trên điện thoại/máy tính của giảng viên.
 - **Minh bạch khi Từ chối yêu cầu**: Mọi hành động từ chối (hoán đổi lịch, từ chối lớp mô phỏng) bắt buộc cung cấp trường `ly_do_tu_choi`, hiển thị rõ trong lịch sử và trích dẫn nguyên văn trong email thông báo. Cung cấp các nút gợi ý lý do lâm sàng thường gặp (*Trùng lịch mổ, Trực cấp cứu, Đi công tác*).
 - **Chuẩn hóa Văn bản Ký số E-Office**: Biểu mẫu đề xuất mở lớp mô phỏng và dự trù dụng cụ - vật tư phải hỗ trợ xuất PDF theo đúng thể thức văn bản hành chính (Quốc hiệu, Tiêu ngữ, bảng biểu kẻ lưới, chữ ký Trưởng Bộ môn và Trưởng Trung tâm CECICS) để liên thông ký số trên hệ thống E-Office của Trường.
