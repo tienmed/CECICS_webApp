@@ -87,6 +87,12 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
 - **Luôn dựa vào Graphify khi Code, Fix Bug hay Lên Plan**: Bắt buộc sử dụng cấu trúc đồ thị tri thức mã nguồn `graphify` (`graphify-out/GRAPH_REPORT.md`, `graph.json` hoặc lệnh `python scripts/graphify_rag.py subgraph`) để:
   1. *Lên Plan*: Nhận diện trước các God Nodes bị ảnh hưởng (`executeAction`, `todayVnYmd`, `useApp`, `canPerform`...) và ranh giới các Community liên quan.
   2. *Code & Fix Bug*: Tra cứu luồng phụ thuộc giữa các node để sửa đúng nguyên nhân gốc, tránh phá vỡ giao thoa giữa các module.
+- **Cập nhật Đồ Thị Tri Thức Graphify sau Tính Năng Mới ([P0-GRAPHIFY-AST-UPDATE])**:
+  - Sau khi triển khai tính năng mới hoặc thêm/sửa module cốt lõi, bắt buộc chạy lệnh làm tươi đồ thị AST offline:
+    ```powershell
+    $env:GRAPHIFY_BACKEND="none"; graphify . --update; graphify cluster-only .
+    ```
+  - Tuyệt đối không để backend `gemini` tự động gọi API cloud ngoài luồng gây lỗi 401 hoặc làm phình token không cần thiết cho việc phân tích cú pháp AST tĩnh.
 - **Tài Liệu Nghiệp Vụ (`README.md`)**: File `README.md` tại thư mục gốc chỉ dành riêng để mô tả rõ ràng các module của ứng dụng và mối liên kết luồng nghiệp vụ giữa các node; tuyệt đối không mô tả kỹ thuật, không nhắc cấu trúc code, framework hay đường dẫn file trong `README.md`.
 
 

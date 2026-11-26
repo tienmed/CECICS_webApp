@@ -40,4 +40,7 @@ python scripts/llm_client.py --model qwen --prompt "Viết hàm helper..." --max
 
 # 4. Gọi trực tiếp Gemma 4 tóm tắt nghiệp vụ
 python scripts/llm_client.py --model gemma --prompt "Tóm tắt logic..." --max-tokens 200
+
+# 5. Cập nhật Đồ thị Tri thức Codebase (Offline AST, 0 Token)
+$env:GRAPHIFY_BACKEND="none"; graphify . --update; graphify cluster-only .
 ```
