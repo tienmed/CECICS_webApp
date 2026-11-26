@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStore } from '@/core/store';
+import { getSnapshot } from '@/lib/repository';
 import type { CmeScheduleSession } from '@/lib/cme-utils';
 import { moveSentEmailToTrash } from '@/lib/mailer';
 import nodemailer from 'nodemailer';
@@ -32,8 +32,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Thiếu mã khóa học (course_id).' }, { status: 400 });
     }
 
-    const store = await getStore();
-    const db = store.getAll();
+    const db = await getSnapshot();
 
     const course = db.CmeCourses?.find((c) => c.course_id === course_id);
     if (!course) {

@@ -923,7 +923,7 @@ export default function CmeAdminPage() {
 
       {/* Modal gửi thông báo lịch học & đồng bộ Google Calendar */}
       <Modal
-        isOpen={notifyModalOpen}
+        open={notifyModalOpen}
         onClose={() => setNotifyModalOpen(false)}
         title={`Đồng Bộ Google Calendar & Thông Báo Lịch Học: ${selectedCourseForNotify?.ten_khoa || ''}`}
       >
