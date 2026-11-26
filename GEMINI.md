@@ -60,6 +60,13 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
       1. Có **chỉ định đích danh** gửi riêng cho từng email cụ thể đó.
       2. Gửi theo **dạng danh sách ngoài** (External Recipients / Stakeholders) đã được chọn hoặc phê duyệt chủ động.
   - Khi có yêu cầu *"gửi tới nhân viên CECICS"*, hệ thống bắt buộc sử dụng danh sách 18 nhân sự chuẩn hóa này, tuyệt đối không gửi nhầm sang danh sách ngoài CECICS.
+- **Quy Chuẩn Quản Lý Nghiên Cứu & Hội Nghị Mô Phỏng Y Khoa ([P0-CECICS-RESEARCH-CONFERENCES-INVARIANT])**:
+  - **Theo dõi Đề tài Nghiên cứu Nội bộ**: Quản lý danh mục đề tài tại `data/research_projects.json` và API `/api/research`, bao gồm: Mã đề tài, Tên đề tài, Chủ nhiệm đề tài (thuộc 18 cán bộ công vụ CECICS hoặc Giảng viên bộ môn), Email công vụ `@pnt.edu.vn`, Bộ môn phối hợp, Trạng thái (`Ý tưởng`, `Đang thực hiện`, `Đã nghiệm thu`, `Đã công bố`), Ngày bắt đầu, Dự kiến hoàn thành và Tóm tắt mục tiêu & phương pháp.
+  - **Mạng lưới Hội nghị Chuyên ngành Mô phỏng & Giáo dục Y học**: Bắt buộc bao quát cả 2 nhóm:
+    1. *Quốc tế*: IMSH (SSH Hoa Kỳ), SESAM (Châu Âu), ASPiH (Anh Quốc), ASPE (Người bệnh chuẩn).
+    2. *Trong nước*: Hội nghị Giáo dục Y học Toàn quốc (VAME), Hội nghị KHKT Thường niên Trường ĐH Y khoa Phạm Ngọc Thạch (PNTU), và Hội nghị Mô phỏng Y học Lâm sàng Việt Nam (Sim-Summit).
+  - **100% Cổng Thông tin Thực tế**: Cung cấp đường dẫn chính thức đã xác minh kết nối (HTTP 200), hạn nộp báo cáo (Call for Abstracts) và định hướng ứng dụng nghiên cứu thực tế cho CECICS.
+  - **Luồng Y văn Thời gian thực**: Tích hợp Europe PMC REST API truy xuất các bài báo mô phỏng lâm sàng thực tế có DOI/PMID phục vụ nghiên cứu viên.
 - **Đồng bộ Google Calendar cecics@pnt.edu.vn & Không Gửi Email Mời ([P0-CECICS-GOOGLE-CALENDAR-SYNC-INVARIANT])**:
   - **QUY TẮC DUY NHẤT TẠO VÀ ĐỒNG BỘ CALENDAR TRONG TOÀN BỘ HỆ THỐNG**:
     - **CẤM HOÀN TOÀN GỬI TỆP ĐÍNH KÈM `.ics` HOẶC EMAIL MỜI QUA SMTP/VEVENT** làm rác hòm thư người dùng khi chỉ cần đồng bộ lịch tự động.
