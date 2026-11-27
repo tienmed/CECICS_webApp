@@ -1,0 +1,34 @@
+[
+  {
+    "meeting_id": "MEET-2026-11-27-01",
+    "tieu_de": "Cuộc họp giao ban và phân công nhiệm vụ chuyên môn CECICS",
+    "ngay_hop": "2026-11-27",
+    "gio_bd": "08:30",
+    "gio_kt": "11:15",
+    "dia_diem": "Phòng họp Trung tâm CECICS (Lầu 3, Nhà A3)",
+    "chu_tri": "Nguyễn Ngọc Phương Thư",
+    "thu_ky": "Trần Tú Trinh",
+    "thanh_phan": [
+      "Nguyễn Ngọc Phương Thư",
+      "Bùi Phan Quỳnh Phương",
+      "Nguyễn Thị Mỹ Linh",
+      "Trịnh Trung Tiến",
+      "Cao Thị Ngọc Bích",
+      "Nguyễn Thị Lan Anh",
+      "Châu Thị Kiều Chinh",
+      "Nguyễn Như Quỳnh",
+      "Trần Tú Trinh",
+      "Cao Tấn Tải",
+      "Nguyễn Hữu Nhân",
+      "Nguyễn Thị Kiều Trang",
+      "Nguyễn Thái Cường",
+      "BS. Duy",
+      "BS. Uyên",
+      "ThS. Minh Nhân"
+    ],
+    "noi_dung_md": "# BIÊN BẢN CUỘC HỌP GIAO BAN VÀ PHÂN CÔNG NHIỆM VỤ CHUYÊN MÔN\n...",
+    "file_dinh_kem": ["bien_ban_hop_giao_ban_2026_11_27.md"],
+    "nguoi_tao": "trinhtt@pnt.edu.vn",
+    "tao_luc": "2026-11-27T08:30:00.000Z"
+  }
+]

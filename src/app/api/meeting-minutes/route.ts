@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { parseMeetingFile } from '@/lib/meeting-parser';
 import officialStaffList from '../../../../data/cecics_official_staff.json';
+import {
+  getStoredMeetingMinutes,
+  saveStoredMeetingMinutes,
+  getStoredMeetingTasks,
+  saveStoredMeetingTasks,
+} from '@/lib/meeting-storage';
+
+export async function GET() {
+  try {
+    const minutes = getStoredMeetingMinutes();
+    const tasks = getStoredMeetingTasks();
+    return NextResponse.json({ ok: true, minutes, tasks });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Lỗi khi tải dữ liệu biên bản họp';
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  }
+}
 
 const PNT_TOKEN = process.env.PNT_AI_TOKEN || '68f67779de494d422cc6fe17f7f20b3974a6fdcb46cb804fbab24b232aaa6013';
 const GEMMA_URL = process.env.PNT_GEMMA_URL || 'https://pnt.badt.vn/gemma4/chat';

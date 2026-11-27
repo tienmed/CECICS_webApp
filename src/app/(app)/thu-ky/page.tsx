@@ -57,15 +57,49 @@ export default function ThuKyPage() {
 
   // Load local data khi mount
   useEffect(() => {
-    try {
-      const storedMin = localStorage.getItem(STORAGE_KEY_MINUTES);
-      if (storedMin) setSavedMinutes(JSON.parse(storedMin));
+    async function loadData() {
+      try {
+        const res = await fetch('/api/meeting-minutes');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ok && Array.isArray(json.minutes) && Array.isArray(json.tasks)) {
+            const storedMin = localStorage.getItem(STORAGE_KEY_MINUTES);
+            const localMin: MeetingMinutesRecord[] = storedMin ? JSON.parse(storedMin) : [];
+            const mergedMin = [...localMin];
+            for (const m of json.minutes as MeetingMinutesRecord[]) {
+              if (!mergedMin.some((item) => item.meeting_id === m.meeting_id)) {
+                mergedMin.push(m);
+              }
+            }
+            setSavedMinutes(mergedMin);
 
-      const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
-      if (storedTasks) setSavedTasks(JSON.parse(storedTasks));
-    } catch {
-      // Bỏ qua lỗi parse storage
+            const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
+            const localTasks: MeetingTaskRecord[] = storedTasks ? JSON.parse(storedTasks) : [];
+            const mergedTasks = [...localTasks];
+            for (const t of json.tasks as MeetingTaskRecord[]) {
+              if (!mergedTasks.some((item) => item.task_id === t.task_id)) {
+                mergedTasks.push(t);
+              }
+            }
+            setSavedTasks(mergedTasks);
+            return;
+          }
+        }
+      } catch {
+        // Fallback đọc từ localStorage
+      }
+
+      try {
+        const storedMin = localStorage.getItem(STORAGE_KEY_MINUTES);
+        if (storedMin) setSavedMinutes(JSON.parse(storedMin));
+
+        const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
+        if (storedTasks) setSavedTasks(JSON.parse(storedTasks));
+      } catch {
+        // Bỏ qua lỗi parse storage
+      }
     }
+    loadData();
   }, []);
 
   // Lưu danh sách biên bản
