@@ -6,7 +6,7 @@
 
 ## I. THÔNG TIN CHUNG
 - **Thời gian**: 08:30 ngày 27/11/2026.
-- **Địa điểm**: Phòng họp Trung tâm CECICS (Lầu 3, Nhà A3) - Trường Đại học Y khoa Phạm Ngọc Thạch.
+- **Địa điểm**: Lầu 5 khu D - Tân Nhựt.
 - **Chủ trì**: **TS.BS. Nguyễn Ngọc Phương Thư** – Trưởng Trung tâm CECICS.
 - **Thư ký**: **CN. Phạm Nguyễn Tường Vân** – Cán bộ Hành chính - Thư ký Trung tâm CECICS.
 - **Thành phần tham dự**:
