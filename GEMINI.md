@@ -22,6 +22,7 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
   - Dùng **Qwen 2.5** (`scripts/llm_client.py --model qwen`) cho sinh mã TypeScript/React, debug AST nodes.
 
 ## 4. Skills Dự Án Tích Hợp
+- [`.agent/skills/cecics-core-workflows/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/cecics-core-workflows/SKILL.md): Quy chuẩn và hướng dẫn thực thi 4 luồng nghiệp vụ cốt lõi: Hành chính, Kỹ thuật & Vật tư mô phỏng, Đào tạo (CME/Sinh viên), và Nghiên cứu Khoa học.
 - [`.agent/skills/graphify-rag/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/graphify-rag/SKILL.md): Token budget, AST extraction, Qwen/Gemma routing.
 - [`.agent/skills/microsoft-token-economizer/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/microsoft-token-economizer/SKILL.md): Microsoft Research TokenEconomizer (Micro-skills, Tool Pruning, Loop Guard).
 - [`.agent/skills/cecics-doc-converter/SKILL.md`](file:///e:/CECICS_webApp/.agent/skills/cecics-doc-converter/SKILL.md): Chuẩn hóa tài liệu Word/Excel/PDF sang Markdown phục vụ RAG bằng Microsoft MarkItDown.
@@ -111,6 +112,11 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
     4. *Phần IV: Bảng phân công đầu việc & tiến độ (Action Matrix)*: Bảng gồm các cột: STT, Đầu việc, Người phụ trách, Hạn chót (Deadline), Mức độ ưu tiên, Trạng thái.
   - **Liên kết nhân sự thực hiện**: Tự động nhận diện tên người được giao việc và ưu tiên map chính xác vào danh sách 18 cán bộ nhân sự chính thức của CECICS; cho phép thư ký linh hoạt chỉnh sửa hoặc gán cho khách mời/giảng viên ngoài.
   - **Quản lý đầu việc sau cuộc họp (Task Board)**: Mọi biên bản sau khi lưu bắt buộc đồng bộ tự động sang Bảng theo dõi đầu việc (`MeetingTasks`), có khả năng lọc theo Deadline, mức độ ưu tiên và chuyển đổi trạng thái hoàn thành (`Chưa bắt đầu` -> `Đang làm` -> `Hoàn thành`).
+- **Quy Chuẩn 4 Luồng Nghiệp Vụ Cốt Lõi CECICS ([P0-CECICS-CORE-FLOWS-INVARIANT])**:
+  - **Luồng Hành chính (Admin)**: Mọi giao dịch qua `cecics@pnt.edu.vn`. Tiếp nhận hồ sơ/tư vấn CME qua đầu mối thường trực CN. Nguyễn Như Quỳnh (`0708.180.889` - `quynhnn@pnt.edu.vn`). Lãnh đạo phụ trách hành chính: BS. Nguyễn Minh Luân. Định kỳ rà soát phân bổ chi phí quản lý gián tiếp 3% CME với Phòng TCKT.
+  - **Luồng Kỹ thuật (Technical)**: Quản lý hạ tầng mô phỏng Lầu 7, 8, 9 (Khu C) và cơ sở Tân Nhựt. Tự động kiểm tra xung đột phòng và trạng thái bảo dưỡng trước khi gán ca học. Thiết lập định mức vật tư tiêu hao chuẩn và chuẩn bị trước ca học 30 phút.
+  - **Luồng Đào tạo (Training & CME)**: Lịch giảng phân nhóm tuần T2-CN kèm huy hiệu buổi trực quan. Hoán đổi lịch giảng 2 chiều đối ứng cùng lớp sau ngày hiện tại. Mở lớp CME phối hợp Trung tâm Đào tạo Nhân lực Y tế, đồng bộ Google Calendar tự động add Attendee không gửi file `.ics`. Các khóa chuẩn hóa: Train-the-Trainer (SESAM), Hội thảo Corticoid và cấp cứu mô phỏng.
+  - **Luồng Nghiên cứu Khoa học (Research)**: Quản lý sổ cái đề tài tại `data/research_projects.json` và phân hệ `/nghien-cuu`. Bao quát đề tài báo cáo Hội nghị VAME (khung ECD trạm thi OSCE), Phiên Mô phỏng Lâm sàng HNKHCN XIX, và các sáng kiến cấp Trường về mô hình tổ chức lớp học mô phỏng, Người bệnh Chuẩn và bộ công cụ CVI-CVR.
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
