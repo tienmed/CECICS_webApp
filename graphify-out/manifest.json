@@ -168,10 +168,10 @@
     "semantic_hash": "bbb48267cd52a2bfbd92fca31de136c6"
   },
   "src/app/(app)/quan-tri/page.tsx": {
-    "mtime": 1795744889.5295894,
-    "seen": 1795744899.5660648,
-    "ast_hash": "10b0337e9cc663386c13db6378c05e81",
-    "semantic_hash": "10b0337e9cc663386c13db6378c05e81"
+    "mtime": 1795750589.2668643,
+    "seen": 1795751148.703686,
+    "ast_hash": "5cdc77ad587af393803359db4050e925",
+    "semantic_hash": "5cdc77ad587af393803359db4050e925"
   },
   "src/app/(app)/thiet-bi/page.tsx": {
     "mtime": 1795620335.1519332,
@@ -547,10 +547,10 @@
     "ast_empty": true
   },
   "data/simulation_digest_history.json": {
-    "mtime": 1795744936.8579085,
-    "seen": 1795744950.3820353,
-    "ast_hash": "9f14e6c1f11a90d2b8d44479db947736",
-    "semantic_hash": "9f14e6c1f11a90d2b8d44479db947736",
+    "mtime": 1795750682.7175524,
+    "seen": 1795751148.6911693,
+    "ast_hash": "f0ae9543d5c73833ce14260fb488c2a8",
+    "semantic_hash": "f0ae9543d5c73833ce14260fb488c2a8",
     "ast_empty": true
   },
   "scripts/generate_email_preview.ts": {
@@ -843,8 +843,8 @@
     "semantic_hash": "1158df810960134418b3bd3023e66896"
   },
   "data/research_projects.json": {
-    "mtime": 1795744937.7408783,
-    "seen": 1795744950.3820353,
+    "mtime": 1795750601.1366267,
+    "seen": 1795751148.6911693,
     "ast_hash": "612314a6fd2c636a57bc30e53a7c92eb",
     "semantic_hash": "612314a6fd2c636a57bc30e53a7c92eb",
     "ast_empty": true
