@@ -14,6 +14,18 @@ describe('Quy tắc bảo mật Email ngoài nhân sự CECICS', () => {
     expect(isCecicsInternalStaff('cuongnt.ttmpls@pnt.edu.vn')).toBe(true);
   });
 
+  it('xác định giảng viên có FTE 50% tại CECICS (Võ Thị Tố Uyên, Đặng Công Duy) là thành viên nhận thông tin nội bộ', () => {
+    expect(isCecicsInternalStaff('uyen_vtt@pnt.edu.vn')).toBe(true);
+    expect(isCecicsInternalStaff('uyenvtt@pnt.edu.vn')).toBe(true);
+    expect(isCecicsInternalStaff('duydc@pnt.edu.vn')).toBe(true);
+    const resUyên = validateInternalRecipient('uyen_vtt@pnt.edu.vn');
+    expect(resUyên.allowed).toBe(true);
+    expect(resUyên.isInternal).toBe(true);
+    const resDuy = validateInternalRecipient('duydc@pnt.edu.vn');
+    expect(resDuy.allowed).toBe(true);
+    expect(resDuy.isInternal).toBe(true);
+  });
+
   it('xác định thanhdtn@pnt.edu.vn là email ngoài nhân sự CECICS', () => {
     expect(isCecicsInternalStaff('thanhdtn@pnt.edu.vn')).toBe(false);
   });

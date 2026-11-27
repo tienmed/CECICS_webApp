@@ -28,12 +28,22 @@ export const CECICS_OFFICIAL_STAFF_EMAILS: readonly string[] = Object.freeze([
 ]);
 
 /**
- * Kiểm tra một địa chỉ email có thuộc nhân sự nội bộ Trung tâm CECICS hay không.
+ * Danh sách giảng viên liên kết kiêm nhiệm FTE (ví dụ: FTE 50% tại CECICS)
+ * Được công nhận là thành viên của CECICS để nhận thông tin chung/nội bộ tự động.
+ */
+export const CECICS_AFFILIATED_STAFF_EMAILS: readonly string[] = Object.freeze([
+  'uyen_vtt@pnt.edu.vn',
+  'uyenvtt@pnt.edu.vn',
+  'duydc@pnt.edu.vn',
+]);
+
+/**
+ * Kiểm tra một địa chỉ email có thuộc nhân sự nội bộ Trung tâm CECICS (18 CBNV chính thức hoặc GV FTE 50% kiêm nhiệm) hay không.
  */
 export function isCecicsInternalStaff(email: string | null | undefined): boolean {
   if (!email) return false;
   const normalized = email.trim().toLowerCase();
-  return CECICS_OFFICIAL_STAFF_EMAILS.includes(normalized);
+  return CECICS_OFFICIAL_STAFF_EMAILS.includes(normalized) || CECICS_AFFILIATED_STAFF_EMAILS.includes(normalized);
 }
 
 /**
