@@ -1,20 +1,110 @@
 [
-  { "stt": 1, "ho_ten": "Nguyễn Ngọc Phương Thư", "email": "nguyenngocphuongthu@pnt.edu.vn", "role": "Trưởng Trung tâm" },
-  { "stt": 2, "ho_ten": "Bùi Phan Quỳnh Phương", "email": "bsquynhphuong@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 3, "ho_ten": "Nguyễn Thị Mỹ Linh", "email": "linhntm@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 4, "ho_ten": "Trịnh Trung Tiến", "email": "bstien@pnt.edu.vn", "role": "Admin / Nhân sự CECICS" },
-  { "stt": 5, "ho_ten": "Cao Thị Ngọc Bích", "email": "bichctn@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 6, "ho_ten": "Nguyễn Minh Luân", "email": "bsminhluan@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 7, "ho_ten": "Nguyễn Thị Thu Thủy", "email": "thuyntt.ttmpls@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 8, "ho_ten": "Châu Thị Kiều Chinh", "email": "chinhctk.ttmpls@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 9, "ho_ten": "Phạm Nguyễn Tường Vân", "email": "vanpnt@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 10, "ho_ten": "Nguyễn Như Quỳnh", "email": "quynhnn@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 11, "ho_ten": "Trần Tú Trinh", "email": "trinhtt@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 12, "ho_ten": "Cao Tấn Tải", "email": "taict@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 13, "ho_ten": "Nguyễn Hữu Nhân", "email": "huu_nhan@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 14, "ho_ten": "Nguyễn Thị Kiều Trang", "email": "trangntk@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 15, "ho_ten": "Nguyễn Thái Cường", "email": "cuongnt.ttmpls@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 16, "ho_ten": "Nguyễn Thị Lan Anh", "email": "anhntl@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 17, "ho_ten": "Mai Trần Thái Pháp", "email": "phapmtt@pnt.edu.vn", "role": "Nhân sự CECICS" },
-  { "stt": 18, "ho_ten": "Trần Thái Thiên Thư", "email": "thuttt@pnt.edu.vn", "role": "Nhân sự CECICS" }
+  {
+    "stt": 1,
+    "ho_ten": "Nguyễn Ngọc Phương Thư",
+    "email": "nguyenngocphuongthu@pnt.edu.vn",
+    "role": "Trưởng Trung tâm"
+  },
+  {
+    "stt": 2,
+    "ho_ten": "Bùi Phan Quỳnh Phương",
+    "email": "bsquynhphuong@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 3,
+    "ho_ten": "Nguyễn Thị Mỹ Linh",
+    "email": "linhntm@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 4,
+    "ho_ten": "Trịnh Trung Tiến",
+    "email": "bstien@pnt.edu.vn",
+    "role": "Admin / Nhân sự CECICS"
+  },
+  {
+    "stt": 5,
+    "ho_ten": "Cao Thị Ngọc Bích",
+    "email": "bichctn@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 6,
+    "ho_ten": "Nguyễn Minh Luân",
+    "email": "bsminhluan@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 7,
+    "ho_ten": "Nguyễn Thị Thu Thủy",
+    "email": "thuyntt.ttmpls@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 8,
+    "ho_ten": "Châu Thị Kiều Chinh",
+    "email": "chinhctk.ttmpls@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 9,
+    "ho_ten": "Phạm Nguyễn Tường Vân",
+    "email": "vanpnt@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 10,
+    "ho_ten": "Nguyễn Như Quỳnh",
+    "email": "quynhnn@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 11,
+    "ho_ten": "Trần Tú Trinh",
+    "email": "trinhtt@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 12,
+    "ho_ten": "Cao Tấn Tải",
+    "email": "taict@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 13,
+    "ho_ten": "ThS.ĐD. Nguyễn Hữu Nhân",
+    "email": "huu_nhan@pnt.edu.vn",
+    "role": "ThS.ĐD. / Nhân sự CECICS"
+  },
+  {
+    "stt": 14,
+    "ho_ten": "Nguyễn Thị Kiều Trang",
+    "email": "trangntk@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 15,
+    "ho_ten": "Nguyễn Thái Cường",
+    "email": "cuongnt.ttmpls@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 16,
+    "ho_ten": "Nguyễn Thị Lan Anh",
+    "email": "anhntl@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 17,
+    "ho_ten": "Mai Trần Thái Pháp",
+    "email": "phapmtt@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  },
+  {
+    "stt": 18,
+    "ho_ten": "Trần Thái Thiên Thư",
+    "email": "thuttt@pnt.edu.vn",
+    "role": "Nhân sự CECICS"
+  }
 ]
