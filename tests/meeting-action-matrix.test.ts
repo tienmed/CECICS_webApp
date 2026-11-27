@@ -10,10 +10,11 @@ describe('CECICS Meeting Minutes & Action Matrix Task Board - Standardized Profi
 
     const latest = minutes[0];
     expect(latest.tieu_de).toContain('Cuộc họp giao ban và phân công nhiệm vụ chuyên môn CECICS');
-    expect(latest.ngay_hop).toBe('2026-11-27');
+    expect(latest.ngay_hop).toBe('2026-11-25');
+    expect(latest.gio_bd).toBe('14:00');
     
-    // Kiểm tra danh xưng và vai trò chuẩn hóa của Chủ trì (Trưởng Trung tâm) và Thư ký (Vân)
-    expect(latest.chu_tri).toBe('TS.BS. Nguyễn Ngọc Phương Thư');
+    // Kiểm tra danh xưng và vai trò chuẩn hóa của Chủ trì (Bùi Phan Quỳnh Phương) và Thư ký (Vân)
+    expect(latest.chu_tri).toBe('ThS.BS.CKII. Bùi Phan Quỳnh Phương');
     expect(latest.thu_ky).toBe('CN. Phạm Nguyễn Tường Vân');
     expect(latest.nguoi_tao).toBe('vanpnt@pnt.edu.vn');
     

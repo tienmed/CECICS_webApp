@@ -5,9 +5,9 @@
 ---
 
 ## I. THÔNG TIN CHUNG
-- **Thời gian**: 08:30 ngày 27/11/2026.
+- **Thời gian**: 14:00 ngày 25/11/2026.
 - **Địa điểm**: Lầu 5 khu D - Tân Nhựt.
-- **Chủ trì**: **TS.BS. Nguyễn Ngọc Phương Thư** – Trưởng Trung tâm CECICS.
+- **Chủ trì**: **ThS.BS.CKII. Bùi Phan Quỳnh Phương** – Trung tâm CECICS.
 - **Thư ký**: **CN. Phạm Nguyễn Tường Vân** – Cán bộ Hành chính - Thư ký Trung tâm CECICS.
 - **Thành phần tham dự**:
   - Trưởng Trung tâm: **TS.BS. Nguyễn Ngọc Phương Thư**.
@@ -61,7 +61,7 @@ Cuộc họp đã thảo luận và thống nhất dự kiến phân công báo 
 
 ---
 
-## III. KẾT LUẬN & CHỈ ĐẠO CỦA TRƯỞNG TRUNG TÂM
+## III. KẾT LUẬN & CHỈ ĐẠO CỦA CHỦ TRÌ CUỘC HỌP
 1. **Tiến độ video SSH & Tài liệu kiểm định**: Yêu cầu ThS.ĐD. Nguyễn Hữu Nhân, ThS.ĐD. Cao Thị Ngọc Bích và ThS.BS. Trần Tú Trinh bám sát hạn chót hoàn thiện hồ sơ chỉnh sửa theo góp ý của Thầy Hội, Cô Kim.
 2. **Quyết định Ủy ban & Biểu phí CME Moulage**: Giao CN. Châu Thị Kiều Chinh và CN. Nguyễn Như Quỳnh hoàn thành hồ sơ trình Trưởng Trung tâm trong tuần tới.
 3. **Biên soạn sách SĐH Điều dưỡng**: ThS.ĐD. Cao Thị Ngọc Bích và ThS.BS. Đặng Công Duy bám sát mốc tiến độ tháng 11/2026.
@@ -101,7 +101,7 @@ Cuộc họp đã thảo luận và thống nhất dự kiến phân công báo 
 
 ---
 
-| **THƯ KÝ CUỘC HỌP** | **TRƯỞNG TRUNG TÂM** |
+| **THƯ KÝ CUỘC HỌP** | **CHỦ TRÌ CUỘC HỌP** |
 | :---: | :---: |
 | *(Đã ký số)* | *(Đã ký số)* |
-| **CN. Phạm Nguyễn Tường Vân** | **TS.BS. Nguyễn Ngọc Phương Thư** |
+| **CN. Phạm Nguyễn Tường Vân** | **ThS.BS.CKII. Bùi Phan Quỳnh Phương** |
