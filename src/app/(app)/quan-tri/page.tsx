@@ -388,15 +388,6 @@ export default function AdminPage() {
                         >
                           Sửa
                         </button>
-                        {u.user_id !== 'U-CECICS-ALL' && (
-                          <button
-                            onClick={() => deleteUser(u)}
-                            className="text-xs text-rose-600 hover:underline font-medium hover:text-rose-800"
-                            title="Xóa người dùng"
-                          >
-                            Xóa
-                          </button>
-                        )}
                       </td>
                     )}
                   </tr>
