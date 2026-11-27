@@ -1,61 +1,73 @@
 import { describe, it, expect } from 'vitest';
 import { getStoredMeetingMinutes, getStoredMeetingTasks } from '../src/lib/meeting-storage';
 import officialStaffList from '../data/cecics_official_staff.json';
+import { CECICS_AFFILIATED_STAFF_EMAILS } from '../src/core/cecics-staff';
 
-describe('CECICS Meeting Minutes & Action Matrix Task Board', () => {
-  it('phải tải được danh sách biên bản họp với đầy đủ thông tin chuẩn 4 phần', () => {
+describe('CECICS Meeting Minutes & Action Matrix Task Board - Standardized Profiles', () => {
+  it('phải tải được danh sách biên bản họp với danh xưng chuẩn hóa chính xác theo profile', () => {
     const minutes = getStoredMeetingMinutes();
     expect(minutes.length).toBeGreaterThan(0);
 
     const latest = minutes[0];
     expect(latest.tieu_de).toContain('Cuộc họp giao ban và phân công nhiệm vụ chuyên môn CECICS');
     expect(latest.ngay_hop).toBe('2026-11-27');
-    expect(latest.chu_tri).toBe('Nguyễn Ngọc Phương Thư');
-    expect(latest.thu_ky).toBe('Trần Tú Trinh');
-    expect(latest.thanh_phan).toContain('Nguyễn Ngọc Phương Thư');
-    expect(latest.thanh_phan).toContain('Cao Thị Ngọc Bích');
-    expect(latest.thanh_phan).toContain('Trần Tú Trinh');
+    
+    // Kiểm tra danh xưng chuẩn hóa của Chủ trì và Thư ký
+    expect(latest.chu_tri).toBe('TS.BS. Nguyễn Ngọc Phương Thư');
+    expect(latest.thu_ky).toBe('ThS.BS. Trần Tú Trinh');
+    
+    // Kiểm tra thành phần tham dự
+    expect(latest.thanh_phan).toContain('TS.BS. Nguyễn Ngọc Phương Thư');
+    expect(latest.thanh_phan).toContain('BS.CKII. Trịnh Trung Tiến');
+    expect(latest.thanh_phan).toContain('ThS.BS.CKII. Bùi Phan Quỳnh Phương');
+    expect(latest.thanh_phan).toContain('ThS.ĐD. Cao Thị Ngọc Bích');
+    expect(latest.thanh_phan).toContain('ThS.BS. Võ Thị Tố Uyên');
+    expect(latest.thanh_phan).toContain('ThS.BS. Đặng Công Duy');
   });
 
-  it('phải đồng bộ đầy đủ 21 đầu việc phân công chi tiết cho các nhân sự', () => {
+  it('phải đồng bộ đầy đủ 21 đầu việc với danh xưng chuẩn hóa', () => {
     const tasks = getStoredMeetingTasks();
     expect(tasks.length).toBe(21);
 
-    // Kiểm tra task video SSH
-    const sshTask = tasks.find((t) => t.tieu_de.includes('video') && t.tieu_de.includes('SSH'));
-    expect(sshTask).toBeDefined();
-    expect(sshTask?.nguoi_phu_trach).toBe('Nguyễn Hữu Nhân');
-    expect(sshTask?.assignee_user_id).toBe('huu_nhan@pnt.edu.vn');
-    expect(sshTask?.muc_do_uu_tien).toBe('Cao');
+    // 1. BS.CKII. Trịnh Trung Tiến
+    const tienTasks = tasks.filter((t) => t.nguoi_phu_trach === 'BS.CKII. Trịnh Trung Tiến');
+    expect(tienTasks.length).toBe(2);
+    expect(tienTasks[0].assignee_user_id).toBe('bstien@pnt.edu.vn');
 
-    // Kiểm tra task kiểm định chất lượng (góp ý Thầy Hội, Cô Kim)
-    const auditTask = tasks.find((t) => t.tieu_de.includes('kiểm định'));
-    expect(auditTask).toBeDefined();
-    expect(auditTask?.nguoi_phu_trach).toBe('Trần Tú Trinh');
-    expect(auditTask?.assignee_user_id).toBe('trinhtt@pnt.edu.vn');
+    // 2. TS.BS. Nguyễn Ngọc Phương Thư
+    const thuTasks = tasks.filter((t) => t.nguoi_phu_trach === 'TS.BS. Nguyễn Ngọc Phương Thư');
+    expect(thuTasks.length).toBe(1);
+    expect(thuTasks[0].assignee_user_id).toBe('nguyenngocphuongthu@pnt.edu.vn');
 
-    // Kiểm tra task viết sách Sau Đại học Điều dưỡng (hạn tháng 11/2026)
-    const bookTask = tasks.find((t) => t.tieu_de.includes('Sau Đại học Điều dưỡng'));
-    expect(bookTask).toBeDefined();
-    expect(bookTask?.nguoi_phu_trach).toBe('Cao Thị Ngọc Bích');
-    expect(bookTask?.deadline).toBe('2026-11-30');
+    // 3. ThS.BS.CKII. Bùi Phan Quỳnh Phương
+    const phuongTasks = tasks.filter((t) => t.nguoi_phu_trach === 'ThS.BS.CKII. Bùi Phan Quỳnh Phương');
+    expect(phuongTasks.length).toBe(1);
+    expect(phuongTasks[0].assignee_user_id).toBe('bsquynhphuong@pnt.edu.vn');
 
-    // Kiểm tra task Tiền Hội nghị KHCN 2027
-    const preConfTasks = tasks.filter((t) => t.tieu_de.includes('Tiền Hội nghị KHCN XX'));
-    expect(preConfTasks.length).toBe(4);
+    // 4. ThS.BS. Võ Thị Tố Uyên & ThS.BS. Đặng Công Duy
+    const uyenTasks = tasks.filter((t) => t.nguoi_phu_trach === 'ThS.BS. Võ Thị Tố Uyên');
+    expect(uyenTasks.length).toBe(2);
+    expect(uyenTasks[0].assignee_user_id).toBe('uyen_vtt@pnt.edu.vn');
 
-    // Kiểm tra task Hội nghị chính thức KHCN 2027 (loại trừ Tiền Hội nghị)
-    const mainConfTasks = tasks.filter((t) => t.tieu_de.includes('Hội nghị KHCN XX') && !t.tieu_de.includes('Tiền Hội nghị'));
-    expect(mainConfTasks.length).toBe(10);
+    const duyTasks = tasks.filter((t) => t.nguoi_phu_trach === 'ThS.BS. Đặng Công Duy');
+    expect(duyTasks.length).toBe(1);
+    expect(duyTasks[0].assignee_user_id).toBe('duydc@pnt.edu.vn');
+
+    // 5. ThS.ĐD. Cao Thị Ngọc Bích
+    const bichTasks = tasks.filter((t) => t.nguoi_phu_trach === 'ThS.ĐD. Cao Thị Ngọc Bích');
+    expect(bichTasks.length).toBe(1);
+    expect(bichTasks[0].deadline).toBe('2026-11-30');
   });
 
-  it('phải khớp chính xác email công vụ đối với các nhân sự thuộc 18 cán bộ chính thức CECICS', () => {
+  it('phải khớp chính xác email công vụ đối với các nhân sự thuộc CECICS (18 CBNV chính thức hoặc GV FTE 50%)', () => {
     const tasks = getStoredMeetingTasks();
     const cecicsStaffEmails = officialStaffList.map((s) => s.email);
+    const affiliatedEmails = [...CECICS_AFFILIATED_STAFF_EMAILS];
+    const allValidEmails = [...cecicsStaffEmails, ...affiliatedEmails];
 
     for (const task of tasks) {
       if (task.assignee_user_id) {
-        expect(cecicsStaffEmails).toContain(task.assignee_user_id);
+        expect(allValidEmails).toContain(task.assignee_user_id);
       }
     }
   });
