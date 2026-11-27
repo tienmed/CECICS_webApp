@@ -124,7 +124,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
         decision: 'Đã duyệt',
         ghi_chu_hanh_chinh: 'Kế hoạch hợp lệ theo khung chương trình.',
       },
-      'thunnp@pnt.edu.vn',
+      'nguyenngocphuongthu@pnt.edu.vn',
       fixedNow
     ).data as SimClassRecord;
 
@@ -141,10 +141,10 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
         decision: 'Đã duyệt',
         room_ids: ['P-HH-101'],
         equipment_ids: ['SA-01-01'],
-        ktv_phu_trach: 'U-2026-0006',
+        ktv_phu_trach: 'U-2026-0030',
         ghi_chu_ky_thuat: 'Đã chuẩn bị máy tại P.HH-101',
       },
-      'kythuat@pnt.edu.vn',
+      'taict@pnt.edu.vn',
       fixedNow
     ).data as SimClassRecord;
 
@@ -186,7 +186,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
           room_ids: ['P-HH-101'],
           equipment_ids: ['CPR-04-02'],
         },
-        'kythuat@pnt.edu.vn',
+        'taict@pnt.edu.vn',
         fixedNow
       )
     ).toThrowError(DomainError);
@@ -202,7 +202,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
       store,
       'sendSimClassReminder',
       { sim_id: targetSimId },
-      'thunnp@pnt.edu.vn',
+      'nguyenngocphuongthu@pnt.edu.vn',
       fixedNow
     ).data as SimClassRecord;
 
@@ -235,7 +235,7 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
       store,
       'sendSimClassReminder',
       { sim_id: targetSimId },
-      'thunnp@pnt.edu.vn',
+      'nguyenngocphuongthu@pnt.edu.vn',
       fixedNow
     );
 
@@ -266,9 +266,9 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
     const db = store.getAll();
 
     const userCDHA = db.Users.find((u) => u.email === 'vuphammd@pnt.edu.vn')!;
-    const userNoi = db.Users.find((u) => u.email === 'bomon.noi@pnt.edu.vn')!;
-    const adminUser = db.Users.find((u) => u.email === 'admin@pnt.edu.vn')!;
-    const techUser = db.Users.find((u) => u.email === 'kythuat@pnt.edu.vn')!;
+    const userNoi = db.Users.find((u) => u.email === 'linhntm@pnt.edu.vn')!;
+    const adminUser = db.Users.find((u) => u.email === 'bstien@pnt.edu.vn')!;
+    const techUser = db.Users.find((u) => u.email === 'taict@pnt.edu.vn')!;
 
     const simCDHA = db.SimClasses.find((s) => s.sim_id === 'MP-2026-0004')!; // BM-CDHA
     const simNoi = db.SimClasses.find((s) => s.sim_id === 'MP-2026-0001')!;  // BM-NOI
@@ -399,12 +399,12 @@ describe('Quy trình Đăng ký Lớp Mô phỏng & Phê duyệt Song song (3 M�
         decision: 'Đã duyệt',
         room_ids: ['P-HH-101'],
         equipment_ids: ['SA-01-01'],
-        ktv_phu_trach: 'U-2026-0006',
+        ktv_phu_trach: 'U-2026-0030',
         session_overrides: [
-          { buoi_so: 2, room_id: 'P-HH-102', ktv_phu_trach: 'U-2026-0006' },
+          { buoi_so: 2, room_id: 'P-HH-102', ktv_phu_trach: 'U-2026-0030' },
         ],
       },
-      'kythuat@pnt.edu.vn',
+      'taict@pnt.edu.vn',
       fixedNow
     ).data as SimClassRecord;
 

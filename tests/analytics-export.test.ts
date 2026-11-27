@@ -27,7 +27,7 @@ describe('Analytics & Multi-Room Hours Attribution', () => {
       calendar_event_id: '',
       rsvp: 'Chấp nhận',
       ghi_chu: 'Dạy bù cho buổi ngày 05/11',
-      tao_boi: 'admin@pnt.edu.vn',
+      tao_boi: 'bstien@pnt.edu.vn',
       cap_nhat_luc: '2026-11-15T08:00:00Z',
     });
 
@@ -69,7 +69,7 @@ describe('Analytics & Multi-Room Hours Attribution', () => {
         calendar_event_id: '',
         rsvp: '',
         ghi_chu: '',
-        tao_boi: 'admin@pnt.edu.vn',
+        tao_boi: 'bstien@pnt.edu.vn',
         cap_nhat_luc: '2026-11-12T13:00:00Z',
       },
       {
@@ -89,7 +89,7 @@ describe('Analytics & Multi-Room Hours Attribution', () => {
         calendar_event_id: '',
         rsvp: '',
         ghi_chu: 'Ca dạy bù',
-        tao_boi: 'admin@pnt.edu.vn',
+        tao_boi: 'bstien@pnt.edu.vn',
         cap_nhat_luc: '2026-11-14T08:00:00Z',
       }
     );
@@ -179,7 +179,7 @@ describe('Dual-Key Verification Locks State Machine', () => {
         layer1_by: 'BS. Nội Khoa',
         layer1_at: '2026-11-20T08:00:00Z',
       },
-      'admin@pnt.edu.vn'
+      'bstien@pnt.edu.vn'
     ).data as VerificationLockRecord;
     expect(res1.layer1_locked).toBe(true);
     expect(res1.layer2_locked).toBe(false);
@@ -197,7 +197,7 @@ describe('Dual-Key Verification Locks State Machine', () => {
         layer2_by: 'Lãnh đạo CECICS',
         layer2_at: '2026-11-20T09:00:00Z',
       },
-      'admin@pnt.edu.vn'
+      'bstien@pnt.edu.vn'
     ).data as VerificationLockRecord;
     expect(res2.layer1_locked).toBe(true);
     expect(res2.layer2_locked).toBe(true);
@@ -215,7 +215,7 @@ describe('Dual-Key Verification Locks State Machine', () => {
         unlock_requested: true,
         unlock_reason: 'Cần bổ sung ca thi trạm OSCE',
       },
-      'admin@pnt.edu.vn'
+      'bstien@pnt.edu.vn'
     ).data as VerificationLockRecord;
     expect(res3.layer1_locked).toBe(false);
     expect(res3.unlock_requested).toBe(true);
@@ -233,7 +233,7 @@ describe('Dual-Key Verification Locks State Machine', () => {
         unlock_requested: false,
         unlock_reason: '',
       },
-      'admin@pnt.edu.vn'
+      'bstien@pnt.edu.vn'
     ).data as VerificationLockRecord;
     expect(res4.layer1_locked).toBe(false);
     expect(res4.layer2_locked).toBe(false);

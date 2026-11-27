@@ -24,6 +24,7 @@ const ALLOWED_ACTIONS: ActionName[] = [
   'runDailyChecks',
   'markNotificationsRead',
   'upsertUser',
+  'deleteUser',
   'upsertRoom',
   'upsertDepartment',
   'upsertTarget',

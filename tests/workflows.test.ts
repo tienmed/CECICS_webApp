@@ -34,9 +34,9 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
 
   it('kiểm tra quyền đăng nhập domain @pnt.edu.vn và whitelist email ngoài', () => {
     const db = buildMockSeed(fixedNow);
-    expect(evaluateLoginAccess('daotao@pnt.edu.vn', db.Users).allowed).toBe(true);
+    expect(evaluateLoginAccess('bstien@pnt.edu.vn', db.Users).allowed).toBe(true);
     // GV thỉnh giảng Gmail ngoài có trong whitelist
-    expect(evaluateLoginAccess('gv.thinhgiang@gmail.com', db.Users).allowed).toBe(true);
+    expect(evaluateLoginAccess('thanhdtn@pnt.edu.vn', db.Users).allowed).toBe(true);
     // Email lạ không có trong danh sách
     expect(evaluateLoginAccess('nguoila@gmail.com', db.Users).allowed).toBe(false);
   });
@@ -51,7 +51,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       store,
       'assignRoom',
       { session_id: pendingSession.session_id, room_id: 'P-TN-101' },
-      'hanhchinh@pnt.edu.vn',
+      'quynhnn@pnt.edu.vn',
       fixedNow
     );
     expect((resTN.data as { room_id: string }).room_id).toBe('P-TN-101');
@@ -63,7 +63,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       store,
       'assignRoom',
       { session_id: pendingSession.session_id, room_id: 'P-HH-201' },
-      'hanhchinh@pnt.edu.vn',
+      'quynhnn@pnt.edu.vn',
       fixedNow
     );
     expect((resHH.data as { room_id: string }).room_id).toBe('P-HH-201');
@@ -127,7 +127,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         noi_dung: 'Lớp bổ sung cấp cứu',
         so_hoc_vien: 15,
       },
-      'bomon.noi@pnt.edu.vn',
+      'linhntm@pnt.edu.vn',
       fixedNow
     ).data as { sim_id: string; trang_thai: string; dang_ky_tre: boolean };
 
@@ -139,7 +139,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       store,
       'approveLateSimClass',
       { sim_id: created.sim_id, decision: 'approve', ghi_chu: 'Đồng ý hỗ trợ' },
-      'kythuat@pnt.edu.vn',
+      'nguyenngocphuongthu@pnt.edu.vn',
       fixedNow
     );
 
@@ -154,7 +154,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
           room_id: 'P-HH-101',
           equipment_ids: ['CPR-04-02'],
         },
-        'ktv.hung@pnt.edu.vn',
+        'taict@pnt.edu.vn',
         fixedNow
       )
     ).toThrowError(DomainError);
@@ -169,7 +169,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         room_id: 'P-HH-101',
         equipment_ids: ['CPR-04-01'],
       },
-      'ktv.hung@pnt.edu.vn',
+      'taict@pnt.edu.vn',
       fixedNow
     ).data as { trang_thai: string };
     expect(reviewed.trang_thai).toBe('Đã duyệt');
@@ -186,7 +186,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         mo_ta: 'Hỏng nguồn bo mạch chính',
         danh_gia: 'Không kịp',
       },
-      'ktv.hung@pnt.edu.vn',
+      'taict@pnt.edu.vn',
       fixedNow
     ).data as { impacts: { impact_id: string; sim_id: string }[] };
 
@@ -197,7 +197,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       store,
       'confirmIncidentImpact',
       { impact_id: impactId, phuong_an: 'Đổi mô hình' },
-      'bomon.noi@pnt.edu.vn',
+      'linhntm@pnt.edu.vn',
       fixedNow
     );
     const saved = store.getAll().IncidentImpacts.find((i) => i.impact_id === impactId)!;
@@ -225,14 +225,14 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       expect(pendingEsc.some((e) => e.doi_tuong_id === pastSession.session_id)).toBe(false);
     }
 
-    executeAction(store, 'runDailyChecks', {}, 'admin@pnt.edu.vn', fixedNow);
+    executeAction(store, 'runDailyChecks', {}, 'bstien@pnt.edu.vn', fixedNow);
     const openEsc = db.Escalations.find((e) => e.trang_thai === 'Đang mở')!;
 
     executeAction(
       store,
       'resolveEscalation',
       { esc_id: openEsc.esc_id, hanh_dong_ld: 'Chỉ đạo', y_kien: 'Ưu tiên xử lý trong ngày mai.' },
-      'truongtt@pnt.edu.vn',
+      'nguyenngocphuongthu@pnt.edu.vn',
       fixedNow
     );
     const resolved = db.Escalations.find((e) => e.esc_id === openEsc.esc_id)!;
@@ -252,7 +252,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
   it('chỉ Admin mới được vào phân hệ Quản trị và phân quyền vai trò ADMIN cho người khác', () => {
     const store = createMemoryStore(buildMockSeed(fixedNow));
     const db = store.getAll();
-    const target = db.Users.find((u) => u.email === 'hanhchinh@pnt.edu.vn')!;
+    const target = db.Users.find((u) => u.email === 'quynhnn@pnt.edu.vn')!;
 
     // Hành chính (không phải Admin) không được phép phân quyền hoặc sửa người dùng
     expect(() =>
@@ -260,7 +260,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         store,
         'upsertUser',
         { user_id: target.user_id, email: target.email, vai_tro: [...target.vai_tro, 'ADMIN'] },
-        'hanhchinh@pnt.edu.vn',
+        'quynhnn@pnt.edu.vn',
         fixedNow
       )
     ).toThrowError(DomainError);
@@ -270,7 +270,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
       store,
       'upsertUser',
       { user_id: target.user_id, email: target.email, vai_tro: [...target.vai_tro, 'ADMIN'] },
-      'admin@pnt.edu.vn',
+      'bstien@pnt.edu.vn',
       fixedNow
     ).data as { vai_tro: string[] };
     expect(updated.vai_tro).toContain('ADMIN');
@@ -362,7 +362,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         noi_dung: 'Mô phỏng đa trạm OSCE cấp cứu',
         so_hoc_vien: 30,
       },
-      'bomon.noi@pnt.edu.vn',
+      'linhntm@pnt.edu.vn',
       fixedNow
     ).data as { sim_id: string };
 
@@ -375,7 +375,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         room_ids: ['P-HH-101', 'P-HH-102'],
         equipment_ids: ['CPR-04-01'],
       },
-      'ktv.hung@pnt.edu.vn',
+      'taict@pnt.edu.vn',
       fixedNow
     ).data as { room_id: string; trang_thai: string };
 
@@ -401,7 +401,7 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
         gio_bd: '14:00',
         gio_kt: '16:30',
       },
-      'daotao@pnt.edu.vn',
+      'bstien@pnt.edu.vn',
       fixedNow
     );
 
@@ -410,5 +410,49 @@ describe('Luồng nghiệp vụ MVP CECICS', () => {
     expect(updated.ngay).toBe(newDate);
     expect(updated.gio_bd).toBe('14:00');
     expect(updated.gio_kt).toBe('16:30');
+  });
+
+  it('hỗ trợ Admin xóa người dùng khỏi hệ thống và chặn tự xóa chính mình', () => {
+    const store = createMemoryStore(buildMockSeed(fixedNow));
+    const created = executeAction(
+      store,
+      'upsertUser',
+      { email: 'temp.user@pnt.edu.vn', ho_ten: 'Người dùng tạm', vai_tro: ['GIANG_VIEN'] },
+      'bstien@pnt.edu.vn',
+      fixedNow
+    ).data as { user_id: string; email: string };
+
+    expect(store.getAll().Users.some((u) => u.user_id === created.user_id)).toBe(true);
+
+    expect(() =>
+      executeAction(
+        store,
+        'deleteUser',
+        { user_id: 'U-2027-0013' },
+        'bstien@pnt.edu.vn',
+        fixedNow
+      )
+    ).toThrowError('Không thể tự xóa tài khoản của chính mình.');
+
+    expect(() =>
+      executeAction(
+        store,
+        'deleteUser',
+        { user_id: 'U-CECICS-ALL' },
+        'bstien@pnt.edu.vn',
+        fixedNow
+      )
+    ).toThrowError('Không được phép xóa tài khoản danh sách toàn thể Trung tâm CECICS.');
+
+    const deleted = executeAction(
+      store,
+      'deleteUser',
+      { user_id: created.user_id },
+      'bstien@pnt.edu.vn',
+      fixedNow
+    ).data as { deleted_id: string };
+
+    expect(deleted.deleted_id).toBe(created.user_id);
+    expect(store.getAll().Users.some((u) => u.user_id === created.user_id)).toBe(false);
   });
 });

@@ -126,6 +126,11 @@ export default function AdminPage() {
     if (res.ok) setUserModal(false);
   }
 
+  async function deleteUser(target: (typeof db.Users)[number]) {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa người dùng "${target.ho_ten}" (${target.email}) khỏi hệ thống?`)) return;
+    await execute('deleteUser', { user_id: target.user_id }, `Đã xóa người dùng ${target.ho_ten}.`);
+  }
+
   async function saveRoom(e: React.FormEvent) {
     e.preventDefault();
     const res = await execute('upsertRoom', rForm, 'Đã lưu thông tin phòng học.');
@@ -303,6 +308,15 @@ export default function AdminPage() {
                         >
                           Sửa
                         </button>
+                        {u.user_id !== 'U-CECICS-ALL' && (
+                          <button
+                            onClick={() => deleteUser(u)}
+                            className="text-xs text-rose-600 hover:underline font-medium hover:text-rose-800"
+                            title="Xóa người dùng"
+                          >
+                            Xóa
+                          </button>
+                        )}
                       </td>
                     )}
                   </tr>
@@ -374,6 +388,15 @@ export default function AdminPage() {
                         >
                           Sửa
                         </button>
+                        {u.user_id !== 'U-CECICS-ALL' && (
+                          <button
+                            onClick={() => deleteUser(u)}
+                            className="text-xs text-rose-600 hover:underline font-medium hover:text-rose-800"
+                            title="Xóa người dùng"
+                          >
+                            Xóa
+                          </button>
+                        )}
                       </td>
                     )}
                   </tr>

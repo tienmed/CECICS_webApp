@@ -86,6 +86,17 @@ Quản lý tập trung tại `data/research_projects.json` và phân hệ `/nghi
 * Công cụ: *“Bộ công cụ đánh giá độ giá trị nội dung CVI-CVR cho các trạm thi lâm sàng”*.
 * Báo cáo tiến độ và nghiệm thu định kỳ gửi về **Phòng Quản lý Nghiên cứu Khoa học và Hợp tác Quốc tế** (`nckh.htqt@pnt.edu.vn`).
 
+### C. Quy Trình Thẩm Định Bảng Kiểm OSCE Bằng Chỉ Số CVI - CVR ([P0-CECICS-CVI-CVR-VALIDATION-INVARIANT])
+1. **Mục đích**: Chuẩn hóa ngân hàng trạm thi chạy trạm OSCE và kịch bản mô phỏng lâm sàng, loại bỏ các tiêu chí đánh giá cảm tính hoặc không thiết yếu.
+2. **Kích hoạt công cụ**: Truy cập phân hệ `/osce` (nút **"📐 Thẩm định CVI - CVR"**) hoặc phân hệ `/nghien-cuu` (tab **"⭐ Chuyên Trang Tuần & Thẩm Định CVI - CVR"**).
+3. **Quy chuẩn chuyên gia**:
+   * Hội đồng chuyên gia y khoa lâm sàng gồm $N = 5 - 12$ chuyên gia.
+   * Chấm điểm Likert 4 mức độ cho từng tiêu chí (1: Không liên quan, 2: Cần chỉnh sửa nhiều, 3: Phù hợp, 4: Thiết yếu).
+4. **Tiêu chí nghiệm thu**:
+   * Tiêu chuẩn đơn lẻ: $I\text{-}CVI \ge 0.78$ và $CVR \ge CVR_{\text{Lawshe}}$ tối thiểu theo số lượng chuyên gia.
+   * Tiêu chuẩn toàn bảng kiểm: $S\text{-}CVI/Ave \ge 0.90$.
+   * Các tiêu chí không đạt hoặc bị khuyến nghị *LOẠI BỎ* bắt buộc phải chỉnh sửa hoặc lược bỏ trước kỳ thi chính thức.
+
 ---
 
 ## 5. Ánh Xạ Graphify Knowledge Graph & Tra Cứu Kiến Trúc Mã Nguồn

@@ -168,10 +168,10 @@
     "semantic_hash": "bbb48267cd52a2bfbd92fca31de136c6"
   },
   "src/app/(app)/quan-tri/page.tsx": {
-    "mtime": 1795167448.7493677,
-    "seen": 1795179905.2082922,
-    "ast_hash": "0dcf68f62bce8147d185a429f552b7dd",
-    "semantic_hash": "0dcf68f62bce8147d185a429f552b7dd"
+    "mtime": 1795744889.5295894,
+    "seen": 1795744899.5660648,
+    "ast_hash": "10b0337e9cc663386c13db6378c05e81",
+    "semantic_hash": "10b0337e9cc663386c13db6378c05e81"
   },
   "src/app/(app)/thiet-bi/page.tsx": {
     "mtime": 1795620335.1519332,
@@ -192,10 +192,10 @@
     "semantic_hash": "b98977790f10e37a801340dbc9e10123"
   },
   "src/app/api/actions/route.ts": {
-    "mtime": 1795604232.442952,
-    "seen": 1795659547.7065148,
-    "ast_hash": "00946de64715d938e3e8ef0de5535e2e",
-    "semantic_hash": "00946de64715d938e3e8ef0de5535e2e"
+    "mtime": 1795744867.7798674,
+    "seen": 1795744899.5680597,
+    "ast_hash": "1ea5fc0422f75a4a22a4fe649239c704",
+    "semantic_hash": "1ea5fc0422f75a4a22a4fe649239c704"
   },
   "src/app/api/ai-advisor/route.ts": {
     "mtime": 1795106603.1695411,
@@ -312,10 +312,10 @@
     "semantic_hash": "9a404c41eea82858f21419685d4f341b"
   },
   "src/core/mutations.ts": {
-    "mtime": 1795696442.3117125,
-    "seen": 1795696637.8596468,
-    "ast_hash": "def3b306befa461d9fe0b8327a33a7ea",
-    "semantic_hash": "def3b306befa461d9fe0b8327a33a7ea"
+    "mtime": 1795744889.4368987,
+    "seen": 1795744899.584288,
+    "ast_hash": "0e8cc78cf6474d2665039408f978e409",
+    "semantic_hash": "0e8cc78cf6474d2665039408f978e409"
   },
   "src/core/permissions.ts": {
     "mtime": 1795611765.6249485,
@@ -384,10 +384,10 @@
     "semantic_hash": "3cdc6345d4c4f3f0cd3f8308284a6cdf"
   },
   "src/lib/mock-seed.ts": {
-    "mtime": 1795710452.741329,
-    "seen": 1795710537.2303133,
-    "ast_hash": "6d1c5375f8207f2f8d90edeb3ee21749",
-    "semantic_hash": "6d1c5375f8207f2f8d90edeb3ee21749"
+    "mtime": 1795744733.577546,
+    "seen": 1795744899.5925307,
+    "ast_hash": "afa1decf4c085db52c2113c9491d6865",
+    "semantic_hash": "afa1decf4c085db52c2113c9491d6865"
   },
   "src/lib/repository.ts": {
     "mtime": 1795661907.2919295,
@@ -408,10 +408,10 @@
     "semantic_hash": "77c5097fbf0b3cc8710ee9416ce251bc"
   },
   "tests/analytics-export.test.ts": {
-    "mtime": 1795170826.2214081,
-    "seen": 1795179905.2082922,
-    "ast_hash": "54ea33655e4ffc30793db22bec67b0eb",
-    "semantic_hash": "54ea33655e4ffc30793db22bec67b0eb"
+    "mtime": 1795744575.899415,
+    "seen": 1795744899.5987914,
+    "ast_hash": "767187e2c8894d93ebeb7ea62e537cc4",
+    "semantic_hash": "767187e2c8894d93ebeb7ea62e537cc4"
   },
   "tests/conflict.test.ts": {
     "mtime": 1795098417.336651,
@@ -432,10 +432,10 @@
     "semantic_hash": "d1a791095d694ba5df65900dc604bc12"
   },
   "tests/workflows.test.ts": {
-    "mtime": 1795689663.9645262,
-    "seen": 1795689719.0516052,
-    "ast_hash": "526878b30902a88229171cbfcb995516",
-    "semantic_hash": "526878b30902a88229171cbfcb995516"
+    "mtime": 1795744915.3564742,
+    "seen": 1795744950.4415333,
+    "ast_hash": "8c7cd089ebcd5d3a4adb800ff7949a70",
+    "semantic_hash": "8c7cd089ebcd5d3a4adb800ff7949a70"
   },
   "tsconfig.json": {
     "mtime": 1795098516.2072532,
@@ -534,23 +534,23 @@
     "semantic_hash": "b8da7361fcd4dda1691be11ef6d55f76"
   },
   "tests/sim-class-workflow.test.ts": {
-    "mtime": 1795714395.4084375,
-    "seen": 1795740134.509725,
-    "ast_hash": "18b96c51726acaf4bac835658cff9c9c",
-    "semantic_hash": "18b96c51726acaf4bac835658cff9c9c"
+    "mtime": 1795744687.5053015,
+    "seen": 1795744899.6054254,
+    "ast_hash": "082c8b0002d8dda8ac8091dfe62d44a3",
+    "semantic_hash": "082c8b0002d8dda8ac8091dfe62d44a3"
   },
   "data/cecics_official_staff.json": {
-    "mtime": 1795612284.4024773,
-    "seen": 1795659547.6953456,
-    "ast_hash": "8cd3a9f0f4fffa4612884a6be2088dc4",
-    "semantic_hash": "8cd3a9f0f4fffa4612884a6be2088dc4",
+    "mtime": 1795742389.4381018,
+    "seen": 1795744899.5526357,
+    "ast_hash": "3752726679dcff216be3cad5aae39dec",
+    "semantic_hash": "3752726679dcff216be3cad5aae39dec",
     "ast_empty": true
   },
   "data/simulation_digest_history.json": {
-    "mtime": 1795742167.2836733,
-    "seen": 1795742319.0740597,
-    "ast_hash": "8972189506968f1a037400f57b1e3b31",
-    "semantic_hash": "8972189506968f1a037400f57b1e3b31",
+    "mtime": 1795744936.8579085,
+    "seen": 1795744950.3820353,
+    "ast_hash": "9f14e6c1f11a90d2b8d44479db947736",
+    "semantic_hash": "9f14e6c1f11a90d2b8d44479db947736",
     "ast_empty": true
   },
   "scripts/generate_email_preview.ts": {
@@ -711,10 +711,10 @@
     "semantic_hash": "0b52da6b260c665907600a8bb028287f"
   },
   "tests/recurring-meetings.test.ts": {
-    "mtime": 1795604366.328083,
-    "seen": 1795659547.7266355,
-    "ast_hash": "dfc0ae2eec6c52c29f421035747143cf",
-    "semantic_hash": "dfc0ae2eec6c52c29f421035747143cf"
+    "mtime": 1795744575.8999927,
+    "seen": 1795744899.603431,
+    "ast_hash": "e99289bee428429b3c2ef92c67f5af48",
+    "semantic_hash": "e99289bee428429b3c2ef92c67f5af48"
   },
   "tests/sheets-date-normalization.test.ts": {
     "mtime": 1795689651.8672068,
@@ -843,10 +843,10 @@
     "semantic_hash": "1158df810960134418b3bd3023e66896"
   },
   "data/research_projects.json": {
-    "mtime": 1795742168.1037333,
-    "seen": 1795742319.0730295,
-    "ast_hash": "124b44d05d3f7363e0e1552e0d22acc4",
-    "semantic_hash": "124b44d05d3f7363e0e1552e0d22acc4",
+    "mtime": 1795744937.7408783,
+    "seen": 1795744950.3820353,
+    "ast_hash": "612314a6fd2c636a57bc30e53a7c92eb",
+    "semantic_hash": "612314a6fd2c636a57bc30e53a7c92eb",
     "ast_empty": true
   },
   "src/app/(app)/nghien-cuu/page.tsx": {
@@ -904,17 +904,17 @@
     "semantic_hash": "4cf4e7206295fc970ce2994a8e84d089"
   },
   "data/meeting_minutes.json": {
-    "mtime": 1795741848.6983242,
-    "seen": 1795742162.5749075,
-    "ast_hash": "03c2b7b9eb9fef33e69aefcf510534cc",
-    "semantic_hash": "03c2b7b9eb9fef33e69aefcf510534cc",
+    "mtime": 1795744017.2866595,
+    "seen": 1795744899.5526357,
+    "ast_hash": "52cda82904772dd2f78e3f762a16b227",
+    "semantic_hash": "52cda82904772dd2f78e3f762a16b227",
     "ast_empty": true
   },
   "data/meeting_tasks.json": {
-    "mtime": 1795741848.7119658,
-    "seen": 1795742162.5749075,
-    "ast_hash": "a48e95a99406da7aa2bd421edd12228d",
-    "semantic_hash": "a48e95a99406da7aa2bd421edd12228d",
+    "mtime": 1795743212.276168,
+    "seen": 1795744899.5526357,
+    "ast_hash": "02076dd5ada0dce0c4da2fdad61aa8aa",
+    "semantic_hash": "02076dd5ada0dce0c4da2fdad61aa8aa",
     "ast_empty": true
   },
   "src/app/api/simulation-digest/route.ts": {
@@ -954,9 +954,9 @@
     "semantic_hash": "f976f48c100cc2859f3e0a2f38135ab0"
   },
   "tests/meeting-action-matrix.test.ts": {
-    "mtime": 1795741874.1060734,
-    "seen": 1795742162.6195657,
-    "ast_hash": "b84259494a530bd38e3302826fa91853",
-    "semantic_hash": "b84259494a530bd38e3302826fa91853"
+    "mtime": 1795744017.3332005,
+    "seen": 1795744899.6019032,
+    "ast_hash": "6732cc42681cd3c68deacf617fe4eb5a",
+    "semantic_hash": "6732cc42681cd3c68deacf617fe4eb5a"
   }
 }

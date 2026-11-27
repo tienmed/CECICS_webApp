@@ -40,8 +40,8 @@ function createInMemoryStore(seed?: DatabaseSnapshot): DataStore {
 
 describe('Tự động sinh chuỗi lịch họp định kỳ Trung tâm CECICS', () => {
   const adminActor: UserRecord = {
-    user_id: 'U-2026-0010',
-    email: 'admin@pnt.edu.vn',
+    user_id: 'U-2027-0013',
+    email: 'bstien@pnt.edu.vn',
     ho_ten: 'Quản trị hệ thống',
     vai_tro: ['ADMIN', 'HANH_CHINH'],
     don_vi: 'HANH_CHINH',

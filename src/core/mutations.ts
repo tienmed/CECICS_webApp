@@ -273,6 +273,7 @@ export type ActionName =
   | 'runDailyChecks'
   | 'markNotificationsRead'
   | 'upsertUser'
+  | 'deleteUser'
   | 'upsertRoom'
   | 'upsertDepartment'
   | 'upsertTarget'
@@ -2032,6 +2033,34 @@ export function executeAction(
       return { data: created };
     }
 
+    case 'deleteUser': {
+      if (!canPerform(actor, 'manage_master_data')) {
+        throw new DomainError('FORBIDDEN', 'Chỉ Quản trị hệ thống (Admin) có quyền xóa người dùng.');
+      }
+      const targetUserId = String(payload.user_id || '').trim();
+      const target = db.Users.find((u) => u.user_id === targetUserId || u.email.toLowerCase() === targetUserId.toLowerCase());
+      if (!target) {
+        throw new DomainError('NOT_FOUND', 'Không tìm thấy người dùng cần xóa.');
+      }
+      if (target.user_id === actor.user_id || target.email.toLowerCase() === actor.email.toLowerCase()) {
+        throw new DomainError('VALIDATION', 'Không thể tự xóa tài khoản của chính mình.');
+      }
+      if (target.user_id === 'U-CECICS-ALL' || target.email.toLowerCase() === 'cecics@pnt.edu.vn') {
+        throw new DomainError('VALIDATION', 'Không được phép xóa tài khoản danh sách toàn thể Trung tâm CECICS.');
+      }
+      if (target.vai_tro.includes(ROLES.ADMIN)) {
+        const otherAdmins = db.Users.filter(
+          (u) => u.user_id !== target.user_id && u.kich_hoat && u.vai_tro.includes(ROLES.ADMIN)
+        );
+        if (otherAdmins.length === 0) {
+          throw new DomainError('VALIDATION', 'Hệ thống phải còn ít nhất 1 tài khoản Admin đang hoạt động.');
+        }
+      }
+      store.removeByPredicate('Users', (u) => u.user_id === target.user_id);
+      recordAudit(store, actor, 'DELETE_USER', 'Users', target.user_id, target, null, now);
+      return { data: { deleted_id: target.user_id, email: target.email } };
+    }
+
     case 'upsertRoom': {
       if (!canPerform(actor, 'manage_rooms') && !canPerform(actor, 'manage_master_data')) {
         throw new DomainError('FORBIDDEN', 'Bạn không có quyền quản trị hoặc nạp phòng học.');
@@ -2452,7 +2481,7 @@ export function generateCenterRecurringMeetingsInternal(
       calendar_event_id: `gcal-${session_id}`,
       rsvp: 'Đã đồng ý',
       ghi_chu: 'Họp giao ban định kỳ Trung tâm CECICS (Chiều Thứ Tư, 2 tuần/lần, 14:00 - 16:00). Thành phần: Toàn bộ nhân viên CECICS.',
-      tao_boi: actor.user_id || 'admin@pnt.edu.vn',
+      tao_boi: actor.user_id || 'cecics@pnt.edu.vn',
       cap_nhat_luc: nowIso,
     };
 

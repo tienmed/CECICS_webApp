@@ -117,6 +117,12 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
   - **Luồng Kỹ thuật (Technical)**: Quản lý hạ tầng mô phỏng Lầu 7, 8, 9 (Khu C) và cơ sở Tân Nhựt. Tự động kiểm tra xung đột phòng và trạng thái bảo dưỡng trước khi gán ca học. Thiết lập định mức vật tư tiêu hao chuẩn và chuẩn bị trước ca học 30 phút.
   - **Luồng Đào tạo (Training & CME)**: Lịch giảng phân nhóm tuần T2-CN kèm huy hiệu buổi trực quan. Hoán đổi lịch giảng 2 chiều đối ứng cùng lớp sau ngày hiện tại. Mở lớp CME phối hợp Trung tâm Đào tạo Nhân lực Y tế, đồng bộ Google Calendar tự động add Attendee không gửi file `.ics`. Các khóa chuẩn hóa: Train-the-Trainer (SESAM), Hội thảo Corticoid và cấp cứu mô phỏng.
   - **Luồng Nghiên cứu Khoa học (Research)**: Quản lý sổ cái đề tài tại `data/research_projects.json` và phân hệ `/nghien-cuu`. Bao quát đề tài báo cáo Hội nghị VAME (khung ECD trạm thi OSCE), Phiên Mô phỏng Lâm sàng HNKHCN XIX, và các sáng kiến cấp Trường về mô hình tổ chức lớp học mô phỏng, Người bệnh Chuẩn và bộ công cụ CVI-CVR.
+- **Quy Chuẩn Chứng Độ Giá Trị Nội Dung CVI - CVR Trạm Mô Phỏng & Bảng Kiểm OSCE ([P0-CECICS-CVI-CVR-VALIDATION-INVARIANT])**:
+  - **Tiêu chuẩn tính toán chuẩn y khoa**:
+    1. *Lawshe CVR (Content Validity Ratio)*: $CVR = \frac{n_e - N/2}{N/2}$. Ngưỡng tối thiểu tra theo bảng Lawshe/Wilson tùy thuộc vào số lượng chuyên gia ($N=8 \rightarrow CVR \ge 0.75$, $N=10 \rightarrow CVR \ge 0.62$).
+    2. *Polit & Beck CVI (Content Validity Index)*: Thang đo Likert 4 mức độ (1-4). Bắt buộc đạt $I\text{-}CVI \ge 0.78$ (với $N \ge 6$) và $S\text{-}CVI/Ave \ge 0.90$ để đủ điều kiện ban hành bảng kiểm chính thức.
+  - **Phân loại khuyến nghị rõ ràng**: Tự động phân loại 3 mức độ: *GIỮ NGUYÊN*, *CHỈNH SỬA BỔ SUNG*, *LOẠI BỎ* đối với từng tiêu chí kỹ năng.
+  - **Tích hợp Chuyên trang Tuần**: Luôn gắn chuyên đề học thuật CVI-CVR vào danh mục bài viết nổi bật của bản tin tuần (`simulation_digest_cron.ts`, `simulation-digest-service.ts`) và cung cấp công cụ thẩm định ma trận trực tiếp tại `/osce` và `/nghien-cuu`.
 
 ## 6. Quy Tắc Vận Hành Kho Mã & Kế Hoạch Lập Trình ([P0-WORKFLOW-COMMIT-VERSION-GRAPHIFY])
 - **Sau mỗi task luôn Commit**: Mọi tác vụ hoàn thành (tính năng, cải tiến, vá lỗi, cập nhật tài liệu) sau khi vượt qua kiểm tra (`npx vitest run`) bắt buộc phải lập tức thực hiện `git add` và `git commit` với thông điệp rõ ràng theo chuẩn Conventional Commits. Tuyệt đối không để dồn ứ các thay đổi qua nhiều task mà không commit.
