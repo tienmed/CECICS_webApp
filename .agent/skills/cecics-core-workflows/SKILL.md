@@ -85,3 +85,29 @@ Quản lý tập trung tại `data/research_projects.json` và phân hệ `/nghi
 * Sáng kiến: *“Chuẩn hóa Người bệnh Chuẩn (Standardized Patient) phục vụ đào tạo và lượng giá OSCE”*.
 * Công cụ: *“Bộ công cụ đánh giá độ giá trị nội dung CVI-CVR cho các trạm thi lâm sàng”*.
 * Báo cáo tiến độ và nghiệm thu định kỳ gửi về **Phòng Quản lý Nghiên cứu Khoa học và Hợp tác Quốc tế** (`nckh.htqt@pnt.edu.vn`).
+
+---
+
+## 5. Ánh Xạ Graphify Knowledge Graph & Tra Cứu Kiến Trúc Mã Nguồn
+
+Khi tiếp nhận yêu cầu phân tích, sửa đổi hoặc nâng cấp tính năng cho 4 luồng nghiệp vụ, Agent bắt buộc đối chiếu với Đồ thị tri thức mã nguồn (**Graphify** - 911 nodes, 2371 edges):
+
+1. **Hành chính (Admin Flow)**:
+   * File trọng tâm: `src/lib/weekly-schedule-email.ts`, `src/core/meeting-minutes.ts`, `data/cecics_official_staff.json`.
+   * Lệnh tra cứu: `graphify query "sendWeeklyScheduleEmail" --budget 1200`
+2. **Kỹ thuật & Vật tư (Technical Flow)**:
+   * File trọng tâm: `src/core/conflict.ts`, `src/core/equipment.ts`, `src/core/consumables.ts`.
+   * Lệnh tra cứu: `graphify query "detectRoomConflict consumables quota" --budget 1200`
+3. **Đào tạo & CME (Training Flow)**:
+   * File trọng tâm: `src/core/cme.ts`, `src/lib/cme-utils.ts`, `src/app/(app)/cme/page.tsx`, `src/app/(app)/doi-lich/page.tsx`.
+   * Lệnh tra cứu: `graphify query "registerCmeCourseAction validateSwapTwoWay" --budget 1200`
+4. **Nghiên cứu Khoa học (Research Flow)**:
+   * File trọng tâm: `src/lib/research-projects.ts`, `src/lib/simulation-crawler.ts`, `src/core/cvi-cvr-engine.ts`, `src/app/(app)/nghien-cuu/page.tsx`.
+   * Lệnh tra cứu: `graphify query "getResearchProjects calculateCviCvr" --budget 1200`
+
+### Quy Chuẩn Cập Nhật Đồ Thị Tri Thức Offline (`[P0-GRAPHIFY-AST-UPDATE]`):
+Sau mỗi lần cập nhật tính năng mới hoặc chỉnh sửa module cốt lõi, chạy lệnh làm tươi đồ thị AST offline:
+```powershell
+$env:GRAPHIFY_BACKEND="none"; graphify . --update; graphify cluster-only .
+```
+

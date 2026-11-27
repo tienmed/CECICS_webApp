@@ -547,10 +547,10 @@
     "ast_empty": true
   },
   "data/simulation_digest_history.json": {
-    "mtime": 1795742132.2797873,
-    "seen": 1795742162.5749075,
-    "ast_hash": "98d645867723287b9a5758c647f4c487",
-    "semantic_hash": "98d645867723287b9a5758c647f4c487",
+    "mtime": 1795742167.2836733,
+    "seen": 1795742319.0740597,
+    "ast_hash": "8972189506968f1a037400f57b1e3b31",
+    "semantic_hash": "8972189506968f1a037400f57b1e3b31",
     "ast_empty": true
   },
   "scripts/generate_email_preview.ts": {
@@ -843,8 +843,8 @@
     "semantic_hash": "1158df810960134418b3bd3023e66896"
   },
   "data/research_projects.json": {
-    "mtime": 1795742132.4753485,
-    "seen": 1795742162.5749075,
+    "mtime": 1795742168.1037333,
+    "seen": 1795742319.0730295,
     "ast_hash": "124b44d05d3f7363e0e1552e0d22acc4",
     "semantic_hash": "124b44d05d3f7363e0e1552e0d22acc4",
     "ast_empty": true
