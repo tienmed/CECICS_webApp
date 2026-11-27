@@ -141,4 +141,17 @@ Hệ thống Vận hành Số hóa Trung tâm Kỹ năng & Sáng tạo Mô phỏ
   - Tuyệt đối không để backend `gemini` tự động gọi API cloud ngoài luồng gây lỗi 401 hoặc làm phình token không cần thiết cho việc phân tích cú pháp AST tĩnh.
 - **Tài Liệu Nghiệp Vụ (`README.md`)**: File `README.md` tại thư mục gốc chỉ dành riêng để mô tả rõ ràng các module của ứng dụng và mối liên kết luồng nghiệp vụ giữa các node; tuyệt đối không mô tả kỹ thuật, không nhắc cấu trúc code, framework hay đường dẫn file trong `README.md`.
 
+## 7. Quy Chuẩn Đóng Task & Đồng Bộ Vai Trò Quản Trị ([P0-TASK-CLOSURE-INVARIANT], [P0-CECICS-USER-ROLE-SYNC-INVARIANT])
+- **Quy trình Đóng Task Chuẩn 3 Bước Bắt Buộc ([P0-TASK-CLOSURE-INVARIANT])**:
+  1. **Bước 1 - Kiểm tra xác minh (Verification)**: Đảm bảo mọi tính năng, sửa đổi hoạt động chính xác trên môi trường thực tế (`DATA_MODE=sheets` hoặc test passing).
+  2. **Bước 2 - Làm tươi Đồ thị Tri thức Codebase (Graphify AST)**: Luôn chạy lệnh làm tươi AST offline trước khi đóng task:
+     ```powershell
+     $env:GRAPHIFY_BACKEND="none"; graphify . --update; graphify cluster-only .
+     ```
+  3. **Bước 3 - Tổng kết & Đúc kết Quy tắc (/learn)**: Nhận diện các bài học, lỗi phát sinh, hoặc quy chuẩn mới để đưa vào Rule/Skill trước khi thông báo hoàn tất task.
+- **Đồng Bộ Quyền & Vai Trò Tài Khoản Quản Trị ([P0-CECICS-USER-ROLE-SYNC-INVARIANT])**:
+  - Tài khoản Admin chính thức của BS.CKII. Trịnh Trung Tiến (`bstien@pnt.edu.vn`) và Admin hệ thống (`admin@pnt.edu.vn`) bắt buộc phải luôn có vai trò `ADMIN,LANH_DAO,DIEU_PHOI,GIANG_VIEN` đồng nhất trên cả Google Sheets tab `Users` và `src/lib/mock-seed.ts`.
+  - Khi xuất hiện lỗi `"Bạn không có quyền đổi cấu hình hệ thống."` tại `/quan-tri`, ưu tiên kiểm tra cột `vai_tro` của tài khoản đang đăng nhập trong Google Sheets trước khi sửa mã nguồn logic.
+
+
 
