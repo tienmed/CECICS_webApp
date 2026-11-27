@@ -4,10 +4,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { type ResearchProject } from '@/lib/research-projects';
 import { type SimulationArticle, type SimulationConference } from '@/lib/simulation-crawler';
 import { useApp } from '@/components/AppProvider';
+import { CviCvrCalculator } from '@/components/CviCvrCalculator';
 
 export default function ResearchPage() {
   const { user } = useApp();
-  const [activeTab, setActiveTab] = useState<'PROJECTS' | 'CONFERENCES' | 'ARTICLES'>('PROJECTS');
+  const [activeTab, setActiveTab] = useState<'PROJECTS' | 'CONFERENCES' | 'ARTICLES' | 'DIGEST_CVI'>('PROJECTS');
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ResearchProject[]>([]);
   const [conferences, setConferences] = useState<SimulationConference[]>([]);
@@ -186,6 +187,16 @@ export default function ResearchPage() {
           }`}
         >
           <span>📚</span> Y Văn Mô Phỏng Thời Gian Thực ({articles.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('DIGEST_CVI')}
+          className={`py-3 px-5 text-sm font-semibold border-b-2 flex items-center gap-2 transition ${
+            activeTab === 'DIGEST_CVI'
+              ? 'border-blue-600 text-blue-700 bg-blue-50/50'
+              : 'border-transparent text-blue-600 hover:text-blue-800'
+          }`}
+        >
+          <span>⭐</span> Chuyên Trang Tuần & Thẩm Định CVI - CVR
         </button>
       </div>
 
@@ -416,6 +427,41 @@ export default function ResearchPage() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {!loading && activeTab === 'DIGEST_CVI' && (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-2xl shadow-sm">
+            <span className="px-3 py-1 bg-blue-500/30 text-blue-200 border border-blue-400/40 rounded-full text-xs font-bold uppercase tracking-wider">
+              Chuyên Đề Học Thuật Mô Phỏng Định Kỳ
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold mt-2">
+              Chứng Độ Giá Trị Nội Dung CVI - CVR Cho Các Trạm Đánh Giá Mô Phỏng Lâm Sàng & Bảng Kiểm OSCE
+            </h2>
+            <p className="text-blue-100 text-sm mt-1 max-w-3xl leading-relaxed">
+              Áp dụng chuẩn hóa quốc tế Lawshe (1975) và Polit & Beck (2006) để định lượng độ thiết yếu của từng tiêu chí (CVR) và độ tương thích nội dung toàn diện (I-CVI, S-CVI/Ave) với Hội đồng chuyên gia y khoa lâm sàng.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <a
+                href="/api/simulation-digest?format=html"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-blue-900 font-bold rounded-lg text-xs hover:bg-blue-50 transition shadow-xs"
+              >
+                <span>📰</span> Xem Bản Tin Email Chuyên Trang Tuần Này (HTML) ↗
+              </a>
+              <a
+                href="/osce"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-700 text-white font-bold rounded-lg text-xs hover:bg-blue-800 transition"
+              >
+                <span>🧭</span> Chuyển Sang Sơ Đồ Trạm OSCE
+              </a>
+            </div>
+          </div>
+
+          {/* Nhúng công cụ tính toán ma trận CVI - CVR */}
+          <CviCvrCalculator />
         </div>
       )}
 

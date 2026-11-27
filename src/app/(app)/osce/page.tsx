@@ -15,6 +15,7 @@ import {
   type OsceStationStatus,
   rotateOsceCircuit,
 } from '@/core/osce-data';
+import { CviCvrCalculator } from '@/components/CviCvrCalculator';
 
 // Web Audio API để phát âm thanh chuông báo chuyển trạm tự nhiên mà không cần file MP3 ngoài
 function playStationChime(type: 'warning' | 'rotate') {
@@ -75,7 +76,7 @@ export default function OsceFloorPlanPage() {
   const [currentCampus, setCurrentCampus] = useState<'HH' | 'TN'>('HH');
 
   // Chế độ xem
-  const [viewMode, setViewMode] = useState<'map' | 'table' | 'kiosk'>('map');
+  const [viewMode, setViewMode] = useState<'map' | 'table' | 'kiosk' | 'cvi'>('map');
   const [showArrows, setShowArrows] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
@@ -300,6 +301,16 @@ export default function OsceFloorPlanPage() {
             >
               <span>📋</span>
               <span className="hidden sm:inline">Bảng trạm</span>
+            </button>
+            <button
+              onClick={() => setViewMode('cvi')}
+              className={`px-2.5 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1 ${
+                viewMode === 'cvi' ? 'bg-blue-600 text-white shadow-xs' : 'text-blue-700 hover:bg-blue-50'
+              }`}
+              title="Thẩm định Độ giá trị Nội dung (CVI & CVR) cho Bảng kiểm Trạm"
+            >
+              <span>📐</span>
+              <span className="hidden sm:inline">Thẩm định CVI - CVR</span>
             </button>
             <button
               onClick={() => setViewMode(viewMode === 'kiosk' ? 'map' : 'kiosk')}
@@ -727,6 +738,16 @@ export default function OsceFloorPlanPage() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Chế độ Thẩm định Độ giá trị Nội dung CVI - CVR */}
+      {viewMode === 'cvi' && (
+        <div className="space-y-4">
+          <CviCvrCalculator
+            initialStationName={selectedStation ? selectedStation.name : 'Trạm Hồi sức Tim phổi Cấp cứu (CPR / ACLS)'}
+            initialChuyenKhoa={selectedStation ? selectedStation.chuyen_khoa : 'Hồi sức Cấp cứu & Ngoại Tim mạch'}
+          />
         </div>
       )}
 

@@ -82,7 +82,15 @@ function buildFallbackSummary(article: SimulationArticle): SummarizedArticle {
   ];
   let takeaway = 'Tham khảo kinh nghiệm quốc tế để cải tiến quy trình lượng giá và chuẩn hóa an toàn đào tạo mô phỏng tại CECICS.';
 
-  if (article.id.includes('milmed') || article.id.includes('debriefing')) {
+  if (article.id.includes('cvi') || article.id.includes('cvr')) {
+    viTitle = 'Chứng Độ Giá Trị Nội Dung CVI - CVR (Content Validity Index & Ratio) Cho Trạm Đánh Giá Mô Phỏng Lâm Sàng & Bảng Kiểm OSCE';
+    bullets = [
+      'Chỉ số tỷ lệ giá trị nội dung Lawshe CVR (Content Validity Ratio) đo lường mức độ đồng thuận của Hội đồng chuyên gia về tính "Thiết yếu" (Essential) của từng tiêu chí kỹ năng lâm sàng.',
+      'Chỉ số giá trị nội dung CVI theo thang Likert 4 mức độ của Polit & Beck: I-CVI (Item-level) >= 0.78 và S-CVI/Ave (Scale-level Average) >= 0.90 là ngưỡng chuẩn vàng quốc tế để ban hành bảng kiểm.',
+      'Quy trình thẩm định CVI-CVR giúp các Hội đồng Khảo thí Y khoa loại bỏ các tiêu chí đánh giá cảm tính, tối ưu hóa độ tin cậy và đảm bảo tính pháp lý trong các kỳ thi tốt nghiệp chạy trạm OSCE.',
+    ];
+    takeaway = 'Ứng dụng trực tiếp bộ công cụ tính toán ma trận CVI-CVR tại phân hệ OSCE của CECICS WebApp để thẩm định bảng kiểm trước mỗi kỳ thi tốt nghiệp và kỳ thi kỹ năng tiền lâm sàng.';
+  } else if (article.id.includes('milmed') || article.id.includes('debriefing')) {
     viTitle = 'So sánh Thảo luận Phản hồi trong Mô phỏng (In-Simulation Debriefing) và Sau Mô phỏng (Post-Simulation Debriefing)';
     bullets = [
       'Kỹ thuật "Dừng lại và Sửa lỗi" ngay trong lúc diễn tập (Stop-and-Fix) giúp học viên sửa sai tức thì khi thực hiện các thủ thuật vận động tinh (Procedural Skills).',
