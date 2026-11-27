@@ -60,10 +60,10 @@
     "semantic_hash": "76cde60eccb1ce1f83a22326e5f6792c"
   },
   "package.json": {
-    "mtime": 1795586291.0715477,
-    "seen": 1795659547.6963427,
-    "ast_hash": "2c251aeb4cffaeb249e1ce899b8fa9a0",
-    "semantic_hash": "2c251aeb4cffaeb249e1ce899b8fa9a0"
+    "mtime": 1795714417.6442473,
+    "seen": 1795740134.4610898,
+    "ast_hash": "457b1a1025a3ebdc0a9cff7c6d6d0178",
+    "semantic_hash": "457b1a1025a3ebdc0a9cff7c6d6d0178"
   },
   "postcss.config.mjs": {
     "mtime": 1795097402.4322429,
@@ -534,10 +534,10 @@
     "semantic_hash": "b8da7361fcd4dda1691be11ef6d55f76"
   },
   "tests/sim-class-workflow.test.ts": {
-    "mtime": 1795591020.1894495,
-    "seen": 1795659547.7266355,
-    "ast_hash": "47b352eea6974430706736339514d6f8",
-    "semantic_hash": "47b352eea6974430706736339514d6f8"
+    "mtime": 1795714395.4084375,
+    "seen": 1795740134.509725,
+    "ast_hash": "18b96c51726acaf4bac835658cff9c9c",
+    "semantic_hash": "18b96c51726acaf4bac835658cff9c9c"
   },
   "data/cecics_official_staff.json": {
     "mtime": 1795612284.4024773,
@@ -547,10 +547,10 @@
     "ast_empty": true
   },
   "data/simulation_digest_history.json": {
-    "mtime": 1795708655.3433905,
-    "seen": 1795708677.7462234,
-    "ast_hash": "333658a2f3c4b01a71c1a156e40f0852",
-    "semantic_hash": "333658a2f3c4b01a71c1a156e40f0852",
+    "mtime": 1795740106.9359648,
+    "seen": 1795740134.4610898,
+    "ast_hash": "7c3c2ff7203b1fca1cffb7501eee5ccc",
+    "semantic_hash": "7c3c2ff7203b1fca1cffb7501eee5ccc",
     "ast_empty": true
   },
   "scripts/generate_email_preview.ts": {
@@ -590,10 +590,10 @@
     "semantic_hash": "5e7b350eddba18809be78d3d1c8121d6"
   },
   "src/app/(app)/cme/page.tsx": {
-    "mtime": 1795709308.894086,
-    "seen": 1795709333.885866,
-    "ast_hash": "8c15b7a70c9b254ec658adf9c1a21bf3",
-    "semantic_hash": "8c15b7a70c9b254ec658adf9c1a21bf3"
+    "mtime": 1795714624.7289917,
+    "seen": 1795740134.4723685,
+    "ast_hash": "5ca06bfb895589552e41e754ef6fd971",
+    "semantic_hash": "5ca06bfb895589552e41e754ef6fd971"
   },
   "src/app/api/cme/import-legacy/route.ts": {
     "mtime": 1795582656.6488178,
@@ -825,10 +825,10 @@
     "semantic_hash": "5fa09259a930d24ddbf4879b78b38fb2"
   },
   "src/app/api/cme/notify-schedule/route.ts": {
-    "mtime": 1795709292.8261354,
-    "seen": 1795709333.8904347,
-    "ast_hash": "0ccd4d098b9c36792e4431c094029d7e",
-    "semantic_hash": "0ccd4d098b9c36792e4431c094029d7e"
+    "mtime": 1795714574.8499894,
+    "seen": 1795740134.479041,
+    "ast_hash": "b1a586b72ec824de23e8408ef60c3bdc",
+    "semantic_hash": "b1a586b72ec824de23e8408ef60c3bdc"
   },
   "src/lib/cme-utils.ts": {
     "mtime": 1795708575.5941186,
@@ -843,8 +843,8 @@
     "semantic_hash": "1158df810960134418b3bd3023e66896"
   },
   "data/research_projects.json": {
-    "mtime": 1795709958.8029878,
-    "seen": 1795710537.2040484,
+    "mtime": 1795740107.6842928,
+    "seen": 1795740134.4610898,
     "ast_hash": "f23dafa4858df34f8175b5b45b4aec6c",
     "semantic_hash": "f23dafa4858df34f8175b5b45b4aec6c",
     "ast_empty": true
@@ -902,5 +902,35 @@
     "seen": 1795710874.526333,
     "ast_hash": "4cf4e7206295fc970ce2994a8e84d089",
     "semantic_hash": "4cf4e7206295fc970ce2994a8e84d089"
+  },
+  "scripts/fetch_cecics_emails.py": {
+    "mtime": 1795739470.961579,
+    "seen": 1795740134.4610898,
+    "ast_hash": "7cbb4c7a0401a98ce9d9de406677d5b2",
+    "semantic_hash": "7cbb4c7a0401a98ce9d9de406677d5b2"
+  },
+  "scripts/fetch_cme_nckh_deep.py": {
+    "mtime": 1795739518.6219537,
+    "seen": 1795740134.4610898,
+    "ast_hash": "4b4810a0d534c6fee4936765e3bd441d",
+    "semantic_hash": "4b4810a0d534c6fee4936765e3bd441d"
+  },
+  "scripts/inspect_sheets.ts": {
+    "mtime": 1795739412.5465498,
+    "seen": 1795740134.4610898,
+    "ast_hash": "da9c3d2358e58b0753d7fe13b0c95c26",
+    "semantic_hash": "da9c3d2358e58b0753d7fe13b0c95c26"
+  },
+  "scripts/read_cme_data.ts": {
+    "mtime": 1795739392.1738603,
+    "seen": 1795740134.4703655,
+    "ast_hash": "b10372dc42dde44cf83ab709a40fe6b6",
+    "semantic_hash": "b10372dc42dde44cf83ab709a40fe6b6"
+  },
+  "scripts/test_google_access.ts": {
+    "mtime": 1795739366.4738493,
+    "seen": 1795740134.4723685,
+    "ast_hash": "055ffd3b752271fc8a97ed22e5f398fa",
+    "semantic_hash": "055ffd3b752271fc8a97ed22e5f398fa"
   }
 }
